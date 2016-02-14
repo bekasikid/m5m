@@ -35,7 +35,7 @@ app.get("/generate",function(req,res){
 
 
 app.post("/registration",function(req,res){
-    reg.registration(req,res);
+    reg.regOnline(req,res);
 });
 
 app.post("/confirmation",function(req,res){
@@ -51,7 +51,6 @@ app.post("/confirmation-mobile",function(req,res){
             res.status(401).send({ error: "Unauthorized" });
         }
     });
-
 });
 
 app.get("/status/:id",function(req,res){
@@ -73,6 +72,21 @@ app.post("/update-participant",function(req,res){
 app.get("/quota/:id/:dt",function(req,res){
     quotas.getQuotas(req,res);
 });
+
+/*back office*/
+app.post("login",function(req,res){
+    filterModel.validateReq(req.res).then(function(retval){
+        if(retval==200){
+            reg.confirmation(req,res);
+        } else{
+            res.status(401).send({ error: "Unauthorized" });
+        }
+    });
+});
+
+app.get("/participants",function(req,res){
+
+})
 
 /*master data*/
 app.get("/payment-method",function(req,res){

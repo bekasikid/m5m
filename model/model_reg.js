@@ -11,9 +11,23 @@ var Q = require("q");
 var getIP = require('ipware')().get_ip;
 var fee = 150000;
 
+
+var regOnline = function(req,res){
+    registration(req,res).then(function(result){
+        res.json(result.retval);
+    });
+}
 var registration = function (req, res) {
-    //check quota dulu sebelum generate
-    if(lib.isset(req.body.nik) && !lib.empty(req.body.nik)){
+    //@TODO:check quota dulu sebelum generate
+    //@TODO:check peserta apakah sudah menang?
+    var deferred = Q.defer();
+    if(!lib.empty(req.body.nik)){
+
+        if(!lib.empty(req.body.location)){
+            //must search nearest location and available quotas
+
+        }
+
         var reg = {
             "registration_nik": req.body.nik,
             "registration_name": req.body.name,
@@ -33,21 +47,39 @@ var registration = function (req, res) {
                 retval['fee'] = fee + lib.generateFee(row.insertId);
                 var uniquecode = lib.uniqueCode(row.insertId);
                 retval['id'] = uniquecode;
-                db.execute("UPDATE registrations SET registration_code = '"+uniquecode+"' WHERE registration_id = '"+row.insertId+"'").then(function(){
-                    res.json(retval);
+                db.execute("UPDATE registrations SET registration_code = ? WHERE registration_id = ?",[uniquecode,row.insertId]).then(function(){
+                    deferred.resolve({
+                        rc : 200,
+                        retval : retval
+                    });
                 });
 
             }else{
-                res.status(400).send({ error: "registration failed" });
+                deferred.resolve({
+                    rc : 400,
+                    retval : { error: "registration failed" }
+                });
             }
         },function(){
-            res.status(400).send({ error: "registration failed" });
+            deferred.resolve({
+                rc : 400,
+                retval : { error: "registration failed" }
+            });
         });
     }else{
-        res.status(400).send({ error: "data not valid" });
+        deferred.resolve({
+            rc : 400,
+            retval : { error: "registration failed" }
+        });
     }
-
+    return deferred.promise;
 };
+
+var confirmOnline = function(req,res){
+    confirmation(req,res).then(function(result){
+        res.json(result.retval);
+    });
+}
 
 var confirmation = function(req,res){
     /*
@@ -58,32 +90,56 @@ var confirmation = function(req,res){
     /*
         konfirmasi
      */
-
+    var deferred = Q.defer();
     if(!lib.empty(req.body.paymentMethod) && !lib.empty(req.body.id)){
         if(req.body.paymentMethod==1){
             //musti di cek antara mereka konfirmasi dulu dengan dapet data settlement duluan dr kfc
             //kalo konfirmasi dulu, maka update table registrasi, dan input table contestant
             db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ? WHERE registration_code = ?", [req.body.paymentMethod,req.body.reffno,req.body.id]).then(function(row){
                 if(row.affectedRows==0){
-                    res.status(400).send({ error: "confirmation failed" });
+                    //res.status(400).send({ error: "confirmation failed" });
+                    deferred.resolve({
+                        rc : 400,
+                        retval : { error: "registration failed" }
+                    });
                 }else{
-                    res.json(req.body);
+                    //res.json(req.body);
+                    //@TODO : musti tambahin no peserta
+                    deferred.resolve({
+                        rc : 200,
+                        retval : req.body
+                    });
                 }
             });
         }else if(req.body.paymentMethod==4 || req.body.paymentMethod==5){
             db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ? WHERE registration_code = ?", [req.body.paymentMethod,req.body.reffno,req.body.id]).then(function(row){
                 if(row.affectedRows==0){
-                    res.status(400).send({ error: "confirmation failed" });
+                    //res.status(400).send({ error: "confirmation failed" });
+                    deferred.resolve({
+                        rc : 400,
+                        retval : { error: "registration failed" }
+                    });
                 }else{
-                    res.json(req.body);
+                    //res.json(req.body);
+                    //res.json(req.body);
+                    //@TODO : musti tambahin no peserta
+                    deferred.resolve({
+                        rc : 200,
+                        retval : req.body
+                    });
                 }
             });
         }else if(req.body.paymentMethod=='cc'){
-
+            //@TODO : pembayaran lewat doku
         }
     }else{
-        res.status(400).send({ error: "failed" });
+        //res.status(400).send({ error: "failed" });
+        deferred.resolve({
+            rc : 400,
+            retval : { error: "registration failed" }
+        });
     }
+    return deferred.promise;
 };
 
 var status = function(req,res){
@@ -146,6 +202,7 @@ var history = function(req,res){
                                 store_type: rows[0]['store_type']
                             },
                             date : moment(rows[0]['quota_date']).format("YYYY-MM-DD"),
+                            "no" : rows[0]['competition_no'],
                             "session" : rows[0]['quota_session'],
                             score : rows[0]['competition_score'],
                             status : rows[0]['competition_eliminated'], // 1 elimininasi, 0 blom main, 2 menang
@@ -183,6 +240,7 @@ var history = function(req,res){
                             },
                             date : moment(rowsComp[0]['quota_date']).format("YYYY-MM-DD"),
                             "session" : rowsComp[0]['quota_session'],
+                            "no" : rows[0]['competition_no'],
                             score : rowsComp[0]['competition_score'],
                             status : rowsComp[0]['competition_eliminated'], // 1 elimininasi, 0 blom main, 2 menang
                         });
@@ -221,7 +279,10 @@ var rek = function(i){
 
 };
 
+module.exports.regOnline = regOnline;
 module.exports.registration = registration;
+module.exports.confirmOnline = confirmOnline;
+module.exports.confirmation = confirmation;
 module.exports.paymentMethod = paymentMethod;
 module.exports.rek = rek;
 module.exports.status = status;

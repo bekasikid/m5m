@@ -41,7 +41,7 @@ getCities = function(req,res){
     db.execute(query,params).then(function(rows){
         res.json(rows);
     });
-}
+};
 
 var getQuotas = function(req,res){
     db.execute("SELECT * FROM stores where store_id = '"+req.params.id+"'").then(function(rows){

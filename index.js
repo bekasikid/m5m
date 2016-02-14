@@ -97,4 +97,12 @@ app.get("/stores",function(req,res){
     quotas.getStores(req,res);
 });
 
+/*
+sms parsing
+ */
+
+app.get("/sms-receive",function(req,res){
+    sms.incomeSms(req,res);
+});
+
 app.listen(process.env.PORT || 3000);

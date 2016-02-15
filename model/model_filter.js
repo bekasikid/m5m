@@ -17,8 +17,8 @@ var validateReq = function(req,res){
     db.execute("SELECT * FROM registrations WHERE registration_code = ?",[req.body.id]).then(function(rows){
         if(rows.length==1){
             var sign = lib.hmacSha1(req.body.id+"\n"+req.method+"\n"+JSON.stringify(req.body)+"\n"+req.headers.date,key);
-            var auth = req.headers.authorization.split(":");
-            var username = auth[0].split(" ");
+            var auth = req.headers.authorization.split(" ");
+            var username = auth[1].split(":");
             if(username[0]!==req.body.id){
                 //res.status(401).send({ error: "Unauthorized" });
                 deferred.resolve(401);
@@ -38,6 +38,39 @@ var validateReq = function(req,res){
     return deferred.promise;
 }
 
+var validateAdmin = function(req,res){
+    var deferred = Q.defer();
+
+    var auth = req.headers.authorization.split(" ");
+    var username = auth[1].split(":");
+
+    db.execute("SELECT * FROM users LEFT JOIN stores ON users.store_id=stores.store_id WHERE user_username = ? AND users.user_active=1",[username[0]]).then(function(rows){
+        if(rows.length==1){
+            if(req.method=="POST"){
+                var sign = lib.hmacSha1(username[0]+"\n"+key+"\n"+req.method+"\n"+JSON.stringify(req.body),rows[0].user_password);
+            }else{
+                var sign = lib.hmacSha1(username[0]+"\n"+key+"\n"+req.method,rows[0].user_password);
+            }
+            console.log(username[0]+"||"+sign);
+            if(username[0]!=rows[0].user_username){
+                deferred.resolve({"rc":401});
+            }else{
+                console.log(username[1]+"||"+sign);
+                if(username[1]==sign){
+                    delete rows[0].user_password;
+                    deferred.resolve({"rc":200,row:rows[0]});
+                }else{
+                    console.log({"rc":401});
+                    deferred.resolve({"rc":401});
+                }
+            }
+        }else{
+            deferred.resolve({"rc":401});
+        }
+    });
+    return deferred.promise;
+}
+
 var checkWhiteList = function (connection, req) {
     var ip = getIP(req);
     //console.log ("SELECT * FROM whitelist WHERE list_ip = ?"+ip.clientIp);
@@ -45,4 +78,5 @@ var checkWhiteList = function (connection, req) {
 }
 
 module.exports.validateReq = validateReq;
+module.exports.validateAdmin = validateAdmin;
 

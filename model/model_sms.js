@@ -1,5 +1,7 @@
 /**
  * Created by Andre on 10/02/2016.
+ * @TODO : logic pemilihan kota, user ditawarin untuk meng sms balik dalam pilihan kota
+ *          kfc#kota#<
  */
 
 var lib = require('./model_library');
@@ -9,7 +11,7 @@ var reg = require("./model_reg")
 var Q = require("q");
 var getIP = require('ipware')().get_ip;
 
-var incomeSms = function(req,res){
+var incomingSms = function(req,res){
     if(!lib.empty(req.query.moid || !lib.empty(req.query.msgid))){
         var sms = {
             "sms_id": lib.empty(req.query.moid)? req.query.msgid: req.query.moid,
@@ -65,4 +67,4 @@ var incomeSms = function(req,res){
 
 };*/
 
-module.exports.incomeSms = incomeSms;
+module.exports.incomingSms = incomingSms;

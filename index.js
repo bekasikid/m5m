@@ -7,14 +7,17 @@ var app = express();
 
 //var db = require("./model/model_db");
 var lib = require("./model/model_library");
+var admin = require("./model/model_admin");
 var reg = require("./model/model_reg");
 var filterModel = require("./model/model_filter");
 var quotas = require("./model/model_quotas");
+var cors = require('cors')
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
+app.use(cors());
 
 
 /*untuk server trx*/
@@ -44,7 +47,7 @@ app.post("/confirmation",function(req,res){
 
 app.post("/confirmation-mobile",function(req,res){
     //id + "\n" + method + "\n" + body + "\n" + date
-    filterModel.validateReq(req.res).then(function(retval){
+    filterModel.validateReq(req,res).then(function(retval){
         if(retval==200){
             reg.confirmation(req,res);
         } else{
@@ -74,10 +77,10 @@ app.get("/quota/:id/:dt",function(req,res){
 });
 
 /*back office*/
-app.post("login",function(req,res){
-    filterModel.validateReq(req.res).then(function(retval){
-        if(retval==200){
-            reg.confirmation(req,res);
+app.post("/login",function(req,res){
+    filterModel.validateAdmin(req,res).then(function(retval){
+        if(retval.rc==200){
+            res.json(retval.row);
         } else{
             res.status(401).send({ error: "Unauthorized" });
         }
@@ -86,7 +89,23 @@ app.post("login",function(req,res){
 
 app.get("/participants",function(req,res){
 
-})
+});
+app.get("/daftar",function(req,res){
+    filterModel.validateAdmin(req,res).then(function(retval){
+        if(retval.rc==200){
+            //res.json(retval.row);
+            admin.daftar(req,res).then(function(rows){
+                if(req.query.tipe=='total'){
+                    res.send(rows.total.toString());
+                }else{
+                    res.json(rows.rows);
+                }
+            });
+        } else{
+            res.status(401).send({ error: "Unauthorized" });
+        }
+    });
+});
 
 /*master data*/
 app.get("/payment-method",function(req,res){
@@ -102,7 +121,7 @@ sms parsing
  */
 
 app.get("/sms-receive",function(req,res){
-    sms.incomeSms(req,res);
+    sms.incomingSms(req,res);
 });
 
 app.listen(process.env.PORT || 3000);

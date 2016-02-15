@@ -84,9 +84,81 @@ var participants = function (req, res) {
     res.json(row);
 };
 
-var login = function(req,res){
+var daftar = function(req,res){
+    /*
+    query :
+        id, nik, name, page, limit, sort, sortby, type
+     */
+    var deferred = Q.defer();
 
+    var sort = "";
+    var limit = "";
+    if(req.query.tipe=='total'){
+        var query = "SELECT count(*)as total FROM registrations LEFT JOIN stores ON registrations.store_id=stores.store_id ";
+    }else{
+        var query = "SELECT * FROM registrations LEFT JOIN stores ON registrations.store_id=stores.store_id ";
+        if(!lib.empty(req.query.sort)){
+            var urut = "";
+            if(req.query.sort=="id"){
+                urut = "registrations.registration_code"
+            }else if(req.query.sort=="nik"){
+                urut = "registrations.registration_nik"
+            }else if(req.query.sort=="name"){
+                urut = "registrations.registration_name"
+            }else if(req.query.sort=="phone"){
+                urut = "registrations.registration_phone"
+            }else if(req.query.sort=="email"){
+                urut = "registrations.registration_email"
+            }
+            sort = " ORDER BY "+urut+" "+req.query.sortby;
+        }
+        var limit = " LIMIT "+(parseInt(req.query.page)*parseInt(req.query.limit))+","+req.query.limit;
+    }
+
+
+
+    var wh = "";
+    var where = [];
+    var params = [];
+    if(!lib.empty(req.query.id) || !lib.empty(req.query.nik) || !lib.empty(req.query.name)){
+        if(!lib.empty(req.query.id)){
+            where.push( " registrations.registration_code = ? ");
+            params.push(req.query.id);
+        }
+
+        if(!lib.empty(req.query.nik)){
+            where.push(" registrations.registration_nik = ? ");
+            params.push(req.query.nik);
+        }
+
+        if(!lib.empty(req.query.name)){
+            where.push( " registrations.registration_name like ?");
+            params.push("%"+req.query.name+"%");
+        }
+
+        if(!lib.empty(req.query.phone)){
+            where.push( " registrations.registration_phone = ?");
+            params.push("%"+req.query.phone+"%");
+        }
+
+        if(!lib.empty(req.query.email)){
+            where.push( " registrations.registration_email = ?");
+            params.push("%"+req.query.email+"%");
+        }
+
+        wh = " WHERE " + where.join(" AND ");
+    }
+
+    db.execute(query+wh+sort+limit,params).then(function(rows){
+        if(req.query.tipe=='total'){
+            deferred.resolve({rc : "00" , total : rows[0].total});
+        }else{
+            deferred.resolve({rc : "00" , rows : rows});
+        }
+    });
+    return deferred.promise;
 };
 
 
 module.exports.participants = participants;
+module.exports.daftar = daftar;

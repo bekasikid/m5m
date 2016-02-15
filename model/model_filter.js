@@ -15,23 +15,22 @@ var key = "L6TGw!_&LLFP_^DBUqr*";
 var validateReq = function(req,res){
     var deferred = Q.defer();
     db.execute("SELECT * FROM registrations WHERE registration_code = ?",[req.body.id]).then(function(rows){
+        //console.log(rows[0]);
         if(rows.length==1){
-            var sign = lib.hmacSha1(req.body.id+"\n"+req.method+"\n"+JSON.stringify(req.body)+"\n"+req.headers.date,key);
+            var sign = lib.hmacSha1(rows[0].registration_code+"\n"+rows[0].registration_password+"\n"+req.method+"\n"+JSON.stringify(req.body),key);
             var auth = req.headers.authorization.split(" ");
             var username = auth[1].split(":");
-            if(username[0]!==req.body.id){
-                //res.status(401).send({ error: "Unauthorized" });
+            if(username[0]!==rows[0].registration_code){
                 deferred.resolve(401);
             }else{
+                console.log(username[1]+"||"+sign);
                 if(username[1]==sign){
-                    //res.status(401).send({ error: "Unauthorized" });
                     deferred.resolve(200);
                 }else{
                     deferred.resolve(401);
                 }
             }
         }else{
-            //res.status(401).send({ error: "Unauthorized" });
             deferred.resolve(401);
         }
     });
@@ -73,8 +72,7 @@ var validateAdmin = function(req,res){
 
 var checkWhiteList = function (connection, req) {
     var ip = getIP(req);
-    //console.log ("SELECT * FROM whitelist WHERE list_ip = ?"+ip.clientIp);
-    return query.execute(connection, "SELECT * FROM whitelist WHERE list_ip = ?", [ip.clientIp]);
+    return db.execute("SELECT * FROM whitelist WHERE list_ip = ?", [ip.clientIp]);
 }
 
 module.exports.validateReq = validateReq;

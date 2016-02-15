@@ -16,7 +16,8 @@ var regOnline = function(req,res){
     registration(req,res).then(function(result){
         res.json(result.retval);
     });
-}
+};
+
 var registration = function (req, res) {
     //@TODO:check quota dulu sebelum generate
     //@TODO:check peserta apakah sudah menang?
@@ -76,11 +77,42 @@ var registration = function (req, res) {
     return deferred.promise;
 };
 
+var loginConfirmation = function(req,res){
+    var deferred = Q.defer();
+    if(!lib.empty(req.body.id)){
+        db.execute("SELECT * FROM registrations WHERE registration_code = ? ", [req.body.id]).then(function(rows){
+            console.log(rows);
+            if(rows.length==0){
+                deferred.resolve({
+                    rc : 400,
+                    retval : { error: "login failed" }
+                });
+            }else{
+                delete rows[0].registration_password;
+                rows[0].registration_dob = moment(rows[0].registration_dob).format("YYYY-MM-DD");
+                rows[0].competition_date = moment(rows[0].competition_date).format("YYYY-MM-DD");
+                rows[0].registration_date = moment(rows[0].registration_date).format("YYYY-MM-DD HH:mm:ss");
+                deferred.resolve({
+                    rc : 200,
+                    retval : rows[0]
+                });
+            }
+        });
+    }else{
+        //res.status(400).send({ error: "failed" });
+        deferred.resolve({
+            rc : 400,
+            retval : { error: "registration failed" }
+        });
+    }
+    return deferred.promise;
+};
+
 var confirmOnline = function(req,res){
     confirmation(req,res).then(function(result){
         res.json(result.retval);
     });
-}
+};
 
 var confirmation = function(req,res){
     /*
@@ -282,6 +314,7 @@ var rek = function(i){
 
 module.exports.regOnline = regOnline;
 module.exports.registration = registration;
+module.exports.loginConfirmation = loginConfirmation;
 module.exports.confirmOnline = confirmOnline;
 module.exports.confirmation = confirmation;
 module.exports.paymentMethod = paymentMethod;

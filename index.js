@@ -56,6 +56,23 @@ app.post("/confirmation-mobile",function(req,res){
     });
 });
 
+app.post("/login-payment",function(req,res){
+    filterModel.validateReq(req,res).then(function(retval){
+        if(retval==200){
+            reg.loginConfirmation(req,res).then(function(row){
+                console.log(row);
+                if(row.rc==200){
+                    res.json(row.retval);
+                }else{
+                    res.status(401).send({ error: "Unauthorized" });
+                }
+            });
+        } else{
+            res.status(401).send({ error: "Unauthorized" });
+        }
+    });
+});
+
 app.get("/status/:id",function(req,res){
     reg.status(req,res);
 });

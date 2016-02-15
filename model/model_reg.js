@@ -35,6 +35,7 @@ var registration = function (req, res) {
             "registration_address": lib.empty(req.body.address)? "" : req.body.address,
             "registration_phone": req.body.phone,
             "registration_email": lib.empty(req.body.email)?"":req.body.email,
+            "registration_password": lib.empty(req.body.password)?"":req.body.password,
             "registration_date" : moment().format("YYYY-MM-DD HH:mm:ss"),
             "store_id": lib.empty(req.body.store_id)?"":req.body.store_id,
             "competition_date": lib.empty(req.body.competition_date)?"":req.body.competition_date,

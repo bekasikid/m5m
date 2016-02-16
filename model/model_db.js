@@ -10,14 +10,14 @@ var pool = null;
 
 var openConn = function () {
     pool = mysql.createPool({
-        //host: "kfc.cbseeyyassm5.ap-southeast-1.rds.amazonaws.com",
-        //user: "fonetix",
-        //password: "Fonetix1pwD",
-        //database: 'kfc',
-        host: 'localhost',
-        database: 'eatntreat',
-        user: 'root',
-        password: '',
+        host: "kfc.cbseeyyassm5.ap-southeast-1.rds.amazonaws.com",
+        user: "fonetix",
+        password: "Fonetix1pwD",
+        database: 'kfc',
+        //host: 'localhost',
+        //database: 'eatntreat',
+        //user: 'root',
+        //password: '',
         port:3306,
         dateStrings: 'date',
         connectionLimit: 400

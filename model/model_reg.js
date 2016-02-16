@@ -89,17 +89,21 @@ var loginConfirmation = function(req,res){
                 });
             }else{
                 delete rows[0].registration_password;
-                rows[0].registration_dob = moment(rows[0].registration_dob).format("YYYY-MM-DD");
-                rows[0].competition_date = moment(rows[0].competition_date).format("YYYY-MM-DD");
-                rows[0].registration_date = moment(rows[0].registration_date).format("YYYY-MM-DD HH:mm:ss");
-                deferred.resolve({
-                    rc : 200,
-                    retval : rows[0]
+                db.execute("SELECT * FROM stores WHERE store_id = ?",[rows[0].store_id]).then(function(rowStore){
+                    var st = {};
+                    if(rowStore.length==1){
+                        var st = rowStore[0];
+                    }
+                    rows[0]['store'] = st;
+                    delete rows[0].store_id;
+                    deferred.resolve({
+                        rc : 200,
+                        retval : rows[0]
+                    });
                 });
             }
         });
     }else{
-        //res.status(400).send({ error: "failed" });
         deferred.resolve({
             rc : 400,
             retval : { error: "registration failed" }
@@ -128,7 +132,8 @@ var confirmation = function(req,res){
         if(req.body.paymentMethod==1){
             //musti di cek antara mereka konfirmasi dulu dengan dapet data settlement duluan dr kfc
             //kalo konfirmasi dulu, maka update table registrasi, dan input table contestant
-            db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ? WHERE registration_code = ?", [req.body.paymentMethod,req.body.reffno,req.body.id]).then(function(row){
+            db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ? WHERE registration_code = ?",
+                [req.body.paymentMethod,req.body.reffno,req.body.id]).then(function(row){
                 if(row.affectedRows==0){
                     //res.status(400).send({ error: "confirmation failed" });
                     deferred.resolve({
@@ -145,7 +150,8 @@ var confirmation = function(req,res){
                 }
             });
         }else if(req.body.paymentMethod==4 || req.body.paymentMethod==5){
-            db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ? WHERE registration_code = ?", [req.body.paymentMethod,req.body.reffno,req.body.id]).then(function(row){
+            db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ? WHERE registration_code = ?",
+                [req.body.paymentMethod,req.body.reffno,req.body.id]).then(function(row){
                 if(row.affectedRows==0){
                     //res.status(400).send({ error: "confirmation failed" });
                     deferred.resolve({

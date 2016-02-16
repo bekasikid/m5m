@@ -107,6 +107,9 @@ app.post("/login",function(req,res){
 app.get("/participants",function(req,res){
 
 });
+app.get("/leaderboard",function(req,res){
+    admin.leaderboard(req,res);
+});
 app.get("/daftar",function(req,res){
     filterModel.validateAdmin(req,res).then(function(retval){
         if(retval.rc==200){
@@ -124,6 +127,17 @@ app.get("/daftar",function(req,res){
     });
 });
 
+app.post("/update-score",function(req,res){
+    //admin.score(req,res);
+    //console.log(re)
+    filterModel.validateAdmin(req,res).then(function(retval){
+        if(retval.rc==200){
+            res.json(req.body);
+        }else{
+            res.send("gagal");
+        }
+    });
+});
 /*master data*/
 app.get("/payment-method",function(req,res){
     reg.paymentMethod(req,res);
@@ -133,6 +147,9 @@ app.get("/stores",function(req,res){
     quotas.getStores(req,res);
 });
 
+app.get("/store-near",function(req,res){
+    admin.nearOutlets(req,res);
+});
 /*
 sms parsing
  */

@@ -19,6 +19,7 @@ var openConn = function () {
         password: "Fonetix1pwD",
         database: 'kfc',
         port:3306,
+        dateStrings: 'date',
         connectionLimit: 400
     });
     return pool;

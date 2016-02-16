@@ -37,7 +37,8 @@ var participants = function (req, res) {
                                store_long: rows[0]['store_long'],
                                store_type: rows[0]['store_type']
                            },
-                           date : moment(rows[0]['quota_date']).format("YYYY-MM-DD"),
+                           //date : moment(rows[0]['quota_date']).format("YYYY-MM-DD"),
+                           date : rows[0]['quota_date'],
                            contestant : []
                        };
                        datas.contestant.push(
@@ -159,6 +160,28 @@ var daftar = function(req,res){
     return deferred.promise;
 };
 
+var leaderboard = function(req,res){
+    db.execute("SELECT * FROM leaderboard ORDER BY competition_date ASC").then(function(rows){
+        res.json(rows);
+    });
+};
+
+var score = function(req,res){
+    db.execute("SELECT * FROM leaderboard ORDER BY competition_date ASC").then(function(rows){
+        res.json(rows);
+    });
+};
+
+var nearOutlets = function(req,res){
+    var deferred = Q.defer();
+    var query = "SELECT *, ( 3959 * ACOS( COS( RADIANS(?) ) * COS( RADIANS( store_lat ) ) * COS( RADIANS( store_long ) - RADIANS(?) ) + SIN( RADIANS(?) ) * SIN( RADIANS( store_lat ) ) ) ) AS distance FROM stores HAVING distance < 25 ORDER BY distance LIMIT 0,20"
+    db.execute(query,[req.body.lat,req.body.lng,req.body.lat]).then(function(rows){
+        deferred.resolve(rows);
+    });
+    return deferred.promise;
+}
 
 module.exports.participants = participants;
 module.exports.daftar = daftar;
+module.exports.leaderboard = leaderboard;
+module.exports.nearOutlets = nearOutlets;

@@ -1,7 +1,5 @@
 /**
  * Created by Andre on 10/02/2016.
- * @TODO : logic pemilihan kota, user ditawarin untuk meng sms balik dalam pilihan kota
- *          kfc#kota#<
  */
 
 var lib = require('./model_library');
@@ -11,7 +9,7 @@ var reg = require("./model_reg")
 var Q = require("q");
 var getIP = require('ipware')().get_ip;
 
-var incomingSms = function(req,res){
+var incomeSms = function(req,res){
     if(!lib.empty(req.query.moid || !lib.empty(req.query.msgid))){
         var sms = {
             "sms_id": lib.empty(req.query.moid)? req.query.msgid: req.query.moid,
@@ -41,10 +39,19 @@ var incomingSms = function(req,res){
                     }
                 });
             }else if (text[1]=="bayar"){
+                var metode = 0;
+                if ($text[3]=='kfc'){
+                    $metode=1;
+                }else if ($text[3]=='mandiri'){
+                    $metode=4;
+                }else if ($text[3]=='bca'){
+                    $metode=5;
+                }
+
                 req.body={
                     id:text[2],
-                    paymentMethod:1,
-                    reffno:text[3]
+                    paymentMethod:$metode,
+                    reffno:text[4]
                 }
                 reg.confirmation(req, res);
             }else if (text[1]=="menang"){
@@ -54,9 +61,9 @@ var incomingSms = function(req,res){
             }
 
             /* parsing dibagi   :1. daftar
-                                 2. cek jadwal
-                                 3. cek pemenang
-            */
+             2. cek jadwal
+             3. cek pemenang
+             */
             //res.json(sms);
         });
     }
@@ -65,6 +72,6 @@ var incomingSms = function(req,res){
 
 /*var responBalik = Function(req,res){
 
-};*/
+ };*/
 
-module.exports.incomingSms = incomingSms;
+module.exports.incomeSms = incomeSms;

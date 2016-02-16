@@ -22,11 +22,8 @@ var registration = function (req, res) {
     //@TODO:check quota dulu sebelum generate
     //@TODO:check peserta apakah sudah menang?
     var deferred = Q.defer();
+    console.log(req.body);
     if(!lib.empty(req.body.nik)){
-        if(!lib.empty(req.body.location)){
-            //must search nearest location and available quotas
-
-        }
         var reg = {
             "registration_nik": req.body.nik,
             "registration_name": req.body.name,
@@ -74,6 +71,28 @@ var registration = function (req, res) {
             retval : { error: "registration failed, data not valid" }
         });
     }
+    return deferred.promise;
+};
+
+var checkLocation = function(req,res){
+    var deferred = Q.defer();
+    qL = "SELECT * FROM stores JOIN quotas ON quotas.store_id=stores.store_id WHERE SOUNDEX(?)= SOUNDEX(store_city) AND quota_space > 0 AND quota_date = ? LIMIT 1";
+    db.execute(qL,[req.body.location,req.body.competition_date]).then(function(rowL){
+        //deferred.resolve(rowL);
+        //console.log(rowL);
+        if(rowL.length==1){
+            req.body['store_id'] = rowL[0].store_id;
+            registration(req,res).then(function(result){
+                deferred.resolve(result);
+            });
+        }else{
+            deferred.resolve({
+                rc : 511,
+                retval : { error: "tidak ada tempat, atau pilihan kota salah" }
+            });
+        }
+
+    });
     return deferred.promise;
 };
 
@@ -352,6 +371,8 @@ var rek = function(i){
 
 };
 
+
+module.exports.checkLocation = checkLocation;
 module.exports.regOnline = regOnline;
 module.exports.registration = registration;
 module.exports.loginConfirmation = loginConfirmation;

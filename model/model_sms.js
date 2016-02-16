@@ -5,13 +5,14 @@
 var lib = require('./model_library');
 var db = require("./model_db");
 var moment = require("moment");
-var reg = require("./model_reg")
+var reg = require("./model_reg");
+var qs = require("querystring");
 var Q = require("q");
 var getIP = require('ipware')().get_ip;
 
-var incomeSms = function(req,res){
+var incomingSms  = function(req,res){
     if(!lib.empty(req.query.moid || !lib.empty(req.query.msgid))){
-        var sms = {
+        var smsRow = {
             "sms_id": lib.empty(req.query.moid)? req.query.msgid: req.query.moid,
             "sms_from": req.query.from,
             "sms_text": req.query.text,
@@ -19,23 +20,24 @@ var incomeSms = function(req,res){
             "sms_telcoid": req.query.telcoid,
             "sms_shortCode": req.query.shortcode
         };
-        db.execute("INSERT INTO sms_receive SET ?", sms).then(function(row){
-            var text = sms.sms_text.split("#");
-            sms["text"] = text;
-            console.log(text);
+        db.execute("INSERT INTO sms_receive SET ?", smsRow).then(function(row){
+            var words = smsRow.sms_text.toLowerCase();
+            var text = words.split("#")
             if (text[1]== "daftar"){
+                var compDate = text[5].split("/");
                 req.body={
                     nik:text[2],
                     name:text[3],
-                    phone : sms.sms_from,
-                    store_id:1,
-                    competition_date:text[5]
+                    phone : smsRow.sms_from,
+                    store_id:"0345",
+                    competition_date: compDate[2]+"-"+compDate[1]+"-"+compDate[0]
                 }
-                console.log(req.body);
                 reg.registration(req, res).then(function(result){
+                    //console.log(result);
                     if (result.rc==200){
                         //panggil function reply sms
-
+                        var kata = "NO REG "+result.retval.id+". Bayar ke BCA 7060013697 Mandiri 1200002132200 Rp. "+lib.number_format(result.retval.fee,0,",",".")+" atau ke KFC terdekat. Info, syarat & ket hub 08551555025 atau www.eatortreat.id"
+                        res.send("4 "+responseSMS(req.query.from,kata,1000));
                     }
                 });
             }else if (text[1]=="bayar"){
@@ -53,9 +55,16 @@ var incomeSms = function(req,res){
                     paymentMethod:$metode,
                     reffno:text[4]
                 }
-                reg.confirmation(req, res);
+                reg.confirmation(req, res).then(function(result){
+                    console.log(result);
+                    if (result.rc==200){
+                        //panggil function reply sms
+                        var kata = "NO REG "+result.retval.id+". Bayar ke BCA 7060013697 Mandiri 1200002132200 Rp. "+lib.number_format(result.retval.fee,0,",",".")+" atau ke KFC terdekat. Info, syarat & ket hub 08551555025 atau www.eatortreat.id"
+                        res.send("4 "+responseSMS(req.query.from,kata,1000));
+                    }
+                });
             }else if (text[1]=="menang"){
-                res.json(sms);
+                res.json(smsRow);
             }else{
 
             }
@@ -70,8 +79,13 @@ var incomeSms = function(req,res){
 
 };
 
+var responseSMS = function(to,textResponse,price){
+    retval = "0,"+to+","+qs.escape(textResponse)+","+"1000";
+    return retval;
+}
+
 /*var responBalik = Function(req,res){
 
  };*/
 
-module.exports.incomeSms = incomeSms;
+module.exports.incomingSms  = incomingSms;

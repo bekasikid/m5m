@@ -23,12 +23,10 @@ var registration = function (req, res) {
     //@TODO:check peserta apakah sudah menang?
     var deferred = Q.defer();
     if(!lib.empty(req.body.nik)){
-
         if(!lib.empty(req.body.location)){
             //must search nearest location and available quotas
 
         }
-
         var reg = {
             "registration_nik": req.body.nik,
             "registration_name": req.body.name,
@@ -40,10 +38,12 @@ var registration = function (req, res) {
             "registration_date" : moment().format("YYYY-MM-DD HH:mm:ss"),
             "store_id": lib.empty(req.body.store_id)?"":req.body.store_id,
             "competition_date": lib.empty(req.body.competition_date)?"":req.body.competition_date,
+            "registration_gcm": lib.empty(req.body.gcm)?"":req.body.gcm,
             "created_date": moment().format("YYYY-MM-DD HH:mm:ss"),
             "updated_date": moment().format("YYYY-MM-DD HH:mm:ss")
         };
         db.execute("INSERT INTO registrations SET ?", reg).then(function(row){
+            console.log(row);
             if(row.insertId>0){
                 retval = req.body;
                 retval['fee'] = fee + lib.generateFee(row.insertId);
@@ -65,13 +65,13 @@ var registration = function (req, res) {
         },function(){
             deferred.resolve({
                 rc : 400,
-                retval : { error: "registration failed" }
+                retval : { error: "registration failed, not insert" }
             });
         });
     }else{
         deferred.resolve({
             rc : 400,
-            retval : { error: "registration failed" }
+            retval : { error: "registration failed, data not valid" }
         });
     }
     return deferred.promise;
@@ -214,6 +214,40 @@ var status = function(req,res){
     });
 };
 
+var statusReg = function(req,res){
+    var query = "SELECT * FROM registrations " +
+        "LEFT JOIN stores ON registrations.store_id=stores.store_id " +
+        "where registrations.registration_code= ?";
+    db.execute(query,[req.params.id]).then(function(rows){
+        if(rows.length==1){
+            var row ={
+                id : req.params.id,
+                nik : rows[0]['registration_nik'],
+                name : rows[0]['registration_name'],
+                store : {
+                    store_id: rows[0]['store_id'],
+                    store_name: rows[0]['store_name'],
+                    store_address: rows[0]['store_address'],
+                    store_city: rows[0]['store_city'],
+                    store_province: rows[0]['store_province'],
+                    store_lat: rows[0]['store_lat'],
+                    store_long: rows[0]['store_long'],
+                    store_type: rows[0]['store_type']
+                },
+                payment : rows[0]['method_id'],
+                payment_name : rows[0]['payment_from'],
+                reffno : rows[0]['payment_reffno'],
+                competition_date : rows[0]['competition_date'],
+                paid : rows[0]['registration_confirmation'],
+                valid : rows[0]['registration_valid']
+            };
+            res.json(row);
+        }else{
+            res.status(400).send({ error: "contestant not registered" });
+        }
+    });
+};
+
 var history = function(req,res){
     if(!lib.empty(req.query.id)){
         var query = "SELECT * FROM contestants " +
@@ -326,4 +360,5 @@ module.exports.confirmation = confirmation;
 module.exports.paymentMethod = paymentMethod;
 module.exports.rek = rek;
 module.exports.status = status;
+module.exports.statusReg = statusReg;
 module.exports.history = history;

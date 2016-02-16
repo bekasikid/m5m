@@ -8,6 +8,8 @@ var app = express();
 //var db = require("./model/model_db");
 var lib = require("./model/model_library");
 var admin = require("./model/model_admin");
+var sms = require("./model/model_sms");
+var qs = require("querystring");
 var reg = require("./model/model_reg");
 var filterModel = require("./model/model_filter");
 var quotas = require("./model/model_quotas");
@@ -22,11 +24,11 @@ app.use(cors());
 
 /*untuk server trx*/
 app.get('/', function(req, res){
-    var iseng = {
-        baru : 0
-    };
-    console.log(lib.empty(iseng.lama));
-    res.send(lib.sha1('hello world'));
+    //var iseng = {
+    //    baru : 0
+    //};
+    //console.log(lib.empty(iseng.lama));
+    res.send(qs.escape("hallo gw ainul keren"));
 });
 
 app.get("/generate",function(req,res){
@@ -75,6 +77,10 @@ app.post("/login-payment",function(req,res){
 
 app.get("/status/:id",function(req,res){
     reg.status(req,res);
+});
+
+app.get("/status-register/:id",function(req,res){
+    reg.statusReg(req,res);
 });
 
 app.get("/history",function(req,res){

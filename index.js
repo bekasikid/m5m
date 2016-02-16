@@ -147,7 +147,7 @@ app.get("/stores",function(req,res){
     quotas.getStores(req,res);
 });
 
-app.post("/stores-near",function(req,res){
+app.get("/stores-near",function(req,res){
     admin.nearOutlets(req,res);
 });
 /*

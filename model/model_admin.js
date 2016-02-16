@@ -175,7 +175,7 @@ var score = function(req,res){
 var nearOutlets = function(req,res){
     //var deferred = Q.defer();
     var query = "SELECT *, ( 3959 * ACOS( COS( RADIANS(?) ) * COS( RADIANS( store_lat ) ) * COS( RADIANS( store_long ) - RADIANS(?) ) + SIN( RADIANS(?) ) * SIN( RADIANS( store_lat ) ) ) ) AS distance FROM stores HAVING distance < 25 ORDER BY distance LIMIT 0,20"
-    db.execute(query,[req.body.lat,req.body.lng,req.body.lat]).then(function(rows){
+    db.execute(query,[req.query.lat,req.query.lng,req.query.lat]).then(function(rows){
         //console.log(rows);
         //deferred.resolve(rows);
         res.json(rows);

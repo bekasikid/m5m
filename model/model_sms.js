@@ -30,36 +30,47 @@ var incomingSms  = function(req,res){
             var words = smsRow.sms_text.toLowerCase();
             var n = str.search("#");
             var valid = 0;
+            keyword = words.substr(0,4).substr(0,3);
+            formatSms = "kfc#"+words.substr(4).trim();
+            words = formatSms;
+
             if(n>0){
                 valid = 1;
                 var text = words.split("#");
             }else{
                 var text = words.split(" ");
             }
+
             if(valid){
-                var kata = "Pendaftaran ketik KFC#DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
+                var kata = "Pendaftaran ketik KFC DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
                 res.send("4 "+responseSMS(req.query.from,kata,500));
             }else{
                 if (text[1]== "daftar"){
-                    var compDate = text[5].split("/");
-                    req.body={
-                        nik:text[2],
-                        name:text[3],
-                        phone : smsRow.sms_from,
-                        location:text[4],
-                        competition_date: compDate[2]+"-"+compDate[1]+"-"+compDate[0]
-                    };
-                    console.log(req.body);
-                    reg.checkLocation(req, res).then(function(result){
-                        if (result.rc==200){
-                            //var kata = "NO REG "+result.retval.id+". Bayar ke BCA 7060013697 Mandiri 1200002132200 Rp. "+lib.number_format(result.retval.fee,0,",",".")+" atau ke KFC terdekat. Info, syarat & ket hub 08551555025 atau www.eatortreat.id";
-                            var kata = "NO REG "+result.retval.id+". Bayar ke BCA "+rekBCA+" Mandiri "+rekMandiri+" Rp. "+lib.number_format(result.retval.fee,0,",",".")+" atau ke KFC terdekat. Info, syarat & ket hub "+callCenter+" atau "+domainWeb;
-                            res.send("4 "+responseSMS(req.query.from,kata,1000));
-                        }else if (result.rc==511){
-                            var kata = "Format salah. Info, syarat & ket hub "+callCenter+" atau "+domainWeb;
-                            res.send("4 "+responseSMS(req.query.from,kata,500));
-                        }
-                    });
+                    if(!lib.empty(text[2])){
+                        var compDate = text[5].split("/");
+                        req.body={
+                            nik:text[2],
+                            name:text[3],
+                            phone : smsRow.sms_from,
+                            location:text[4],
+                            competition_date: compDate[2]+"-"+compDate[1]+"-"+compDate[0]
+                        };
+                        console.log(req.body);
+                        reg.checkLocation(req, res).then(function(result){
+                            if (result.rc==200){
+                                //var kata = "NO REG "+result.retval.id+". Bayar ke BCA 7060013697 Mandiri 1200002132200 Rp. "+lib.number_format(result.retval.fee,0,",",".")+" atau ke KFC terdekat. Info, syarat & ket hub 08551555025 atau www.eatortreat.id";
+                                var kata = "NO REG "+result.retval.id+". Bayar ke BCA "+rekBCA+" Mandiri "+rekMandiri+" Rp. "+lib.number_format(result.retval.fee,0,",",".")+" atau ke KFC terdekat. Info, syarat & ket hub "+callCenter+" atau "+domainWeb;
+                                res.send("4 "+responseSMS(req.query.from,kata,1000));
+                            }else if (result.rc==511){
+                                var kata = "Format salah. Info, syarat & ket hub "+callCenter+" atau "+domainWeb;
+                                res.send("4 "+responseSMS(req.query.from,kata,500));
+                            }
+                        });
+                    }else{
+                        var kata = "Pendaftaran ketik KFC DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
+                        res.send("4 "+responseSMS(req.query.from,kata,5000));
+                    }
+
                 }else if (text[1]=="bayar"){
                     var metode = 0;
                     if ($text[3]=='kfc'){
@@ -71,7 +82,7 @@ var incomingSms  = function(req,res){
                     }
 
                     if(metode==0){
-                        var kata = "Pembayaran ketik KFC#BAYAR#(NO REG)#MANDIRI/BCA/KFC#NO STRUK kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
+                        var kata = "Pembayaran ketik KFC BAYAR#(NO REG)#MANDIRI/BCA/KFC#NO STRUK kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
                         res.send("4 "+responseSMS(req.query.from,kata,500));
                     }else{
                         req.body={
@@ -92,7 +103,7 @@ var incomingSms  = function(req,res){
                 }else if (text[1]=="menang"){
                     res.json(smsRow);
                 }else if (text[1]=="cara"){
-                    var kata = "Pendaftaran ketik KFC#DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
+                    var kata = "Pendaftaran ketik KFC DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
                     res.send("4 "+responseSMS(req.query.from,kata,5000));
                 }else{
                     var kata = "Pendaftaran ketik KFC#DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;

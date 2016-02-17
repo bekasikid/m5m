@@ -14,10 +14,10 @@ var getStores = function(req,res){
     var rows = [];
     //var where = {};
     var w = [];
-    var where = "";
+    var where = " store_runner = 1 ";
     if(!lib.empty(req.query.city)){
         w.push(req.query.city);
-        where =" store_city = ? ";
+        where +=" AND store_city = ? ";
     }
     if(!lib.empty(req.query.province)){
         w.push(req.query.province);

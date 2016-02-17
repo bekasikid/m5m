@@ -169,8 +169,11 @@ app.get("/sms-receive",function(req,res){
     sms.incomingSms(req,res);
 });
 
-app.post("sms-register",function(req,res){
-    reg.checkLocation(req,res);
+app.post("/sms-register",function(req,res){
+    console.log(req.headers);
+    reg.checkLocation(req,res).then(function(result){
+        res.json(result);
+    });
 });
 
 app.listen(process.env.PORT || 3000);

@@ -161,13 +161,33 @@ var daftar = function(req,res){
 };
 
 var leaderboard = function(req,res){
-    db.execute("SELECT * FROM leaderboard ORDER BY competition_date ASC").then(function(rows){
-        res.json(rows);
+    db.execute("SELECT * FROM leaderboard " +
+        "JOIN competitions ON leaderboard.competition_id = competitions.competition_id " +
+        "JOIN contestants ON competitions.contestant_id=contestants.contestant_id " +
+        "JOIN quotas ON quotas.quota_id=competitions.quota_id " +
+        "JOIN stores ON stores.store_id=quotas.store_id " +
+        "ORDER BY competition_date ASC").then(function(rows){
+        var tables = [];
+        for(i=0;i<rows.length;i++){
+            tables.push({
+                "store_id" : rows[i].store_id,
+                "store" : rows[i].store_name,
+                "name" : rows[i].contestant_name,
+                "score" : rows[i].competition_score,
+            });
+        }
+        res.json(tables);
     });
 };
 
 var score = function(req,res){
-    db.execute("SELECT * FROM leaderboard ORDER BY competition_date ASC").then(function(rows){
+    db.execute("SELECT * FROM leaderboard " +
+        "JOIN competitions ON leaderboard.competition_id = competitions.competition_id " +
+        "JOIN contestants ON competitions.contestant_id=contestants.contestant_id " +
+        "JOIN quotas ON quotas.quota_id=competitions.quota_id " +
+        "JOIN stores ON stores.store_id=quotas.store_id " +
+        "ORDER BY competition_date ASC").then(function(rows){
+
         res.json(rows);
     });
 };

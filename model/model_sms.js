@@ -47,7 +47,8 @@ var incomingSms  = function(req,res){
                     console.log(req.body);
                     reg.checkLocation(req, res).then(function(result){
                         if (result.rc==200){
-                            var kata = "NO REG "+result.retval.id+". Bayar ke BCA 7060013697 Mandiri 1200002132200 Rp. "+lib.number_format(result.retval.fee,0,",",".")+" atau ke KFC terdekat. Info, syarat & ket hub 08551555025 atau www.eatortreat.id";
+                            //var kata = "NO REG "+result.retval.id+". Bayar ke BCA 7060013697 Mandiri 1200002132200 Rp. "+lib.number_format(result.retval.fee,0,",",".")+" atau ke KFC terdekat. Info, syarat & ket hub 08551555025 atau www.eatortreat.id";
+                            var kata = "NO REG "+result.retval.id+". Bayar ke BCA 2767022707 Mandiri 1200002132200 Rp. "+lib.number_format(result.retval.fee,0,",",".")+" atau ke KFC terdekat. Info, syarat & ket hub 08551555025 atau www.eatortreat.id";
                             res.send("4 "+responseSMS(req.query.from,kata,1000));
                         }else if (result.rc==511){
                             var kata = "Format salah. Info, syarat & ket hub 08551555025 atau www.eatortreat.id";

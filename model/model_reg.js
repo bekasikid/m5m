@@ -196,6 +196,7 @@ var confirmation = function(req,res){
             //kalo konfirmasi dulu, maka update table registrasi, dan input table contestant
             db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ? WHERE registration_code = ?",
                 [req.body.paymentMethod,req.body.reffno,req.body.id]).then(function(row){
+                console.log(row);
                 if(row.affectedRows==0){
                     //res.status(400).send({ error: "confirmation failed" });
                     deferred.resolve({

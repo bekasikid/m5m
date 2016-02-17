@@ -44,14 +44,18 @@ app.post("/registration",function(req,res){
 });
 
 app.post("/confirmation",function(req,res){
-    reg.confirmation(req,res);
+    reg.confirmation(req,res).then(function(result){
+        res.json(result.retval);
+    });
 });
 
 app.post("/confirmation-mobile",function(req,res){
     //id + "\n" + method + "\n" + body + "\n" + date
     filterModel.validateReq(req,res).then(function(retval){
         if(retval==200){
-            reg.confirmation(req,res);
+            reg.confirmation(req,res).then(function(result){
+                res.json(result.retval);
+            });
         } else{
             res.status(401).send({ error: "Unauthorized" });
         }
@@ -163,6 +167,10 @@ sms parsing
 
 app.get("/sms-receive",function(req,res){
     sms.incomingSms(req,res);
+});
+
+app.post("sms-register",function(req,res){
+    reg.checkLocation(req,res);
 });
 
 app.listen(process.env.PORT || 3000);

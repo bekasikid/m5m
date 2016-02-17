@@ -116,6 +116,7 @@ app.get("/participants",function(req,res){
 app.get("/leaderboard",function(req,res){
     admin.leaderboard(req,res);
 });
+
 app.get("/daftar",function(req,res){
     filterModel.validateAdmin(req,res).then(function(retval){
         if(retval.rc==200){

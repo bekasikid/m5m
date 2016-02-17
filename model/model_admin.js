@@ -160,13 +160,13 @@ var daftar = function(req,res){
     return deferred.promise;
 };
 
-var leaderboard = function(req,res){
-    db.execute("SELECT * FROM leaderboard " +
-        "JOIN competitions ON leaderboard.competition_id = competitions.competition_id " +
+var scores = function(req,res){
+    db.execute("SELECT * FROM competitions " +
         "JOIN contestants ON competitions.contestant_id=contestants.contestant_id " +
         "JOIN quotas ON quotas.quota_id=competitions.quota_id " +
         "JOIN stores ON stores.store_id=quotas.store_id " +
-        "ORDER BY competition_date ASC").then(function(rows){
+        "WHERE quotas.quota_date = ?" +
+        "ORDER BY competitions.competition_score ASC",[req.query.date]).then(function(rows){
         var tables = [];
         for(i=0;i<rows.length;i++){
             tables.push({
@@ -174,23 +174,40 @@ var leaderboard = function(req,res){
                 "store" : rows[i].store_name,
                 "name" : rows[i].contestant_name,
                 "score" : rows[i].competition_score,
+                "competition" : req.query.date,
             });
         }
         res.json(tables);
     });
 };
 
-var score = function(req,res){
-    db.execute("SELECT * FROM leaderboard " +
-        "JOIN competitions ON leaderboard.competition_id = competitions.competition_id " +
-        "JOIN contestants ON competitions.contestant_id=contestants.contestant_id " +
-        "JOIN quotas ON quotas.quota_id=competitions.quota_id " +
-        "JOIN stores ON stores.store_id=quotas.store_id " +
-        "ORDER BY competition_date ASC").then(function(rows){
+var leaderboard = function(req,res){
+    if(!lib.empty(req.query.date)){
+        scores(req,res);
+    }else{
+        db.execute("SELECT * FROM leaderboard " +
+            "JOIN competitions ON leaderboard.competition_id = competitions.competition_id " +
+            "JOIN contestants ON competitions.contestant_id=contestants.contestant_id " +
+            "JOIN quotas ON quotas.quota_id=competitions.quota_id " +
+            "JOIN stores ON stores.store_id=quotas.store_id " +
+            "ORDER BY competition_date ASC").then(function(rows){
+            var tables = [];
+            for(i=0;i<rows.length;i++){
+                tables.push({
+                    "store_id" : rows[i].store_id,
+                    "store" : rows[i].store_name,
+                    "name" : rows[i].contestant_name,
+                    "score" : rows[i].competition_score,
+                    "competition" : rows[i].competition_date,
+                });
+            }
+            res.json(tables);
+        });
+    }
 
-        res.json(rows);
-    });
 };
+
+
 
 var nearOutlets = function(req,res){
     //var deferred = Q.defer();

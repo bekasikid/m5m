@@ -18,8 +18,37 @@ var regOnline = function(req,res){
     });
 };
 
+var checkQuotas = function(store,tgl,sess){
+    var deferred = Q.defer();
+    //var sess = 1;
+    db.execute("UPDATE quotas SET quota_space=quota_space-1 WHERE store_id = ? AND quota_date = ? AND quota_session = ?",
+    [store,tgl,sess]).then(function(result){
+        if(result.affectedRows==1){
+            //console.log(result);
+            var kembalian = {
+                rc:200,
+                store_id : store,
+                quota_date : tgl,
+                quota_session : sess
+            };
+            console.log(kembalian);
+            deferred.resolve(kembalian);
+        }else if(sess==7){
+            deferred.resolve({rc:510});
+        }else{
+            sess++;
+            checkQuotas(store,tgl,sess).then(function(hasil){
+                deferred.resolve(hasil);
+            });
+
+        }
+    });
+    return deferred.promise;
+};
+
 var registration = function (req, res) {
     //@TODO:check quota dulu sebelum generate
+    //@TODO : potong quota
     //@TODO:check peserta apakah sudah menang?
     var deferred = Q.defer();
     console.log(req.body);
@@ -47,10 +76,24 @@ var registration = function (req, res) {
                 var uniquecode = lib.uniqueCode(row.insertId);
                 retval['id'] = uniquecode;
                 db.execute("UPDATE registrations SET registration_code = ? WHERE registration_id = ?",[uniquecode,row.insertId]).then(function(){
-                    deferred.resolve({
-                        rc : 200,
-                        retval : retval
+                    checkQuotas(req.body.store_id,req.body.competition_date,1).then(function(retQ){
+                        console.log(retQ);
+                        if(retQ.rc==200){
+                            db.execute("UPDATE registrations SET competition_session = ? WHERE registration_id = ?",[retQ.quota_session,row.insertId]).then(function(){
+                                deferred.resolve({
+                                    rc : 200,
+                                    retval : retval
+                                });
+                            });
+                        }else{
+                            deferred.resolve({
+                                rc : 400,
+                                retval : { error: "quota not available" }
+                            });
+                        }
+
                     });
+
                 });
 
             }else{

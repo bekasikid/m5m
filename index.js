@@ -57,7 +57,7 @@ app.post("/confirmation-mobile",function(req,res){
                 res.json(result.retval);
             });
         } else{
-            res.status(401).send({ error: "Unauthorized" });
+            res.status(401).send({ code : 401 , message: "Unauthorized" });
         }
     });
 });
@@ -66,15 +66,15 @@ app.post("/login-payment",function(req,res){
     filterModel.validateReq(req,res).then(function(retval){
         if(retval==200){
             reg.loginConfirmation(req,res).then(function(row){
-                console.log(row);
+                //console.log(row);
                 if(row.rc==200){
                     res.json(row.retval);
                 }else{
-                    res.status(401).send({ error: "Unauthorized" });
+                    res.status(401).send({ code : 401 , message: "Unauthorized" });
                 }
             });
         } else{
-            res.status(401).send({ error: "Unauthorized" });
+            res.status(401).send({ code : 401 , message: "Unauthorized" });
         }
     });
 });
@@ -107,9 +107,10 @@ app.get("/quota/:id/:dt",function(req,res){
 app.post("/login",function(req,res){
     filterModel.validateAdmin(req,res).then(function(retval){
         if(retval.rc==200){
-            res.json(retval.row);
+            //res.json(retval.row);
+            res.json({ code : 200, message: "success",data:retval.row});
         } else{
-            res.status(401).send({ error: "Unauthorized" });
+            res.status(401).send({ code : 401, message: "unauthorized"});
         }
     });
 });

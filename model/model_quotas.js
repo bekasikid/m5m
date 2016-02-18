@@ -27,7 +27,8 @@ var getStores = function(req,res){
     q = "SELECT * FROM stores";
     if(!lib.empty(where)) { q += " WHERE "+where}
     db.execute(q,w).then(function(rows){
-        res.json(rows);
+        //res.json(rows);
+        res.json({ code : 200, message: "success",data:rows});
     });
 };
 
@@ -39,7 +40,7 @@ getCities = function(req,res){
         params = [req.query.province];
     }
     db.execute(query,params).then(function(rows){
-        res.json(rows);
+        res.json({ code : 200, message: "success",data:rows});
     });
 };
 
@@ -47,7 +48,7 @@ var getQuotas = function(req,res){
     db.execute("SELECT * FROM stores where store_id = '"+req.params.id+"'").then(function(rows){
         if(rows.length==0){
             res.json({
-                rc : "20",
+                code : "400",
                 message : "no data"
             });
         }else{
@@ -58,7 +59,8 @@ var getQuotas = function(req,res){
                 }else{
                     rows[0]['session'] = rowsSession;
                 }
-                res.json(rows[0]);
+                //res.json(rows[0]);
+                res.json({ code : 200, message: "success",data:rows[0]});
             });
 
         }

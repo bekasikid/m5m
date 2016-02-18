@@ -82,13 +82,20 @@ var registration = function (req, res) {
                             db.execute("UPDATE registrations SET competition_session = ? WHERE registration_id = ?",[retQ.quota_session,row.insertId]).then(function(){
                                 deferred.resolve({
                                     rc : 200,
-                                    retval : retval
+                                    retval : {
+                                        code:200,
+                                        message : "success",
+                                        data:retval
+                                    }
                                 });
                             });
                         }else{
                             deferred.resolve({
                                 rc : 400,
-                                retval : { error: "quota not available" }
+                                retval : {
+                                    code : 400,
+                                    message: "quota not available"
+                                }
                             });
                         }
 
@@ -99,19 +106,28 @@ var registration = function (req, res) {
             }else{
                 deferred.resolve({
                     rc : 400,
-                    retval : { error: "registration failed" }
+                    retval : {
+                        code : 400,
+                        message: "registration failed"
+                    }
                 });
             }
         },function(){
             deferred.resolve({
                 rc : 400,
-                retval : { error: "registration failed, not insert" }
+                retval : {
+                    code : 400,
+                    message: "registration failed"
+                }
             });
         });
     }else{
         deferred.resolve({
             rc : 400,
-            retval : { error: "registration failed, data not valid" }
+            retval : {
+                code : 400,
+                message: "registration failed, data not valid"
+            }
         });
     }
     return deferred.promise;
@@ -147,7 +163,7 @@ var loginConfirmation = function(req,res){
             if(rows.length==0){
                 deferred.resolve({
                     rc : 400,
-                    retval : { error: "login failed" }
+                    retval : { code : 400, message: "login failed" }
                 });
             }else{
                 delete rows[0].registration_password;
@@ -160,7 +176,7 @@ var loginConfirmation = function(req,res){
                     delete rows[0].store_id;
                     deferred.resolve({
                         rc : 200,
-                        retval : rows[0]
+                        retval : { code : 400, message: "login failed", data : rows[0]}
                     });
                 });
             }
@@ -168,7 +184,7 @@ var loginConfirmation = function(req,res){
     }else{
         deferred.resolve({
             rc : 400,
-            retval : { error: "registration failed" }
+            retval : { code : 400, message: "registration failed" }
         });
     }
     return deferred.promise;
@@ -201,14 +217,18 @@ var confirmation = function(req,res){
                     //res.status(400).send({ error: "confirmation failed" });
                     deferred.resolve({
                         rc : 400,
-                        retval : { error: "registration failed" }
+                        retval : { code : 400, message: "registration failed" }
                     });
                 }else{
                     //res.json(req.body);
                     //@TODO : musti tambahin no peserta
                     deferred.resolve({
                         rc : 200,
-                        retval : req.body
+                        retval : {
+                            code : 200,
+                            message : "success",
+                            data : req.body
+                        }
                     });
                 }
             });
@@ -219,15 +239,17 @@ var confirmation = function(req,res){
                     //res.status(400).send({ error: "confirmation failed" });
                     deferred.resolve({
                         rc : 400,
-                        retval : { error: "registration failed" }
+                        retval : { code : 400, message: "registration failed" }
                     });
                 }else{
-                    //res.json(req.body);
-                    //res.json(req.body);
                     //@TODO : musti tambahin no peserta
                     deferred.resolve({
                         rc : 200,
-                        retval : req.body
+                        retval : {
+                            code : 200,
+                            message : "success",
+                            data : req.body
+                        }
                     });
                 }
             });
@@ -238,7 +260,7 @@ var confirmation = function(req,res){
         //res.status(400).send({ error: "failed" });
         deferred.resolve({
             rc : 400,
-            retval : { error: "registration failed" }
+            retval : { code : 400, message: "registration failed" }
         });
     }
     return deferred.promise;
@@ -270,9 +292,9 @@ var status = function(req,res){
                 competition_date : moment(rows[0]['quota_date']).format("YYYY-MM-DD"),
                 competition_session : rows[0]['quota_session'],
             };
-            res.json(row);
+            res.json({ code : 200, message: "success",data:row});
         }else{
-            res.status(400).send({ error: "contestant not registered" });
+            res.status(400).send({ code : 400, message: "contestant not registered" });
         }
     });
 };
@@ -304,9 +326,9 @@ var statusReg = function(req,res){
                 paid : rows[0]['registration_confirmation'],
                 valid : rows[0]['registration_valid']
             };
-            res.json(row);
+            res.json({ code : 200, message: "success",data:row});
         }else{
-            res.status(400).send({ error: "contestant not registered" });
+            res.status(400).send({ code : 400, message: "contestant not registered" });
         }
     });
 };
@@ -346,9 +368,9 @@ var history = function(req,res){
                     ],
 
                 };
-                res.json(row);
+                res.json({ code : 200, message: "success",data:row});
             }else{
-                res.status(400).send({ error: "contestant not registered" });
+                res.status(400).send({ code : 200, message: "contestant not registered" });
             }
         });
     }else if(!lib.empty(req.query.nik)){
@@ -388,7 +410,7 @@ var history = function(req,res){
                             name : rows[0]['contestant_name'],
                             histories : competitions
                         };
-                        res.json(row);
+                        res.json({ code : 200, message: "success",data:row});
                     }
                 });
             }
@@ -399,7 +421,7 @@ var history = function(req,res){
 var paymentMethod = function(req,res){
     var rows = [];
     db.execute("SELECT * FROM payment_method where method_active = 1").then(function(rows){
-        res.json(rows);
+        res.json({ code : 200, message: "success",data:rows});
     });
 };
 

@@ -51,9 +51,10 @@ var participants = function (req, res) {
                        );
                    }
                }
-               res.json(datas);
+               //res.json(datas);
+               res.json({ code : 200, message: "success",data:datas});
            }else{
-               res.status(400).send({ error: "data not found" });
+               res.json({ code : 400, message: "data not found"});
            }
         });
     }
@@ -82,7 +83,8 @@ var participants = function (req, res) {
         ],
 
     };
-    res.json(row);
+    //res.json(row);
+    res.json({ code : 200, message: "success",data:row});
 };
 
 var daftar = function(req,res){
@@ -177,7 +179,8 @@ var scores = function(req,res){
                 "competition" : req.query.date,
             });
         }
-        res.json(tables);
+        //res.json(tables);
+        res.json({ code : 200, message: "success",data:tables});
     });
 };
 
@@ -201,7 +204,8 @@ var leaderboard = function(req,res){
                     "competition" : rows[i].competition_date,
                 });
             }
-            res.json(tables);
+            //res.json(tables);
+            res.json({ code : 200, message: "success",data:tables});
         });
     }
 
@@ -215,7 +219,8 @@ var nearOutlets = function(req,res){
     db.execute(query,[req.query.lat,req.query.lng,req.query.lat]).then(function(rows){
         //console.log(rows);
         //deferred.resolve(rows);
-        res.json(rows);
+        //res.json(rows);
+        res.json({ code : 200, message: "success",data:rows});
     });
     //return deferred.promise;
 }

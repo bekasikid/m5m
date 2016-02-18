@@ -176,7 +176,7 @@ var loginConfirmation = function(req,res){
                     delete rows[0].store_id;
                     deferred.resolve({
                         rc : 200,
-                        retval : { code : 400, message: "login failed", data : rows[0]}
+                        retval : { code : 200, message: "success", data : rows[0]}
                     });
                 });
             }

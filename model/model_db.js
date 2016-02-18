@@ -38,6 +38,7 @@ var execute = function (query, row) {
         connPool.query(query, row, function (err, rows) {
             connPool.destroy();
             if (err) {
+                console.log(err);
                 deferred.reject(err);
             } else {
                 deferred.resolve(rows);

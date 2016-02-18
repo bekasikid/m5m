@@ -13,7 +13,8 @@ var qs = require("querystring");
 var reg = require("./model/model_reg");
 var filterModel = require("./model/model_filter");
 var quotas = require("./model/model_quotas");
-var cors = require('cors')
+var cors = require('cors');
+var getIP = require('ipware')().get_ip;
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // for parsing application/json
@@ -167,7 +168,14 @@ sms parsing
  */
 
 app.get("/sms-receive",function(req,res){
-    sms.incomingSms(req,res);
+    //202.158.19.226
+    var ip = getIP(req);
+    if(ip.clientIp == "202.158.19.226"){
+        sms.incomingSms(req,res);
+    }else{
+        res.status(401).send({ code : 401, message: "unauthorized"});
+    }
+
 });
 
 app.post("/sms-register",function(req,res){

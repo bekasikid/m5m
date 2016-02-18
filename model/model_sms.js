@@ -9,7 +9,7 @@ var reg = require("./model_reg");
 var qs = require("querystring");
 var Q = require("q");
 var getIP = require('ipware')().get_ip;
-var domainWeb ="www.eatortreat.id";
+var domainWeb ="www.menang5miliar.com";
 var callCenter = "08551555025";
 var rekBCA = "";
 var rekMandiri = "";
@@ -99,6 +99,9 @@ var incomingSms  = function(req,res){
                             if (result.rc==200){
                                 //panggil function reply sms
                                 var kata = "NO REG "+result.retval.id+". Bayar ke BCA "+rekBCA+" Mandiri "+rekMandiri+" Rp. "+lib.number_format(result.retval.fee,0,",",".")+" atau ke KFC terdekat. Info, syarat & ket hub "+callCenter+" atau "+domainWeb;
+                                res.send("4 "+responseSMS(req.query.from,kata,1000));
+                            }else{
+                                var kata = "Konfirmasi pembayaran tidak berhasil. Hub "+callCenter+" atau "+domainWeb;
                                 res.send("4 "+responseSMS(req.query.from,kata,1000));
                             }
                         });

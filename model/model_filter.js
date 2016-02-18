@@ -17,19 +17,24 @@ var validateReq = function(req,res){
     db.execute("SELECT * FROM registrations WHERE registration_code = ?",[req.body.id]).then(function(rows){
         //console.log(rows[0]);
         if(rows.length==1){
-            var sign = lib.hmacSha1(rows[0].registration_code+"\n"+rows[0].registration_password+"\n"+req.method+"\n"+JSON.stringify(req.body),key);
-            var auth = req.headers.authorization.split(" ");
-            var username = auth[1].split(":");
-            if(username[0]!==rows[0].registration_code){
-                deferred.resolve(401);
-            }else{
-                console.log(username[1]+"||"+sign);
-                if(username[1]==sign){
-                    deferred.resolve(200);
-                }else{
+            if(!lib.empty(req.headers.authorization)){
+                var sign = lib.hmacSha1(rows[0].registration_code+"\n"+rows[0].registration_password+"\n"+req.method+"\n"+JSON.stringify(req.body),key);
+                var auth = req.headers.authorization.split(" ");
+                var username = auth[1].split(":");
+                if(username[0]!==rows[0].registration_code){
                     deferred.resolve(401);
+                }else{
+                    console.log(username[1]+"||"+sign);
+                    if(username[1]==sign){
+                        deferred.resolve(200);
+                    }else{
+                        deferred.resolve(401);
+                    }
                 }
+            }else{
+                deferred.resolve(401);
             }
+
         }else{
             deferred.resolve(401);
         }

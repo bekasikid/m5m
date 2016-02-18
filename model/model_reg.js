@@ -210,11 +210,9 @@ var confirmation = function(req,res){
         if(req.body.paymentMethod==1){
             //musti di cek antara mereka konfirmasi dulu dengan dapet data settlement duluan dr kfc
             //kalo konfirmasi dulu, maka update table registrasi, dan input table contestant
-            db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ? WHERE registration_code = ?",
-                [req.body.paymentMethod,req.body.reffno,req.body.id]).then(function(row){
-                console.log(row);
+            db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ?, registration_voucher =? WHERE registration_code = ?",
+                [req.body.paymentMethod,req.body.reffno,req.body.voucher,req.body.id]).then(function(row){
                 if(row.affectedRows==0){
-                    //res.status(400).send({ error: "confirmation failed" });
                     deferred.resolve({
                         rc : 400,
                         retval : { code : 400, message: "registration failed" }
@@ -222,14 +220,29 @@ var confirmation = function(req,res){
                 }else{
                     //res.json(req.body);
                     //@TODO : musti tambahin no peserta
-                    deferred.resolve({
-                        rc : 200,
-                        retval : {
-                            code : 200,
-                            message : "success",
-                            data : req.body
-                        }
+                    //tambahin kode voucher
+                    db.execute("SELECT * FROM registrations WHERE registration_code = ?",[req.body.id]).then(function(rowReg){
+                        db.execute("UPDATE vouchers SET voucher_taken = 1, voucher_taken_by = ?, voucher_taken_date = now(), updated_date = now() WHERE voucher_code = ?",
+                            [rowReg[0].registration_id,req.body.voucher])
+                            .then(function(rowV){
+                                if(rowV.affectedRows==1){
+                                    deferred.resolve({
+                                        rc : 200,
+                                        retval : {
+                                            code : 200,
+                                            message : "success",
+                                            data : req.body
+                                        }
+                                    });
+                                }else{
+                                    deferred.resolve({
+                                        rc : 400,
+                                        retval : { code : 400, message: "salah kode voucher" }
+                                    });
+                                }
+                            });
                     });
+
                 }
             });
         }else if(req.body.paymentMethod==4 || req.body.paymentMethod==5){

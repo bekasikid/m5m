@@ -41,6 +41,7 @@ app.get("/generate",function(req,res){
 
 
 app.post("/registration",function(req,res){
+    var ip = getIP(req);
     if(ip.clientIp == "128.199.203.196" || ip.clientIp == "188.166.207.104" || ip.clientIp == "127.0.0.1" || ip.clientIp == "::1" || true){
         reg.regOnline(req,res);
     }

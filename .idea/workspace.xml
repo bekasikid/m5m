@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ce5f5be6-9def-4f60-99a4-1a0d4b4a9d1e" name="Default" comment="">
       <change type="DELETED" beforePath="$PROJECT_DIR$/kfc-2016-02-08.sql" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.elasticbeanstalk/config.yml" afterPath="$PROJECT_DIR$/.elasticbeanstalk/config.yml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.js" afterPath="$PROJECT_DIR$/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/model_reg.js" afterPath="$PROJECT_DIR$/model/model_reg.js" />
     </list>
     <ignored path="kfc.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,20 +24,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="148" column="22" selection-start-line="148" selection-start-column="22" selection-end-line="148" selection-end-column="22" />
+            <state vertical-scroll-proportion="0.4276094">
+              <caret line="75" column="137" selection-start-line="75" selection-start-column="137" selection-end-line="75" selection-end-column="137" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="model_db.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="model_db.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/model_db.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.45791245">
+            <state vertical-scroll-proportion="0.0">
               <caret line="19" column="22" selection-start-line="16" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
               <folding />
             </state>
@@ -121,8 +119,8 @@
         <option value="$PROJECT_DIR$/model/model_filter.js" />
         <option value="$PROJECT_DIR$/model/model_sms.js" />
         <option value="$PROJECT_DIR$/model/model_db.js" />
-        <option value="$PROJECT_DIR$/index.js" />
         <option value="$PROJECT_DIR$/model/model_reg.js" />
+        <option value="$PROJECT_DIR$/index.js" />
       </list>
     </option>
   </component>
@@ -659,10 +657,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.js">
+    <entry file="file://$PROJECT_DIR$/model/model_db.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="148" column="22" selection-start-line="148" selection-start-column="22" selection-end-line="148" selection-end-column="22" />
+          <caret line="19" column="22" selection-start-line="16" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
           <folding />
         </state>
       </provider>
@@ -675,10 +673,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/model_db.js">
+    <entry file="file://$PROJECT_DIR$/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45791245">
-          <caret line="19" column="22" selection-start-line="16" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
+        <state vertical-scroll-proportion="0.4276094">
+          <caret line="75" column="137" selection-start-line="75" selection-start-column="137" selection-end-line="75" selection-end-column="137" />
           <folding />
         </state>
       </provider>

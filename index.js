@@ -141,11 +141,16 @@ app.get("/daftar",function(req,res){
                 if(req.query.tipe=='total'){
                     res.send(rows.total.toString());
                 }else{
-                    res.json(rows.rows);
+                    res.json({
+                        code: 200,
+                        message: "success",
+                        data : rows.rows
+                        }
+                    );
                 }
             });
         } else{
-            res.status(401).send({ error: "Unauthorized" });
+            res.status(401).send({ code : 401, message: "Unauthorized" });
         }
     });
 });

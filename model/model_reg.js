@@ -433,7 +433,7 @@ var history = function(req,res){
 
 var paymentMethod = function(req,res){
     var rows = [];
-    db.execute("SELECT * FROM payment_method where method_active = 1").then(function(rows){
+    db.execute("SELECT method_id,method_name,method_active FROM payment_method where method_active = 1").then(function(rows){
         res.json({ code : 200, message: "success",data:rows});
     });
 };

@@ -190,6 +190,15 @@ var loginConfirmation = function(req,res){
     return deferred.promise;
 };
 
+var sendMail = function(req,res){
+
+    db.execute("SELECT * registrations WHERE registration_code = ?",
+        [req.body.id]).then(function(row){
+
+    });
+
+}
+
 var confirmOnline = function(req,res){
     confirmation(req,res).then(function(result){
         res.json(result.retval);

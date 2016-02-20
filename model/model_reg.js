@@ -232,8 +232,8 @@ var confirmation = function(req,res){
                     //@TODO : musti tambahin no peserta
                     //tambahin kode voucher
                     db.execute("SELECT * FROM registrations WHERE registration_code = ?",[req.body.id]).then(function(rowReg){
-                        db.execute("UPDATE vouchers SET voucher_taken = 1, voucher_taken_by = ?, voucher_taken_date = now(), updated_date = now() WHERE voucher_code = ?",
-                            [rowReg[0].registration_id,req.body.voucher])
+                        db.execute("UPDATE vouchers SET voucher_taken = 1, voucher_taken_by = ?, voucher_taken_date = ?, updated_date = now() WHERE voucher_code = ?",
+                            [rowReg[0].registration_id,moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"),req.body.voucher])
                             .then(function(rowV){
                                 if(rowV.affectedRows==1){
                                     db.execute("UPDATE registrations SET registration_valid = 1 WHERE registration_code = ?",[req.body.id]).then(function(){

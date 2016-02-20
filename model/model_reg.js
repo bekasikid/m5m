@@ -6,7 +6,8 @@
  */
 var lib = require('./model_library');
 var db = require("./model_db");
-var moment = require("moment");
+//var moment = require("moment");
+var moment = require('moment-timezone');
 var Q = require("q");
 var getIP = require('ipware')().get_ip;
 var fee = 150000;
@@ -61,12 +62,12 @@ var registration = function (req, res) {
             "registration_phone": req.body.phone,
             "registration_email": lib.empty(req.body.email)?"":req.body.email,
             "registration_password": lib.empty(req.body.password)?"":req.body.password,
-            "registration_date" : moment().format("YYYY-MM-DD HH:mm:ss"),
+            "registration_date" : moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"),
             "store_id": lib.empty(req.body.store_id)?"":req.body.store_id,
             "competition_date": lib.empty(req.body.competition_date)?"":req.body.competition_date,
             "registration_gcm": lib.empty(req.body.gcm)?"":req.body.gcm,
-            "created_date": moment().format("YYYY-MM-DD HH:mm:ss"),
-            "updated_date": moment().format("YYYY-MM-DD HH:mm:ss")
+            "created_date": moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"),
+            "updated_date": moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss")
         };
         db.execute("INSERT INTO registrations SET ?", reg).then(function(row){
             console.log(row);

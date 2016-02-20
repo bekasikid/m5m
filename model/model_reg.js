@@ -21,7 +21,7 @@ var regOnline = function(req,res){
 var checkQuotas = function(store,tgl,sess){
     var deferred = Q.defer();
     //var sess = 1;
-    db.execute("UPDATE quotas SET quota_space=quota_space-1 WHERE store_id = ? AND quota_date = ? AND quota_session = ?",
+    db.execute("UPDATE quotas SET quota_space=quota_space-1 WHERE store_id = ? AND quota_date = ? AND quota_session = ? AND quota_space>0",
     [store,tgl,sess]).then(function(result){
         if(result.affectedRows==1){
             //console.log(result);

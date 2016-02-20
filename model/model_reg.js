@@ -226,14 +226,16 @@ var confirmation = function(req,res){
                             [rowReg[0].registration_id,req.body.voucher])
                             .then(function(rowV){
                                 if(rowV.affectedRows==1){
-                                    deferred.resolve({
-                                        rc : 200,
-                                        retval : {
-                                            code : 200,
-                                            message : "success",
-                                            data : req.body
-                                        }
-                                    });
+                                    db.execute("UPDATE registrations SET registration_valid = 1 WHERE registration_code = ?",[req.body.id]).then(function(){
+                                        deferred.resolve({
+                                            rc : 200,
+                                            retval : {
+                                                code : 200,
+                                                message : "success",
+                                                data : req.body
+                                            }
+                                        });
+                                    })
                                 }else{
                                     deferred.resolve({
                                         rc : 400,
@@ -266,8 +268,28 @@ var confirmation = function(req,res){
                     });
                 }
             });
-        }else if(req.body.paymentMethod=='cc'){
+        }else if(req.body.paymentMethod==2){
             //@TODO : pembayaran lewat doku
+            db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? WHERE registration_code = ?",
+                [req.body.paymentMethod,req.body.id]).then(function(row){
+                if(row.affectedRows==0){
+                    //res.status(400).send({ error: "confirmation failed" });
+                    deferred.resolve({
+                        rc : 400,
+                        retval : { code : 400, message: "registration failed" }
+                    });
+                }else{
+                    //@TODO : musti tambahin no peserta
+                    deferred.resolve({
+                        rc : 200,
+                        retval : {
+                            code : 200,
+                            message : "success",
+                            data : req.body
+                        }
+                    });
+                }
+            });
         }
     }else{
         //res.status(400).send({ error: "failed" });

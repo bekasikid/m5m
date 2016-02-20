@@ -13,7 +13,7 @@ var openConn = function () {
         host: "kfc.cbseeyyassm5.ap-southeast-1.rds.amazonaws.com",
         user: "fonetix",
         password: "Fonetix1pwD",
-        database: 'kfc',
+        database: 'm5m',
         //host: 'localhost',
         //database: 'eatntreat',
         //user: 'root',

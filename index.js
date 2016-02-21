@@ -134,8 +134,8 @@ app.get("/leaderboard",function(req,res){
 });
 
 app.get("/daftar",function(req,res){
-    filterModel.validateAdmin(req,res).then(function(retval){
-        if(retval.rc==200){
+    //filterModel.validateAdmin(req,res).then(function(retval){
+    //    if(retval.rc==200){
             //res.json(retval.row);
             admin.daftar(req,res).then(function(rows){
                 if(req.query.tipe=='total'){
@@ -149,10 +149,10 @@ app.get("/daftar",function(req,res){
                     );
                 }
             });
-        } else{
-            res.status(401).send({ code : 401, message: "Unauthorized" });
-        }
-    });
+        //} else{
+        //    res.status(401).send({ code : 401, message: "Unauthorized" });
+        //}
+    //});
 });
 
 app.post("/update-score",function(req,res){

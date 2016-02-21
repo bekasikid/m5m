@@ -29,6 +29,8 @@ app.get('/', function(req, res){
     //    baru : 0
     //};
     //console.log(lib.empty(iseng.lama));
+    //var validator = require("email-validator");
+    //console.log(validator.validate("email.com"));
     res.status(200).send(""+lib.generateFee(1166));
 });
 

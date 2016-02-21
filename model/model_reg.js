@@ -12,6 +12,7 @@ var Q = require("q");
 var getIP = require('ipware')().get_ip;
 var fee = 152000;
 var qs = require("querystring");
+var validator = require("email-validator");
 
 
 var regOnline = function(req,res){
@@ -54,6 +55,21 @@ var registration = function (req, res) {
     //@TODO:check peserta apakah sudah menang?
     var deferred = Q.defer();
     console.log(req.body);
+
+    if(!lib.empty(req.body.email)){
+        if(!validator.validate(req.body.email)){
+            delete req.body.nik;
+            deferred.resolve({
+                rc : 400,
+                retval : {
+                    code : 400,
+                    message: "registration failed, data not valid"
+                }
+            });
+        }
+    }
+
+
     if(!lib.empty(req.body.nik)){
         var reg = {
             "registration_nik": req.body.nik,

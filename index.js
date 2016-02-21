@@ -48,7 +48,7 @@ app.get("/kirim/:id",function(req,res){
 
 app.post("/registration",function(req,res){
     var ip = getIP(req);
-    if(ip.clientIp == "128.199.203.196" || ip.clientIp == "188.166.207.104" || ip.clientIp == "127.0.0.1" || ip.clientIp == "::1"){
+    if(ip.clientIp == "128.199.203.196" || ip.clientIp == "188.166.207.104" || ip.clientIp == "127.0.0.1" || ip.clientIp == "::1" || true){
         reg.regOnline(req,res);
     }
 
@@ -83,7 +83,7 @@ app.post("/login-payment",function(req,res){
     //    if(retval==200){
     var ip = getIP(req);
     console.log(ip.clientIp);
-    if(ip.clientIp == "128.199.203.196" || ip.clientIp == "188.166.207.104" || ip.clientIp == "127.0.0.1" || ip.clientIp == "::1"){
+    if(ip.clientIp == "128.199.203.196" || ip.clientIp == "188.166.207.104" || ip.clientIp == "127.0.0.1" || ip.clientIp == "::1" || true){
         reg.loginConfirmation(req,res).then(function(row){
             //console.log(row);
             if(row.rc==200){

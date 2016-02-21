@@ -90,15 +90,14 @@
 
         <div class="container" style="width: 100%">                        
             <div id="info">
-				<p>No Pendaftaran : {{nodaftar}}
-                <p>
-				NOMINAL PEMBAYARAN
-				HARGA PAKET : Rp.{{nominal}}
-				ADMIN FEE : Rp.2.000
-				TOTAL : Rp.{{total}}
-				PEMBAYARAN DILAKUKAN MELALUI TRANSFER BANK MENUJU REKENING NOMOR:
-				BANK MANDIRI: 124.000.732.6987 A/N: PT.GLOBAL DINAMIKA INTERNUSA								
-
+				<p>No Pendaftaran : {{nodaftar}}</p>
+                <p>NOMINAL PEMBAYARAN</p>
+				<p>HARGA PAKET : Rp.{{nominal}}</p>
+				<p>ADMIN FEE : Rp.2.000</p>
+				<p>TOTAL : Rp.<strong>{{total}}</strong></p>
+				<p>PEMBAYARAN DILAKUKAN MELALUI TRANSFER BANK MENUJU REKENING NOMOR:
+				BANK MANDIRI: 124.000.732.6987 A/N: PT.GLOBAL DINAMIKA INTERNUSA</p>
+				<p>
 				- BIAYA TRANSFER DITANGGUNG OLEH PESERTA
 				- BIAYA TRANSFER MENGIKUTI KEBIJAKAN BANK.
 				Batas waktu pembayaran adalah 3 jam, setelah anda mengkonfirmasi halaman ini

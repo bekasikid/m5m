@@ -112,6 +112,10 @@ var daftar = function(req,res){
                 urut = "registrations.registration_phone"
             }else if(req.query.sort=="email"){
                 urut = "registrations.registration_email"
+            }else if(req.query.sort=="key"){
+                urut = "registrations.registration_id"
+            }else if(req.query.sort=="date"){
+                urut = "registrations.registration_date"
             }
             sort = " ORDER BY "+urut+" "+req.query.sortby;
         }

@@ -194,9 +194,33 @@ var loginConfirmation = function(req,res){
 
 var sendMail = function(req,res){
 
-    db.execute("SELECT * registrations WHERE registration_code = ?",
-        [req.body.id]).then(function(row){
+    db.execute("SELECT * FROM registrations WHERE registration_code = ?",
+        [req.params.id]).then(function(row){
+        console.log(row);
+        var fs = require('fs');
+        fs.readFile('notif.txt', function (err, data) {
+            //if (err) {
+            //    throw err;
+            //}
+            console.log(data.toString());
+            str = data.toString();
+            var emailText = str.replace("{{nodaftar}}",row[0]['registration_code']);
+            var emailText = emailText.replace("{{nominal}}",lib.number_format((150000+lib.generateFee(row[0]['registration_id'])),0,",","."));
+            var emailText = emailText.replace("{{total}}",lib.number_format((150000+2000+lib.generateFee(row[0]['registration_id'])),0,",","."));
 
+            var sendgrid = require("sendgrid")("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");
+            var email = new sendgrid.Email();
+
+            email.addTo(row[0]['registration_email']);
+            email.setFrom("info@menang5miliar.com");
+            email.setSubject("Pembayaran Program Balap Makan Ayam");
+            email.setHtml(emailText);
+
+            sendgrid.send(email);
+
+
+            res.send("sukses");
+        });
     });
 
 }
@@ -483,7 +507,7 @@ var rek = function(i){
 
 };
 
-
+module.exports.sendMail= sendMail;
 module.exports.checkLocation = checkLocation;
 module.exports.regOnline = regOnline;
 module.exports.registration = registration;

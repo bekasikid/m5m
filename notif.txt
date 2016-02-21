@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Makan 5 Menit, Menang 5 Miliar</title>
+
+        <style media="screen, print">
+            body{
+                font-family: "Helvetica", "Arial", sans-serif;
+                margin: 0;
+                padding: 0;
+                width: 1000px;
+            }
+            .container{
+                outline: 1px solid black;
+            }
+            #top{
+                background: black;
+                color: white;
+                font-weight: bold;
+                line-height: 180%;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            #logo{
+                float: left;
+                width: 500px;
+                text-align: center;
+            }
+            #info{
+                float: left;
+                width: 480px;
+                /*outline: 1px dashed red;*/
+            }
+            #info > span{
+                float: right;
+                text-transform: uppercase;
+                font-size: 13px;
+                margin-top: 10px;
+            }
+            #box{
+                border: 1px solid black;
+                padding: 20px;
+                position: relative;
+            }
+            #box ul{
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            #box ul li{
+                margin-bottom: 10px;
+                width: 50%;
+            }
+            #box li span{
+                display: block;
+            }
+            #qrcode{
+                position: absolute;
+                top: 20px;
+                right: 20px;
+            }
+            #info p{
+                line-height: 36px;
+                text-transform: uppercase;;
+            }
+            #info strong{
+                font-size: 24px;
+                line-height: 36px;
+            }
+            #bottom-left, #bottom-right{
+                width: 46%;
+                float: left;
+                padding: 20px;
+            }
+            .bottom-inner{
+                border: 1px solid black;
+                padding: 20px;
+            }
+            h3{
+                background: black;
+                color: white;
+                line-height: 200%;
+                padding: 0px 20px;
+                margin: 0;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="container" style="width: 100%">                        
+            <div id="info">
+				<p>No Pendaftaran : {{nodaftar}}
+                <p>
+				NOMINAL PEMBAYARAN
+				HARGA PAKET : Rp.{{nominal}}
+				ADMIN FEE : Rp.2.000
+				TOTAL : Rp.{{total}}
+				PEMBAYARAN DILAKUKAN MELALUI TRANSFER BANK MENUJU REKENING NOMOR:
+				BANK MANDIRI: 124.000.732.6987 A/N: PT.GLOBAL DINAMIKA INTERNUSA								
+
+				- BIAYA TRANSFER DITANGGUNG OLEH PESERTA
+				- BIAYA TRANSFER MENGIKUTI KEBIJAKAN BANK.
+				Batas waktu pembayaran adalah 3 jam, setelah anda mengkonfirmasi halaman ini
+				Harap pembayaran dilakukan sesuai nominal pembayaran
+				Kami tidak melakukan refund atas kelebihan atau kekurangan pembayaran
+				</p>                
+            </div>
+            <div style="clear: both"></div>
+            <div id="bottom">               
+                <div style="clear: both"></div>
+            </div>
+        </div>
+
+    </body>
+</html>

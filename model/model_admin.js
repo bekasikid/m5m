@@ -9,7 +9,7 @@ var db = require("./model_db");
 var moment = require("moment");
 var Q = require("q");
 var getIP = require('ipware')().get_ip;
-var fee = 150000;
+var fee = 152000;
 
 var participants = function (req, res) {
 
@@ -20,7 +20,7 @@ var participants = function (req, res) {
             query += " AND quota_session = ?";
             params.push(req.query.session);
         }
-        db.execute(query,params).then(function(rows){
+        db.readQuery(query,params).then(function(rows){
            if(rows.length){
                var datas = {};
                for(i=0;i<rows.length;i++){
@@ -156,7 +156,7 @@ var daftar = function(req,res){
         wh = " WHERE " + where.join(" AND ");
     }
 
-    db.execute(query+wh+sort+limit,params).then(function(rows){
+    db.readQuery(query+wh+sort+limit,params).then(function(rows){
         if(req.query.tipe=='total'){
             deferred.resolve({rc : "00" , total : rows[0].total});
         }else{
@@ -167,7 +167,7 @@ var daftar = function(req,res){
 };
 
 var scores = function(req,res){
-    db.execute("SELECT * FROM competitions " +
+    db.readQuery("SELECT * FROM competitions " +
         "JOIN contestants ON competitions.contestant_id=contestants.contestant_id " +
         "JOIN quotas ON quotas.quota_id=competitions.quota_id " +
         "JOIN stores ON stores.store_id=quotas.store_id " +
@@ -192,7 +192,7 @@ var leaderboard = function(req,res){
     if(!lib.empty(req.query.date)){
         scores(req,res);
     }else{
-        db.execute("SELECT * FROM leaderboard " +
+        db.readQuery("SELECT * FROM leaderboard " +
             "JOIN competitions ON leaderboard.competition_id = competitions.competition_id " +
             "JOIN contestants ON competitions.contestant_id=contestants.contestant_id " +
             "JOIN quotas ON quotas.quota_id=competitions.quota_id " +
@@ -220,7 +220,7 @@ var leaderboard = function(req,res){
 var nearOutlets = function(req,res){
     //var deferred = Q.defer();
     var query = "SELECT *, ( 3959 * ACOS( COS( RADIANS(?) ) * COS( RADIANS( store_lat ) ) * COS( RADIANS( store_long ) - RADIANS(?) ) + SIN( RADIANS(?) ) * SIN( RADIANS( store_lat ) ) ) ) AS distance FROM stores HAVING distance < 25 ORDER BY distance LIMIT 0,20"
-    db.execute(query,[req.query.lat,req.query.lng,req.query.lat]).then(function(rows){
+    db.readQuery(query,[req.query.lat,req.query.lng,req.query.lat]).then(function(rows){
         //console.log(rows);
         //deferred.resolve(rows);
         //res.json(rows);

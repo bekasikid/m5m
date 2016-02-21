@@ -29,7 +29,7 @@ app.get('/', function(req, res){
     //    baru : 0
     //};
     //console.log(lib.empty(iseng.lama));
-    res.send(qs.escape("hallo gw ainul keren"));
+    res.status(200).send(""+lib.generateFee(1166));
 });
 
 app.get("/generate",function(req,res){

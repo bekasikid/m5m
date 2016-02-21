@@ -103,10 +103,10 @@ function generateFee (num){
         return num;
     }
     num = num.toString();
-    //console.log(num);
+    console.log(num);
     panjang = num.length;
-    //console.log(panjang);
-    addFee = num.substr(panjang-4)
+    console.log(panjang);
+    addFee = num.substr(panjang-3)
     return parseInt(addFee);
 }
 

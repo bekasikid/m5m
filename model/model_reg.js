@@ -10,7 +10,7 @@ var db = require("./model_db");
 var moment = require('moment-timezone');
 var Q = require("q");
 var getIP = require('ipware')().get_ip;
-var fee = 150000;
+var fee = 152000;
 
 
 var regOnline = function(req,res){

@@ -2,7 +2,7 @@ branch-defaults:
   default:
     environment: kfc-dev2
   master:
-    environment: kfc-dev
+    environment: kfc-prod
 global:
   application_name: kfc
   default_ec2_keyname: ainul

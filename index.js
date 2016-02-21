@@ -41,17 +41,16 @@ app.get("/generate",function(req,res){
 });
 
 app.get("/kirim/:id",function(req,res){
-
-    reg.sendMail(req,res);
+    if(lib.whitelist(req)){
+        reg.sendMail(req,res);
+    }
 });
 
 
 app.post("/registration",function(req,res){
-    var ip = getIP(req);
-    if(ip.clientIp == "128.199.203.196" || ip.clientIp == "188.166.207.104" || ip.clientIp == "127.0.0.1" || ip.clientIp == "::1" || true){
+    if(lib.whitelist(req)){
         reg.regOnline(req,res);
     }
-
 });
 
 app.post("/confirmation",function(req,res){
@@ -79,11 +78,7 @@ app.post("/login-payment",function(req,res){
      128.199.203.196
      188.166.207.104
      */
-    //filterModel.validateReq(req,res).then(function(retval){
-    //    if(retval==200){
-    var ip = getIP(req);
-    console.log(ip.clientIp);
-    if(ip.clientIp == "128.199.203.196" || ip.clientIp == "188.166.207.104" || ip.clientIp == "127.0.0.1" || ip.clientIp == "::1" || true){
+    if(lib.whitelist(req)){
         reg.loginConfirmation(req,res).then(function(row){
             //console.log(row);
             if(row.rc==200){
@@ -93,11 +88,6 @@ app.post("/login-payment",function(req,res){
             }
         });
     }
-
-        //} else{
-        //    res.status(401).send({ code : 401 , message: "Unauthorized" });
-        //}
-    //});
 });
 
 app.get("/status/:id",function(req,res){

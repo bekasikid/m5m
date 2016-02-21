@@ -7,6 +7,7 @@ var Q = require("q");
 var hash = require("hashids");
 var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 var debug = 1;
+var getIP = require('ipware')().get_ip;
 
 var hmacSha1 = function(text,key){
     return crypto.createHmac('sha1', key).update(text).digest('hex');
@@ -128,6 +129,15 @@ function isset() {
     return true;
 }
 
+function whitelist(req){
+    var ip = getIP(req);
+    if(ip.clientIp == "128.199.203.196" || ip.clientIp == "188.166.207.104" || ip.clientIp == "127.0.0.1" || ip.clientIp == "::1" || true){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 function number_format (number, decimals, dec_point, thousands_sep) {
     var n = number, prec = decimals;
 
@@ -168,6 +178,7 @@ function number_format (number, decimals, dec_point, thousands_sep) {
     return s;
 }
 
+module.exports.whitelist = whitelist;
 module.exports.number_format = number_format;
 module.exports.empty = empty;
 module.exports.isset = isset;

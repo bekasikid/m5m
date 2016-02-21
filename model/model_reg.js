@@ -93,7 +93,7 @@ var registration = function (req, res) {
                 retval['fee'] = fee + lib.generateFee(row.insertId);
                 var uniquecode = lib.uniqueCode(row.insertId);
                 retval['id'] = uniquecode;
-                db.execute("UPDATE registrations SET registration_code = ? WHERE registration_id = ?",[uniquecode,row.insertId]).then(function(){
+                db.execute("UPDATE registrations SET registration_fee = ?, registration_code = ? WHERE registration_id = ?",[retval['fee'],uniquecode,row.insertId]).then(function(){
                     checkQuotas(req.body.store_id,req.body.competition_date,1).then(function(retQ){
                         console.log(retQ);
                         if(retQ.rc==200){
@@ -192,6 +192,7 @@ var loginConfirmation = function(req,res){
                     }
                     rows[0]['store'] = st;
                     delete rows[0].store_id;
+                    rows[0]['registration_fee'] = fee + lib.generateFee(rows[0]['registration_id']);
                     deferred.resolve({
                         rc : 200,
                         retval : { code : 200, message: "success", data : rows[0]}

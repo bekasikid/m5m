@@ -202,7 +202,7 @@ var sendMail = function(req,res){
             //if (err) {
             //    throw err;
             //}
-            console.log(data.toString());
+            //console.log(data.toString());
             str = data.toString();
             var emailText = str.replace("{{nodaftar}}",row[0]['registration_code']);
             var emailText = emailText.replace("{{nominal}}",lib.number_format((150000+lib.generateFee(row[0]['registration_id'])),0,",","."));

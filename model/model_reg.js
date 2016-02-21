@@ -11,6 +11,7 @@ var moment = require('moment-timezone');
 var Q = require("q");
 var getIP = require('ipware')().get_ip;
 var fee = 152000;
+var qs = require("querystring");
 
 
 var regOnline = function(req,res){
@@ -56,11 +57,11 @@ var registration = function (req, res) {
     if(!lib.empty(req.body.nik)){
         var reg = {
             "registration_nik": req.body.nik,
-            "registration_name": req.body.name,
+            "registration_name": qs.unescape(req.body.name),
             "registration_dob": lib.empty(req.body.dob)?"":req.body.dob,
             "registration_address": lib.empty(req.body.address)? "" : req.body.address,
             "registration_phone": req.body.phone,
-            "registration_email": lib.empty(req.body.email)?"":req.body.email,
+            "registration_email": lib.empty(req.body.email)?"":qs.unescape(req.body.email),
             "registration_password": lib.empty(req.body.password)?"":req.body.password,
             "registration_date" : moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"),
             "store_id": lib.empty(req.body.store_id)?"":req.body.store_id,

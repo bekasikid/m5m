@@ -268,7 +268,7 @@ var nearOutlets = function(req,res){
         res.json({ code : 200, message: "success",data:rows});
     });
     //return deferred.promise;
-}
+};
 
 var rekapReg = function(req,res){
     db.readQuery("SELECT COUNT(*)as jumlah FROM registrations").then(function(rowsJ){
@@ -284,7 +284,31 @@ var rekapReg = function(req,res){
             res.json(row);
         });
     });
-}
+};
+var rekapDate = function(req,res){
+    db.readQuery("SELECT DATE(registrations.`registration_date`) tgl, COUNT(*) value FROM registrations JOIN stores ON registrations.`store_id` = stores.`store_id` JOIN cities ON stores.store_city=cities.city_code WHERE registrations.`registration_valid` = 1 GROUP BY DATE(registrations.`registration_date`) ORDER BY tgl ASC ").then(function(rows){
+            var row = {
+                code : 200,
+                message : "success",
+                data : rows
+            }
+            res.json(row);
+    });
+};
+
+var rekapCity = function(req,res){
+    db.readQuery("SELECT   cities.`city_id`,cities.`city_name`, COUNT(*) jumlah FROM registrations JOIN stores ON registrations.`store_id` = stores.`store_id` JOIN cities ON stores.store_city = cities.city_code WHERE registrations.`registration_valid` = 1 GROUP BY cities.`city_id` ORDER BY cities.`city_name` ASC").then(function(rows){
+        var row = {
+            code : 200,
+            message : "success",
+            data : rows
+        }
+        res.json(row);
+    });
+};
+
+module.exports.rekapDate = rekapDate;
+module.exports.rekapCity = rekapCity;
 module.exports.rekapReg = rekapReg;
 module.exports.mandiri = mandiri;
 module.exports.participants = participants;

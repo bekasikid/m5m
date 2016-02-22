@@ -214,5 +214,13 @@ app.get("/rekap",function(req,res){
     //console.log(req.headers);
     admin.rekapReg(req,res);
 });
+app.get("/rekap-date",function(req,res){
+    //console.log(req.headers);
+    admin.rekapDate(req,res);
+});
+app.get("/rekap-cities",function(req,res){
+    //console.log(req.headers);
+    admin.rekapCity(req,res);
+});
 
 app.listen(process.env.PORT || 3000);

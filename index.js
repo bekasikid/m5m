@@ -168,6 +168,12 @@ app.post("/update-score",function(req,res){
         }
     });
 });
+
+app.get("/mandiri",function(req,res){
+    admin.mandiri(req,res).then(function(rows){
+        res.json(rows);
+    });
+});
 /*master data*/
 app.get("/payment-method",function(req,res){
     reg.paymentMethod(req,res);

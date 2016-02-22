@@ -166,6 +166,49 @@ var daftar = function(req,res){
     return deferred.promise;
 };
 
+var mandiri = function(req,res){
+    var deferred = Q.defer();
+
+    var sort = "";
+    var limit = "";
+    if(req.query.tipe=='total'){
+        var query = "SELECT count(*)as total FROM mandiri ";
+    }else{
+        var query = "SELECT * FROM mandiri ";
+
+        sort = " ORDER BY mandiri_datetime DESC";
+
+        var limit = " LIMIT "+(parseInt(req.query.page)*parseInt(req.query.limit))+","+req.query.limit;
+    }
+
+
+
+    var wh = "";
+    var where = [];
+    var params = [];
+    if(!lib.empty(req.query.date) || !lib.empty(req.query.fee)){
+        if(!lib.empty(req.query.date)){
+            where.push( " date(mandiri.mandiri_datetime) = ? ");
+            params.push(req.query.date);
+        }
+
+        if(!lib.empty(req.query.fee)){
+            where.push(" mandiri.mandiri_credit = ? ");
+            params.push(req.query.fee);
+        }
+        wh = " WHERE " + where.join(" AND ");
+    }
+
+    db.readQuery(query+wh+sort+limit,params).then(function(rows){
+        if(req.query.tipe=='total'){
+            deferred.resolve({rc : "00" , total : rows[0].total});
+        }else{
+            deferred.resolve({rc : "00" , rows : rows});
+        }
+    });
+    return deferred.promise;
+};
+
 var scores = function(req,res){
     db.readQuery("SELECT * FROM competitions " +
         "JOIN contestants ON competitions.contestant_id=contestants.contestant_id " +
@@ -229,6 +272,7 @@ var nearOutlets = function(req,res){
     //return deferred.promise;
 }
 
+module.exports.mandiri = mandiri;
 module.exports.participants = participants;
 module.exports.daftar = daftar;
 module.exports.leaderboard = leaderboard;

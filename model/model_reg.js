@@ -82,6 +82,7 @@ var registration = function (req, res) {
             "registration_date" : moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"),
             "store_id": lib.empty(req.body.store_id)?"":req.body.store_id,
             "competition_date": lib.empty(req.body.competition_date)?"":req.body.competition_date,
+            "competition_session": lib.empty(req.body.competition_session)?1:req.body.competition_session,
             "registration_gcm": lib.empty(req.body.gcm)?"":req.body.gcm,
             "created_date": moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"),
             "updated_date": moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss")
@@ -94,7 +95,7 @@ var registration = function (req, res) {
                 var uniquecode = lib.uniqueCode(row.insertId);
                 retval['id'] = uniquecode;
                 db.execute("UPDATE registrations SET registration_fee = ?, registration_code = ? WHERE registration_id = ?",[retval['fee'],uniquecode,row.insertId]).then(function(){
-                    checkQuotas(req.body.store_id,req.body.competition_date,1).then(function(retQ){
+                    checkQuotas(req.body.store_id,req.body.competition_date,reg.competition_session).then(function(retQ){
                         console.log(retQ);
                         if(retQ.rc==200){
                             db.execute("UPDATE registrations SET competition_session = ? WHERE registration_id = ?",[retQ.quota_session,row.insertId]).then(function(){

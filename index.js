@@ -209,4 +209,10 @@ app.post("/sms-register",function(req,res){
     });
 });
 
+/*dashboards*/
+app.get("/rekap",function(req,res){
+    //console.log(req.headers);
+    admin.rekapReg(req,res);
+});
+
 app.listen(process.env.PORT || 3000);

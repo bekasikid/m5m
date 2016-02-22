@@ -258,8 +258,6 @@ var leaderboard = function(req,res){
 
 };
 
-
-
 var nearOutlets = function(req,res){
     //var deferred = Q.defer();
     var query = "SELECT *, ( 3959 * ACOS( COS( RADIANS(?) ) * COS( RADIANS( store_lat ) ) * COS( RADIANS( store_long ) - RADIANS(?) ) + SIN( RADIANS(?) ) * SIN( RADIANS( store_lat ) ) ) ) AS distance FROM stores HAVING distance < 25 ORDER BY distance LIMIT 0,20"
@@ -272,6 +270,22 @@ var nearOutlets = function(req,res){
     //return deferred.promise;
 }
 
+var rekapReg = function(req,res){
+    db.readQuery("SELECT COUNT(*)as jumlah FROM registrations").then(function(rowsJ){
+        db.readQuery("SELECT COUNT(*) jumlah_bayar FROM registrations WHERE registration_valid=1").then(function(rowsB){
+            var row = {
+                code : 200,
+                message : "success",
+                data : {
+                    daftar : rowsJ[0].jumlah,
+                    bayar : rowsB[0].jumlah_bayar
+                }
+            }
+            res.json(row);
+        });
+    });
+}
+module.exports.rekapReg = rekapReg;
 module.exports.mandiri = mandiri;
 module.exports.participants = participants;
 module.exports.daftar = daftar;

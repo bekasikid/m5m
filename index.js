@@ -222,5 +222,9 @@ app.get("/rekap-cities",function(req,res){
     //console.log(req.headers);
     admin.rekapCity(req,res);
 });
+app.get("/rekap-stores",function(req,res){
+    //console.log(req.headers);
+    admin.rekapStores(req,res);
+});
 
 app.listen(process.env.PORT || 3000);

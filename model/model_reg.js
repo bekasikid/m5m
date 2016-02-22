@@ -219,7 +219,7 @@ var sendMail = function(req,res){
         [req.params.id]).then(function(row){
         console.log(row);
         var fs = require('fs');
-        fs.readFile('notif.txt', function (err, data) {
+        fs.readFile('notif.html', function (err, data) {
             //if (err) {
             //    throw err;
             //}

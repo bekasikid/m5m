@@ -38,7 +38,11 @@ app.get('/', function(req, res){
 app.get("/generate",function(req,res){
     //var id = lib.uniqueCode(9999999);
     //res.send(id);
-    res.send(qs.unescape("ainul+ganteng"));
+    var kodok = {
+        bunting : 0
+    }
+    console.log(lib.empty(kodok.ngorek));
+    res.send("hallo");
     //reg.rek(1);
     //res.send("sukses");
 });

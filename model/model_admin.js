@@ -186,7 +186,7 @@ var mandiri = function(req,res){
     var wh = "";
     var where = [];
     var params = [];
-    if(!lib.empty(req.query.date) || !lib.empty(req.query.fee)){
+    if(!lib.empty(req.query.date) || !lib.empty(req.query.fee) || lib.isset(req.query.taken)){
         if(!lib.empty(req.query.date)){
             where.push( " date(mandiri.mandiri_datetime) = ? ");
             params.push(req.query.date);
@@ -196,6 +196,12 @@ var mandiri = function(req,res){
             where.push(" mandiri.mandiri_credit = ? ");
             params.push(req.query.fee);
         }
+
+        if(lib.isset(req.query.taken)){
+            where.push(" mandiri.is_taken = ? ");
+            params.push(req.query.taken);
+        }
+        console.log(lib.empty(req.query.taken));
         wh = " WHERE " + where.join(" AND ");
     }
 

@@ -239,7 +239,7 @@ var sendMail = function(req,res){
 
             sendgrid.send(email,function(err,result){
                 var fs = require('fs');
-                var stream = fs.createWriteStream("./logs/mail/"+moment().tz("Asia/Jakarta").format("YYYY-MM-DD")+"-send-payment.txt");
+                var stream = fs.createWriteStream("./logs/mail/"+moment().tz("Asia/Jakarta").format("YYYY-MM-DD")+"-send-payment.txt",{'flags': 'a'});
                 stream.once('open', function(fd) {
                     stream.write(moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss") +"||"+JSON.stringify(result)+"\n");
                     stream.end();

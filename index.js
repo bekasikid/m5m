@@ -215,20 +215,27 @@ app.post("/sms-register",function(req,res){
 
 /*dashboards*/
 app.get("/rekap",function(req,res){
-    //console.log(req.headers);
-    admin.rekapReg(req,res);
+    if(lib.whitelist(req)){
+        admin.rekapReg(req,res);
+    }
+
 });
 app.get("/rekap-date",function(req,res){
-    //console.log(req.headers);
-    admin.rekapDate(req,res);
+    if(lib.whitelist(req)){
+        admin.rekapDate(req,res);
+    }
+
 });
 app.get("/rekap-cities",function(req,res){
-    //console.log(req.headers);
-    admin.rekapCity(req,res);
+    if(lib.whitelist(req)){
+        admin.rekapCity(req,res);
+    }
 });
 app.get("/rekap-stores",function(req,res){
-    //console.log(req.headers);
-    admin.rekapStores(req,res);
+    if(lib.whitelist(req)){
+        admin.rekapStores(req,res);
+    }
+
 });
 
 app.listen(process.env.PORT || 3000);

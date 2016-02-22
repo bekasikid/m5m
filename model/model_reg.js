@@ -28,14 +28,17 @@ var checkQuotas = function(store,tgl,sess){
     [store,tgl,sess]).then(function(result){
         if(result.affectedRows==1){
             //console.log(result);
-            var kembalian = {
-                rc:200,
-                store_id : store,
-                quota_date : tgl,
-                quota_session : sess
-            };
-            console.log(kembalian);
-            deferred.resolve(kembalian);
+            db.readQuery("SELECT * FROM quotas WHERE store_id = ? AND quota_date = ? AND quota_session = ?",[store,tgl,sess]).then(function(rowsQ){
+                var kembalian = {
+                    rc:200,
+                    quota_id : rowsQ[0].quota_id,
+                    store_id : store,
+                    quota_date : tgl,
+                    quota_session : sess
+                };
+                deferred.resolve(kembalian);
+            });
+
         }else if(sess==7){
             deferred.resolve({rc:510});
         }else{
@@ -234,9 +237,14 @@ var sendMail = function(req,res){
             email.setSubject("Pembayaran Program Balap Makan Ayam");
             email.setHtml(emailText);
 
-            sendgrid.send(email);
-
-
+            sendgrid.send(email,function(err,result){
+                var fs = require('fs');
+                var stream = fs.createWriteStream("./logs/mail/"+moment().tz("Asia/Jakarta").format("YYYY-MM-DD")+"-send-payment.txt");
+                stream.once('open', function(fd) {
+                    stream.write(moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss") +"||"+JSON.stringify(result)+"\n");
+                    stream.end();
+                });
+            });
             res.send("sukses");
         });
     });
@@ -523,6 +531,20 @@ var rek = function(i){
         }
     });
 
+};
+
+var rubah = function(req,res){
+    db.readQuery("SELECT * FROM competitions WHERE regitration_code = ?",[req.body.id]).then(function(rows){
+        checkQuotas(req.body.store_id,req.body.date,req.body.session_id).then(function(row){
+            if(row.rc==200){
+                db.execute("UPDATE quotas SET quota_space = quota_space + 1 WHERE quota_id = ?",[rows[0].quota_id]).then(function(){
+                    db.execute("UPDATE competitions SET quota_id = row.quota_id WHERE competition_id = ?",[rows[0].quota_id]).then(function(){
+                        //sendmail perubahan
+                    });
+                });
+            }
+        })
+    });
 };
 
 module.exports.sendMail= sendMail;

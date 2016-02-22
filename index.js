@@ -22,6 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 
 app.use(cors());
 
+app.use('/logs', express.static('logs'));
 
 /*untuk server trx*/
 app.get('/', function(req, res){

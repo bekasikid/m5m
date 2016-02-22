@@ -297,7 +297,7 @@ var rekapDate = function(req,res){
 };
 
 var rekapCity = function(req,res){
-    db.readQuery("SELECT   cities.`city_id`,cities.`city_name`, COUNT(*) jumlah FROM registrations JOIN stores ON registrations.`store_id` = stores.`store_id` JOIN cities ON stores.store_city = cities.city_code WHERE registrations.`registration_valid` = 1 GROUP BY cities.`city_id` ORDER BY cities.`city_name` ASC").then(function(rows){
+    db.readQuery("SELECT   cities.`city_id`,cities.`city_name`, COUNT(*) value FROM registrations JOIN stores ON registrations.`store_id` = stores.`store_id` JOIN cities ON stores.store_city = cities.city_code WHERE registrations.`registration_valid` = 1 GROUP BY cities.`city_id` ORDER BY cities.`city_name` ASC").then(function(rows){
         var row = {
             code : 200,
             message : "success",
@@ -308,7 +308,7 @@ var rekapCity = function(req,res){
 };
 
 var rekapStores = function(req,res){
-    db.readQuery("SELECT stores.*,COUNT(*) jumlah FROM registrations JOIN stores ON registrations.`store_id` = stores.`store_id` JOIN cities ON stores.store_city = cities.city_code WHERE registrations.`registration_valid` = 1 GROUP BY stores.`store_id` ORDER BY stores.`store_name` ASC").then(function(rows){
+    db.readQuery("SELECT stores.*,COUNT(*) value FROM registrations JOIN stores ON registrations.`store_id` = stores.`store_id` JOIN cities ON stores.store_city = cities.city_code WHERE registrations.`registration_valid` = 1 GROUP BY stores.`store_id` ORDER BY stores.`store_name` ASC").then(function(rows){
         var row = {
             code : 200,
             message : "success",

@@ -248,6 +248,8 @@ var sendMail = function (req, res) {
                     });
                     res.send("sukses");
                 });
+            }else{
+                res.send("gagal");
             }
         });
 

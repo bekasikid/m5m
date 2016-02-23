@@ -22,6 +22,7 @@ var regOnline = function (req, res) {
 };
 
 var checkQuotas = function (store, tgl, sess) {
+    console.log(store+"||"+tgl+"||"+sess+"||");
     var deferred = Q.defer();
     //var sess = 1;
     db.execute("UPDATE quotas SET quota_space=quota_space-1 WHERE store_id = ? AND quota_date = ? AND quota_session = ? AND quota_space>0",
@@ -541,12 +542,16 @@ var rek = function (i) {
 };
 
 var rubah = function (req, res) {
-    db.readQuery("SELECT * FROM competitions WHERE regitration_code = ?", [req.body.id]).then(function (rows) {
-        checkQuotas(req.body.store_id, req.body.date, req.body.session_id).then(function (row) {
-            if (row.rc == 200) {
+    db.readQuery("SELECT * FROM competitions WHERE registration_code = ?", [req.body.id]).then(function (rows) {
+        checkQuotas(req.body.store_id, req.body.date, req.body.session_id).then(function (rowQ) {
+            if (rowQ.rc == 200) {
                 db.execute("UPDATE quotas SET quota_space = quota_space + 1 WHERE quota_id = ?", [rows[0].quota_id]).then(function () {
-                    db.execute("UPDATE competitions SET quota_id = row.quota_id WHERE competition_id = ?", [rows[0].quota_id]).then(function () {
+                    db.execute("UPDATE competitions SET quota_id = ? WHERE registration_code = ?", [rowQ.quota_id,req.body.id]).then(function () {
                         //sendmail perubahan
+                        console.log(rowQ);
+                        db.execute("UPDATE registrations SET competition_session = ?, email_ticket = 1 WHERE registration_code = ?",[rowQ.quota_session,req.body.id]).then(function(rows){
+                            res.send("success");
+                        })
                     });
                 });
             }
@@ -554,6 +559,8 @@ var rubah = function (req, res) {
     });
 };
 
+module.exports.checkQuotas = checkQuotas;
+module.exports.rubah = rubah;
 module.exports.sendMail = sendMail;
 module.exports.checkLocation = checkLocation;
 module.exports.regOnline = regOnline;

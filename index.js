@@ -176,8 +176,12 @@ app.post("/update-score",function(req,res){
 
 app.get("/mandiri",function(req,res){
     admin.mandiri(req,res).then(function(rows){
-        res.json(rows);
+        //res.json(rows);
     });
+});
+
+app.post("/ganti-jadwal",function(req,res){
+    //reg.rubah(req,res);
 });
 /*master data*/
 app.get("/payment-method",function(req,res){
@@ -226,16 +230,23 @@ app.get("/rekap-date",function(req,res){
     }
 
 });
+
 app.get("/rekap-cities",function(req,res){
     if(lib.whitelist(req)){
         admin.rekapCity(req,res);
     }
 });
+
 app.get("/rekap-stores",function(req,res){
     if(lib.whitelist(req)){
         admin.rekapStores(req,res);
     }
+});
 
+app.get("/manual-mandiri/:id/:mandiri",function(req,res){
+    if(lib.whitelist(req)){
+        //admin.manualConfirm(req,res);
+    }
 });
 
 app.listen(process.env.PORT || 3000);

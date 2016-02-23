@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Makan 5 Menit, Menang 5 Miliar</title>
+
+        <style media="screen, print">
+            body{
+                font-family: "Helvetica", "Arial", sans-serif;
+                margin: 0;
+                padding: 0;
+                width: 1000px;
+            }
+            .container{
+                outline: 1px solid black;
+            }
+            #top{
+                background: black;
+                color: white;
+                font-weight: bold;
+                line-height: 180%;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            #logo{
+                float: left;
+                width: 500px;
+                text-align: center;
+            }
+            #info{
+                float: left;
+                width: 480px;
+                /*outline: 1px dashed red;*/
+            }
+            #info > span{
+                float: right;
+                text-transform: uppercase;
+                font-size: 13px;
+                margin-top: 10px;
+            }
+            #box{
+                border: 1px solid black;
+                padding: 20px;
+                position: relative;
+            }
+            #box ul{
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            #box ul li{
+                margin-bottom: 10px;
+                width: 50%;
+            }
+            #box li span{
+                display: block;
+            }
+            #qrcode{
+                position: absolute;
+                top: 20px;
+                right: 20px;
+            }
+            #info p{
+                line-height: 36px;
+                text-transform: uppercase;;
+            }
+            #info strong{
+                font-size: 24px;
+                line-height: 36px;
+            }
+            #bottom-left, #bottom-right{
+                width: 46%;
+                float: left;
+                padding: 20px;
+            }
+            .bottom-inner{
+                border: 1px solid black;
+                padding: 20px;
+            }
+            h3{
+                background: black;
+                color: white;
+                line-height: 200%;
+                padding: 0px 20px;
+                margin: 0;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="container" style="width: 100%">
+            <div id="top" >
+                TIKET HARAP DIBAWA DAN DISERAHKAN UNTUK DITUKARKAN DENGAN ID PESERTA
+            </div>
+            <div id="logo">
+                <img src="http://placehold.it/400x400" alt="" />
+            </div>
+            <div id="info">
+                <p>{{hari}} <strong>{{tanggal}}</strong></p>
+                <span>Peserta wajib datang tepat waktu</span>
+                <p>Pukul <strong>{{waktu}}</strong> WIB</p>
+
+                <div id="box">
+                    <ul>
+                        <li>
+                            <span>Nama:</span>
+                            {{nama}}
+                        </li>
+                        <li>
+                            <span>Lokasi:</span>
+                            {{alamat}}
+                        </li>
+                        <li>
+                            <span>No Identitas:</span>
+                            {{nik}}
+                        </li>
+                    </ul>
+                    <img src="http://placehold.it/160x160" alt="" id="qrcode" />
+                </div>
+                <p>Nomor Peserta<br><strong>{{nopeserta}}</strong></p>
+            </div>
+            <div style="clear: both"></div>
+            <div id="bottom">
+                <div id="bottom-left">
+                    <h3 style="background: black">Syarat dan Ketentuan</h3>
+                    <div class="bottom-inner">
+                        <p>Peserta diharuskan hadir pada sesi (tanggal, jam dan lokasi area) yang telah dipilih sendiri oleh para peserta yang sudah mendaftar.</p>
+                        <p>Peserta dengan umur minimum 17 tahun dan wajib memiliki kartu identitas yang masih berlaku.</p>
+                        <p>Peserta adalah warga negara Indonesia.</p>
+                        <p>Peserta wajib membaca syarat dan ketentuan yang telah disediakan pada media online dan offline sebelum melakukan pendaftaran.</p>
+                        <p>Peserta wajib mematuhi dan mengikuti aturan yang berlaku selama kompetisi berlangsung.</p>
+                        <p>Peserta yang telah mendaftar kompetisi hanya akan memperoleh satu nomor peserta sesuai dengan nama yang didaftarkan.</p>
+                        <p>Satu nama peserta tidak dibatasi untuk mengikuti kompetisi selama kuota masih tersedia dengan melakukan registrasi ulang dan mengikuti ketentuan-ketentuan yang telah diberikan.</p>
+                        <p>Untuk area kompetisi adalah pulau Jawa dan Bali (babak kualifikasi) dan untuk babak final akan dilakukan di DKI Jakarta di KFC TBC</p>
+                        <p>Periode kompetisi pada setiap harinya selama 60 hari yaitu 1 Maret – 27 Mei 2016 dan 1 hari babak final pada tanggal 3 Juni 2016.</p>
+                        <p>Peserta akan melewati babak penyisihan sesuai periode tersebut untuk mendapatkan 3 pemenang harian (juara 1, juara 2 dan juara 3). </p>
+                        <!-- Para juara 1 yang telah didapatkan pada setiap harinya, akan menuju babak final pada tanggal 3 Juni 2016 dan akomodasi peserta akan ditanggung oleh pihak penyelenggara.
+                        Apabila peserta berhalangan hadir maka peserta dinyatakan gugur dan tidak dapat digantikan oleh nama lain. Untuk paket yang telah dibayarkan dapat diambil dengan menggunakan bukti tiket kompetisi pada hari kompetisi yang sama.
+                        Peserta diharuskan mendaftar ulang pada tanggal dan lokasi area yang telah diberikan oleh pihak penyelenggara sebelumnya dengan ketentuan sebagai berikut:
+                        Peserta wajib membawa bukti bayar kesertaan berupa tiket kompetisi yang harus diserahkan kepada crew on field dan KTP/SIM atau kartu pelajar atau kartu identitas lainnya yang masih berlaku untuk dapat ditunjukkan
+                        Peserta diwajIbkan menandatangani surat pernyataan sehat secara jasmani dan rohani dan Pihak penyelenggara dan KFC bebas dari segala macam tuntutan.
+                        Uang registrasi tidak dapat dikembalikan.
+                        Pajak hadiah lomba 15 % (Pph 23) ditanggung oleh para pemenang.
+                        Juri berhak untuk menolak/men-diskualifikasi peserta apabila:
+                        	a. Peserta tidak memenuhi dan melanggar ketentuan mekanisme registrasi dan mekanisme 	    pelaksanaan kompetisi yang telah diberikan.
+                        Keputusan juri bersifat mutlak dan tidak dapat diganggu gugat -->
+                    </div>
+
+                </div>
+                <div id="bottom-right">
+                    <h3>Tata Cara Kompetisi</h3>
+                    <div class="bottom-inner">
+                        <p>Peserta diharuskan hadir pada sesi (tanggal, jam dan lokasi area) yang telah dipilih sendiri oleh para peserta yang sudah mendaftar.</p>
+                        <p>Peserta dengan umur minimum 17 tahun dan wajib memiliki kartu identitas yang masih berlaku.</p>
+                        <p>Peserta adalah warga negara Indonesia.</p>
+                        <p>Peserta wajib membaca syarat dan ketentuan yang telah disediakan pada media online dan offline sebelum melakukan pendaftaran.</p>
+                        <p>Peserta wajib mematuhi dan mengikuti aturan yang berlaku selama kompetisi berlangsung.</p>
+                        <p>Peserta yang telah mendaftar kompetisi hanya akan memperoleh satu nomor peserta sesuai dengan nama yang didaftarkan.</p>
+                        <p>Satu nama peserta tidak dibatasi untuk mengikuti kompetisi selama kuota masih tersedia dengan melakukan registrasi ulang dan mengikuti ketentuan-ketentuan yang telah diberikan.</p>
+                        <p>Untuk area kompetisi adalah pulau Jawa dan Bali (babak kualifikasi) dan untuk babak final akan dilakukan di DKI Jakarta di KFC TBC</p>
+                        <p>Periode kompetisi pada setiap harinya selama 60 hari yaitu 1 Maret – 27 Mei 2016 dan 1 hari babak final pada tanggal 3 Juni 2016.</p>
+                        <p>Peserta akan melewati babak penyisihan sesuai periode tersebut untuk mendapatkan 3 pemenang harian (juara 1, juara 2 dan juara 3). </p>
+                    </div>
+                </div>
+                <div style="clear: both"></div>
+            </div>
+        </div>
+
+    </body>
+</html>

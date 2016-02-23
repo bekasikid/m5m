@@ -235,6 +235,7 @@ var sendMail = function (req, res) {
 
                     email.addTo(row[0]['registration_email']);
                     email.setFrom("info@menang5miliar.com");
+                    email.setFromName("Menang 5 Miliar");
                     email.setSubject("Pembayaran Program Balap Makan Ayam");
                     email.setHtml(emailText);
 
@@ -277,7 +278,7 @@ var confirmation = function (req, res) {
         if (req.body.paymentMethod == 1) {
             //musti di cek antara mereka konfirmasi dulu dengan dapet data settlement duluan dr kfc
             //kalo konfirmasi dulu, maka update table registrasi, dan input table contestant
-            db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ?, registration_voucher =? WHERE registration_code = ?",
+            db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ?, registration_voucher =? WHERE registration_code = ? AND registration_confirmation = 0",
                 [req.body.paymentMethod, req.body.reffno, req.body.voucher, req.body.id]).then(function (row) {
                 if (row.affectedRows == 0) {
                     deferred.resolve({
@@ -315,7 +316,7 @@ var confirmation = function (req, res) {
                 }
             });
         } else if (req.body.paymentMethod == 4 || req.body.paymentMethod == 5) {
-            db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ? WHERE registration_code = ?",
+            db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ? WHERE registration_code = ? AND registration_confirmation = 0",
                 [req.body.paymentMethod, req.body.reffno, req.body.id]).then(function (row) {
                 if (row.affectedRows == 0) {
                     //res.status(400).send({ error: "confirmation failed" });
@@ -337,7 +338,7 @@ var confirmation = function (req, res) {
             });
         } else if (req.body.paymentMethod == 2) {
             //@TODO : pembayaran lewat doku
-            db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? WHERE registration_code = ?",
+            db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? WHERE registration_code = ? AND registration_confirmation = 0",
                 [req.body.paymentMethod, req.body.id]).then(function (row) {
                 if (row.affectedRows == 0) {
                     //res.status(400).send({ error: "confirmation failed" });

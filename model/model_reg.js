@@ -22,6 +22,7 @@ var regOnline = function (req, res) {
 };
 
 var checkQuotas = function (store, tgl, sess) {
+    //musti validasi h-5
     console.log(store+"||"+tgl+"||"+sess+"||");
     var deferred = Q.defer();
     //var sess = 1;
@@ -159,7 +160,7 @@ var registration = function (req, res) {
 var checkLocation = function (req, res) {
     var deferred = Q.defer();
     qL = "SELECT * FROM stores JOIN quotas ON quotas.store_id=stores.store_id WHERE SOUNDEX(?)= SOUNDEX(store_city) AND quota_space > 0 AND quota_date = ? LIMIT 1";
-    db.execute(qL, [req.body.location, req.body.competition_date]).then(function (rowL) {
+    db.readQuery(qL, [req.body.location, req.body.competition_date]).then(function (rowL) {
         //deferred.resolve(rowL);
         //console.log(rowL);
         if (rowL.length == 1) {
@@ -181,7 +182,7 @@ var checkLocation = function (req, res) {
 var loginConfirmation = function (req, res) {
     var deferred = Q.defer();
     if (!lib.empty(req.body.id)) {
-        db.execute("SELECT * FROM registrations WHERE registration_code = ? ", [req.body.id]).then(function (rows) {
+        db.readQuery("SELECT * FROM registrations WHERE registration_code = ? ", [req.body.id]).then(function (rows) {
             console.log(rows);
             if (rows.length == 0) {
                 deferred.resolve({
@@ -290,7 +291,7 @@ var confirmation = function (req, res) {
                     //res.json(req.body);
                     //@TODO : musti tambahin no peserta
                     //tambahin kode voucher
-                    db.execute("SELECT * FROM registrations WHERE registration_code = ?", [req.body.id]).then(function (rowReg) {
+                    db.readQuery("SELECT * FROM registrations WHERE registration_code = ?", [req.body.id]).then(function (rowReg) {
                         db.execute("UPDATE vouchers SET voucher_taken = 1, voucher_taken_by = ?, voucher_taken_date = ?, updated_date = now() WHERE voucher_code = ?",
                             [rowReg[0].registration_id, moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"), req.body.voucher])
                             .then(function (rowV) {
@@ -376,7 +377,7 @@ var status = function (req, res) {
         "JOIN quotas ON quotas.quota_id=competitions.quota_id " +
         "JOIN stores ON quotas.store_id=stores.store_id " +
         "where competitions.registration_code= ?";
-    db.execute(query, [req.params.id]).then(function (rows) {
+    db.readQuery(query, [req.params.id]).then(function (rows) {
         if (rows.length == 1) {
             var row = {
                 id: req.params.id,
@@ -407,7 +408,7 @@ var statusReg = function (req, res) {
     var query = "SELECT * FROM registrations " +
         "LEFT JOIN stores ON registrations.store_id=stores.store_id " +
         "where registrations.registration_code= ?";
-    db.execute(query, [req.params.id]).then(function (rows) {
+    db.readQuery(query, [req.params.id]).then(function (rows) {
         if (rows.length == 1) {
             var row = {
                 id: req.params.id,
@@ -444,7 +445,7 @@ var history = function (req, res) {
             "JOIN quotas ON quotas.quota_id=competitions.quota_id " +
             "JOIN stores ON quotas.store_id=stores.store_id " +
             "where competitions.registration_code= ?";
-        db.execute(query, [req.query.id]).then(function (rows) {
+        db.readQuery(query, [req.query.id]).then(function (rows) {
             if (rows.length == 1) {
                 var row = {
                     id: req.params.id,
@@ -479,13 +480,13 @@ var history = function (req, res) {
         });
     } else if (!lib.empty(req.query.nik)) {
         var query = "SELECT * FROM contestants WHERE contestant_nik = ?";
-        db.execute(query, [req.query.nik]).then(function (rows) {
+        db.readQuery(query, [req.query.nik]).then(function (rows) {
             if (rows.length == 1) {
                 var query = "SELECT * FROM competitions " +
                     "JOIN quotas ON quotas.quota_id=competitions.quota_id " +
                     "JOIN stores ON quotas.store_id=stores.store_id " +
                     "where competitions.contestant_id = ?";
-                db.execute(query, [rows[0].contestant_id]).then(function (rowsComp) {
+                db.readQuery(query, [rows[0].contestant_id]).then(function (rowsComp) {
                     var competitions = [];
                     for (i = 0; i < rowsComp.length; i++) {
                         competitions.push({
@@ -524,7 +525,7 @@ var history = function (req, res) {
 
 var paymentMethod = function (req, res) {
     var rows = [];
-    db.execute("SELECT method_id,method_name,method_active FROM payment_method where method_active = 1").then(function (rows) {
+    db.readQuery("SELECT method_id,method_name,method_active FROM payment_method where method_active = 1").then(function (rows) {
         res.json({code: 200, message: "success", data: rows});
     });
 };

@@ -26,7 +26,7 @@ var getStores = function(req,res){
     }
     q = "SELECT * FROM stores";
     if(!lib.empty(where)) { q += " WHERE "+where}
-    db.execute(q,w).then(function(rows){
+    db.readQuery(q,w).then(function(rows){
         //res.json(rows);
         res.json({ code : 200, message: "success",data:rows});
     });
@@ -39,13 +39,13 @@ getCities = function(req,res){
         query += "  WHERE city_province=?";
         params = [req.query.province];
     }
-    db.execute(query,params).then(function(rows){
+    db.readQuery(query,params).then(function(rows){
         res.json({ code : 200, message: "success",data:rows});
     });
 };
 
 var getQuotas = function(req,res){
-    db.execute("SELECT * FROM stores where store_id = '"+req.params.id+"'").then(function(rows){
+    db.readQuery("SELECT * FROM stores where store_id = '"+req.params.id+"'").then(function(rows){
         if(rows.length==0){
             res.json({
                 code : "400",
@@ -53,7 +53,7 @@ var getQuotas = function(req,res){
             });
         }else{
             var rowsS = [];
-            db.execute("SELECT quota_session,quota_space FROM quotas where store_id = '"+req.params.id+"' AND quota_date = '"+req.params.dt+"'").then(function(rowsSession){
+            db.readQuery("SELECT quota_session,quota_space FROM quotas where store_id = '"+req.params.id+"' AND quota_date = '"+req.params.dt+"'").then(function(rowsSession){
                 if(rowsSession.length==0){
                     rows[0]['session'] = rowsS;
                 }else{

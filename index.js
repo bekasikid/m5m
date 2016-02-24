@@ -249,4 +249,8 @@ app.get("/manual-mandiri/:id/:mandiri",function(req,res){
     }
 });
 
+app.get("/ticket-resend/:id",function(req,res){
+        admin.ticketResend(req,res);
+});
+
 app.listen(process.env.PORT || 3000);

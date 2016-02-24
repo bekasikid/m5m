@@ -7,14 +7,15 @@ var moment = require("moment");
 var getIP = require('ipware')().get_ip;
 var conn = null;
 var pool = null;
+var readPool = null;
 
 var openConn = function () {
     pool = mysql.createPool({
         host: "kfc.cbseeyyassm5.ap-southeast-1.rds.amazonaws.com",
         user: "fonetix",
         password: "Fonetix1pwD",
-        //database: 'kfc',
-        database: 'm5m',
+        database: 'kfc',
+        //database: 'm5m',
         //host: 'localhost',
         //database: 'eatntreat',
         //user: 'root',
@@ -27,12 +28,12 @@ var openConn = function () {
 };
 
 var openReadConn = function () {
-    pool = mysql.createPool({
-        host: "kfc-1.cbseeyyassm5.ap-southeast-1.rds.amazonaws.com:3306",
+    readPool = mysql.createPool({
+        host: "kfc-1.cbseeyyassm5.ap-southeast-1.rds.amazonaws.com",
         user: "fonetix",
         password: "Fonetix1pwD",
-        //database: 'kfc',
-        database: 'm5m',
+        database: 'kfc',
+        //database: 'm5m',
         //host: 'localhost',
         //database: 'eatntreat',
         //user: 'root',
@@ -70,8 +71,8 @@ var execute = function (query, row) {
 
 var readQuery = function (query, row) {
     var deferred = Q.defer();
-    openConn();
-    pool.getConnection(function (err, connPool) {
+    openReadConn();
+    readPool.getConnection(function (err, connPool) {
         //conn = connPool;
         console.log(query);
         console.log(row);

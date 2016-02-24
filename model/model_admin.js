@@ -325,6 +325,7 @@ var rekapStores = function (req, res) {
 
 var manualConfirm = function (req, res) {
     db.readQuery("SELECT * FROM registrations WHERE registration_code = ?", [req.params.id]).then(function (rows) {
+        console.log(rows);
         if (rows.length == 1) {
             var row = rows[0];
             //update mandiri, cek dulu status registration validnya
@@ -364,7 +365,13 @@ var manualConfirm = function (req, res) {
     });
 }
 
+var ticketResend = function (req, res) {
+    db.execute("UPDATE registrations SET email_ticket = 1 WHERE registration_code = ?",[req.params.id]).then(function () {
+        res.send("sukses");
+    });
+};
 
+module.exports.ticketResend = ticketResend;
 module.exports.manualConfirm = manualConfirm;
 module.exports.rekapStores = rekapStores;
 module.exports.rekapDate = rekapDate;

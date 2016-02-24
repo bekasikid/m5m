@@ -23,7 +23,12 @@ var regOnline = function (req, res) {
 
 var checkQuotas = function (store, tgl, sess) {
     //musti validasi h-5
-    console.log(store+"||"+tgl+"||"+sess+"||");
+    //console.log(store+"||"+tgl+"||"+sess+"||");
+    //console.log(moment(tgl, "YYYY-MM-DD").format("x"));
+    var akhir = parseInt (moment(tgl, "YYYY-MM-DD").format("X"));
+    var awal = parseInt(moment().format("X"));
+    var detik = 5*24*60*60;
+    console.log("Hasil : "+(akhir-awal)+"||"+detik);
     var deferred = Q.defer();
     //var sess = 1;
     db.execute("UPDATE quotas SET quota_space=quota_space-1 WHERE store_id = ? AND quota_date = ? AND quota_session = ? AND quota_space>0",
@@ -93,7 +98,7 @@ var registration = function (req, res) {
             "updated_date": moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss")
         };
         db.execute("INSERT INTO registrations SET ?", reg).then(function (row) {
-            console.log(row);
+            //console.log(row);
             if (row.insertId > 0) {
                 retval = req.body;
                 retval['fee'] = fee + lib.generateFee(row.insertId);

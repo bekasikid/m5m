@@ -245,7 +245,7 @@ app.get("/rekap-stores",function(req,res){
 
 app.get("/manual-mandiri/:id/:mandiri",function(req,res){
     if(lib.whitelist(req)){
-        admin.manualConfirm(req,res);
+        //admin.manualConfirm(req,res);
     }
 });
 

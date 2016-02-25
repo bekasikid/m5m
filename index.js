@@ -220,6 +220,13 @@ app.post("/sms-register",function(req,res){
 });
 
 /*dashboards*/
+app.get("/gdi/rekap",function(req,res){
+    //if(lib.whitelist(req)){
+        admin.rekapReg(req,res);
+    //}
+
+});
+
 app.get("/rekap",function(req,res){
     if(lib.whitelist(req)){
         admin.rekapReg(req,res);

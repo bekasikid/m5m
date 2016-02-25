@@ -21,6 +21,16 @@ var regOnline = function (req, res) {
     });
 };
 
+var storeValid =  function(store,tgl,sess){
+    var deferred = Q.defer();
+    db.readQuery("SELECT * FROM stores WHERE store_id = ? AND store_runner = 1",[store]).then(function(rowsStore){
+        if(rowsStore.length==1){
+
+        }
+    });
+    return deferred.promise;
+}
+
 var checkQuotas = function (store, tgl, sess) {
     //musti validasi h-5
     //console.log(store+"||"+tgl+"||"+sess+"||");
@@ -31,31 +41,39 @@ var checkQuotas = function (store, tgl, sess) {
     console.log("Hasil : "+(akhir-awal)+"||"+detik);
     var deferred = Q.defer();
     //var sess = 1;
-    db.execute("UPDATE quotas SET quota_space=quota_space-1 WHERE store_id = ? AND quota_date = ? AND quota_session = ? AND quota_space>0",
-        [store, tgl, sess]).then(function (result) {
-        if (result.affectedRows == 1) {
-            //console.log(result);
-            db.readQuery("SELECT * FROM quotas WHERE store_id = ? AND quota_date = ? AND quota_session = ?", [store, tgl, sess]).then(function (rowsQ) {
-                var kembalian = {
-                    rc: 200,
-                    quota_id: rowsQ[0].quota_id,
-                    store_id: store,
-                    quota_date: tgl,
-                    quota_session: sess
-                };
-                deferred.resolve(kembalian);
-            });
+    db.readQuery("SELECT * FROM stores WHERE store_id = ? AND store_runner = 1",[store]).then(function(rowsStore){
+        if(rowsStore.length==1){
+            db.execute("UPDATE quotas SET quota_space=quota_space-1 WHERE store_id = ? AND quota_date = ? AND quota_session = ? AND quota_space>0",
+                [store, tgl, sess]).then(function (result) {
+                if (result.affectedRows == 1) {
+                    //console.log(result);
+                    db.readQuery("SELECT * FROM quotas WHERE store_id = ? AND quota_date = ? AND quota_session = ?", [store, tgl, sess]).then(function (rowsQ) {
+                        var kembalian = {
+                            rc: 200,
+                            quota_id: rowsQ[0].quota_id,
+                            store_id: store,
+                            quota_date: tgl,
+                            quota_session: sess
+                        };
+                        deferred.resolve(kembalian);
+                    });
 
-        } else if (sess == 7) {
-            deferred.resolve({rc: 510});
-        } else {
-            sess++;
-            checkQuotas(store, tgl, sess).then(function (hasil) {
-                deferred.resolve(hasil);
-            });
+                } else if (sess == 7) {
+                    deferred.resolve({rc: 510});
+                } else {
+                    sess++;
+                    checkQuotas(store, tgl, sess).then(function (hasil) {
+                        deferred.resolve(hasil);
+                    });
 
+                }
+            });
+        }else{
+            deferred.resolve({rc: 400});
         }
     });
+
+
     return deferred.promise;
 };
 
@@ -164,7 +182,7 @@ var registration = function (req, res) {
 
 var checkLocation = function (req, res) {
     var deferred = Q.defer();
-    qL = "SELECT * FROM stores JOIN quotas ON quotas.store_id=stores.store_id WHERE SOUNDEX(?)= SOUNDEX(store_city) AND quota_space > 0 AND quota_date = ? LIMIT 1";
+    qL = "SELECT * FROM stores JOIN quotas ON quotas.store_id=stores.store_id WHERE SOUNDEX(?)= SOUNDEX(store_city) AND quota_space > 0 AND quota_date = ? AND store_runner = 1 LIMIT 1";
     db.readQuery(qL, [req.body.location, req.body.competition_date]).then(function (rowL) {
         //deferred.resolve(rowL);
         //console.log(rowL);

@@ -367,9 +367,22 @@ var manualConfirm = function (req, res) {
 
 var ticketResend = function (req, res) {
     db.execute("UPDATE registrations SET email_ticket = 1 WHERE registration_code = ?",[req.params.id]).then(function () {
-        res.send("sukses");
+        db.readQuery("SELECT * FROM registrations WHERE WHERE registration_code = ?",[req.params.id]).then(function(row){
+            res.json({
+                code:200,
+                message : "success",
+                data : {
+                    id : row[0].registration_code,
+                    name : row[0].registration_name,
+                    confirm : row[0].registration_confirmation,
+                    valid : row[0].registration_valid,
+                }
+            });
+        });
     });
 };
+
+
 
 module.exports.ticketResend = ticketResend;
 module.exports.manualConfirm = manualConfirm;

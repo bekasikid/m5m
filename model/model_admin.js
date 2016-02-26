@@ -334,32 +334,47 @@ var manualConfirm = function (req, res) {
                 //kalo udah invalid, maka kembali booking quota
                 //baru di sukseskan
                 reg.checkQuotas(row.store_id, row.competition_date, row.competition_session).then(function (retQ) {
+                    console.log(retQ);
                     if (retQ.rc == 200) {
-                        db.execute("UPDATE mandiri SET is_taken = 1, taken_by = ?, taken_date = ? WHERE mandiri_id = ? AND is_taken = 0", [row.registration_id, row.competition_date, req.params.mandiri]).then(function (sukses) {
-                            if (sukses.affectedRows == 1) {
-                                db.execute("UPDATE registrations SET competition_session = ?, registration_valid = 3 WHERE registration_code = ?", [retQ.quota_session, req.params.id]).then(function () {
-                                    res.send("sukses");
-                                });
+                        if(row.method_id==4){
+                            db.execute("UPDATE mandiri SET is_taken = 1, taken_by = ?, taken_date = ? WHERE mandiri_id = ? AND is_taken = 0", [row.registration_id, row.competition_date, req.params.mandiri]).then(function (sukses) {
+                                if (sukses.affectedRows == 1) {
+                                    db.execute("UPDATE registrations SET competition_session = ?, registration_valid = 3 WHERE registration_code = ?", [retQ.quota_session, req.params.id]).then(function () {
+                                        res.send("sukses");
+                                    });
 
-                            } else {
-                                res.send("gagal");
-                            }
+                                } else {
+                                    res.send("gagal");
+                                }
 
-                        });
+                            });
+                        }else if(row.method_id==2){
+                            db.execute("UPDATE registrations SET competition_session = ?, registration_valid = 3 WHERE registration_code = ?", [retQ.quota_session, req.params.id]).then(function () {
+                                res.send("sukses");
+                            });
+                        }
+
                     }
                 });
             }else if(row.registration_valid == 0){
-                db.execute("UPDATE mandiri SET is_taken = 1, taken_by = ?, taken_date = ? WHERE mandiri_id = ? AND is_taken = 0", [row.registration_id, row.competition_date, req.params.mandiri]).then(function (sukses) {
-                    if (sukses.affectedRows == 1) {
-                        db.execute("UPDATE registrations SET registration_valid = 3 WHERE registration_code = ?", [req.params.id]).then(function () {
-                            res.send("sukses");
-                        });
+                //console.log(parseInt(row.method_id) == 4);
+                if(row.method_id==4){
+                    db.execute("UPDATE mandiri SET is_taken = 1, taken_by = ?, taken_date = ? WHERE mandiri_id = ? AND is_taken = 0", [row.registration_id, row.competition_date, req.params.mandiri]).then(function (sukses) {
+                        if (sukses.affectedRows == 1) {
+                            db.execute("UPDATE registrations SET competition_session = ?, registration_valid = 3 WHERE registration_code = ?", [row.competition_session, req.params.id]).then(function () {
+                                res.send("sukses");
+                            });
 
-                    } else {
-                        res.send("gagal");
-                    }
+                        } else {
+                            res.send("gagal");
+                        }
 
-                });
+                    });
+                }else if(row.method_id==2){
+                    db.execute("UPDATE registrations SET competition_session = ?, registration_valid = 3 WHERE registration_code = ?", [row.competition_session, req.params.id]).then(function () {
+                        res.send("sukses");
+                    });
+                }
             }
         }
     });

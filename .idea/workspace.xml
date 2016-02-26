@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ce5f5be6-9def-4f60-99a4-1a0d4b4a9d1e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/model_reg.js" afterPath="$PROJECT_DIR$/model/model_reg.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notif.html" afterPath="$PROJECT_DIR$/notif.html" />
     </list>
     <ignored path="kfc.iws" />
@@ -28,16 +28,16 @@
         <entry file="file://$PROJECT_DIR$/index.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="177" column="14" selection-start-line="177" selection-start-column="14" selection-end-line="177" selection-end-column="14" />
+              <caret line="263" column="0" selection-start-line="263" selection-start-column="0" selection-end-line="263" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="model_db.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="model_db.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model/model_db.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
+            <state vertical-scroll-proportion="0.85858583">
               <caret line="36" column="28" selection-start-line="36" selection-start-column="28" selection-end-line="36" selection-end-column="28" />
               <folding />
             </state>
@@ -67,8 +67,8 @@
       <file leaf-file-name="model_reg.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/model_reg.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-194.03448">
-              <caret line="574" column="42" selection-start-line="574" selection-start-column="42" selection-end-line="574" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="256" column="64" selection-start-line="256" selection-start-column="64" selection-end-line="256" selection-end-column="64" />
               <folding />
             </state>
           </provider>
@@ -104,11 +104,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="notif.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="notif.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/notif.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="2.6760564">
-              <caret line="95" column="37" selection-start-line="95" selection-start-column="37" selection-end-line="95" selection-end-column="37" />
+            <state vertical-scroll-proportion="-5.8846154">
+              <caret line="93" column="97" selection-start-line="93" selection-start-column="97" selection-end-line="93" selection-end-column="106" />
               <folding />
             </state>
           </provider>
@@ -126,12 +126,12 @@
         <option value="$PROJECT_DIR$/model/model_filter.js" />
         <option value="$PROJECT_DIR$/model/model_sms.js" />
         <option value="$PROJECT_DIR$/model/model_quotas.js" />
-        <option value="$PROJECT_DIR$/model/model_reg.js" />
         <option value="$PROJECT_DIR$/model/model_db.js" />
         <option value="$PROJECT_DIR$/model/model_admin.js" />
         <option value="$PROJECT_DIR$/model/model_library.js" />
         <option value="$PROJECT_DIR$/index.js" />
         <option value="$PROJECT_DIR$/notif.html" />
+        <option value="$PROJECT_DIR$/model/model_reg.js" />
       </list>
     </option>
   </component>
@@ -675,10 +675,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/model_db.js">
+    <entry file="file://$PROJECT_DIR$/notif.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.8846154">
+          <caret line="93" column="97" selection-start-line="93" selection-start-column="97" selection-end-line="93" selection-end-column="106" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/model_reg.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="36" column="28" selection-start-line="36" selection-start-column="28" selection-end-line="36" selection-end-column="28" />
+          <caret line="256" column="64" selection-start-line="256" selection-start-column="64" selection-end-line="256" selection-end-column="64" />
           <folding />
         </state>
       </provider>
@@ -686,23 +694,15 @@
     <entry file="file://$PROJECT_DIR$/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="177" column="14" selection-start-line="177" selection-start-column="14" selection-end-line="177" selection-end-column="14" />
+          <caret line="263" column="0" selection-start-line="263" selection-start-column="0" selection-end-line="263" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/model_reg.js">
+    <entry file="file://$PROJECT_DIR$/model/model_db.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-194.03448">
-          <caret line="574" column="42" selection-start-line="574" selection-start-column="42" selection-end-line="574" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notif.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.6760564">
-          <caret line="95" column="37" selection-start-line="95" selection-start-column="37" selection-end-line="95" selection-end-column="37" />
+        <state vertical-scroll-proportion="0.85858583">
+          <caret line="36" column="28" selection-start-line="36" selection-start-column="28" selection-end-line="36" selection-end-column="28" />
           <folding />
         </state>
       </provider>

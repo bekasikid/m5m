@@ -254,6 +254,7 @@ var sendMail = function (req, res) {
                     var emailText = str.replace("{{nodaftar}}", row[0]['registration_code']);
                     var emailText = emailText.replace("{{nominal}}", lib.number_format((150000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
                     var emailText = emailText.replace("{{total}}", lib.number_format((150000 + 2000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
+                    var emailText = emailText.replace("{{ingat}}", lib.number_format((150000 + 2000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
 
                     var sendgrid = require("sendgrid")("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");
                     var email = new sendgrid.Email();

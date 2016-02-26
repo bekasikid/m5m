@@ -29,18 +29,19 @@ var incomingSms  = function(req,res){
             "sms_time": [req.query.time.slice(0, 10), " ", req.query.time.slice(10)].join(''),
             "sms_telcoid": req.query.telcoid,
             "sms_shortCode": req.query.shortcode,
+            "query_param" : JSON.stringify(req.query),
             "ip_sender" : ip.clientIp
         };
         db.execute("INSERT INTO sms_receive SET ?", smsRow).then(function(row){
             //console.log(row);
             var words = smsRow.sms_text.toLowerCase();
             console.log(words);
-            var n = words.search("#");
+            //var n = words.search("#");
             var valid = true;
             keyword = words.substr(0,4).substr(0,3);
             formatSms = "kfc#"+words.substr(4).trim();
             words = formatSms;
-            //console.log(words);
+            console.log(words);
             //words = words.toLowerCase();
             //if(n>0){
             //    valid = 1;

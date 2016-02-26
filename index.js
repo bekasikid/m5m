@@ -204,11 +204,12 @@ sms parsing
 app.get("/sms-receive",function(req,res){
     //202.158.19.226
     var ip = getIP(req);
-    if(ip.clientIp == "202.158.19.226"){
-        sms.incomingSms(req,res);
-    }else{
-        res.status(401).send({ code : 401, message: "unauthorized"});
-    }
+    //if(ip.clientIp == "202.158.19.226"){
+    //    sms.incomingSms(req,res);
+    //}else{
+    //    res.status(401).send({ code : 401, message: "unauthorized"});
+    //}
+    sms.incomingSms(req,res);
 
 });
 

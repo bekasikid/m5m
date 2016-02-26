@@ -10,17 +10,13 @@ var qs = require("querystring");
 var Q = require("q");
 var getIP = require('ipware')().get_ip;
 var domainWeb ="www.menang5miliar.com";
-var getIP = require('ipware')().get_ip;
 var callCenter = "08551555025";
 var rekBCA = "";
 var rekMandiri = "";
-var keyword = "kfc";
-
 
 var incomingSms  = function(req,res){
     console.log(req.query);
     if(!lib.empty(req.query.moid || !lib.empty(req.query.msgid))){
-        var ip = getIP(req);
         var smsRow = {
             "provider_id" : lib.empty(req.query.moid)? req.query.msgid: req.query.moid,
             "provider" : "infinetwork",
@@ -28,8 +24,7 @@ var incomingSms  = function(req,res){
             "sms_text": req.query.text,
             "sms_time": [req.query.time.slice(0, 10), " ", req.query.time.slice(10)].join(''),
             "sms_telcoid": req.query.telcoid,
-            "sms_shortCode": req.query.shortcode,
-            "ip_sender" : ip.clientIp
+            "sms_shortCode": req.query.shortcode
         };
         db.execute("INSERT INTO sms_receive SET ?", smsRow).then(function(row){
             //console.log(row);
@@ -45,20 +40,18 @@ var incomingSms  = function(req,res){
             //if(n>0){
             //    valid = 1;
                 var text = words.split("#");
-            //}else{ http://localhost:3000/sms-receive?from=085711226429&text=kfc%23daftar%2312312312313%23andree%23bandung%232016-03-22&time=2016-02-1222%3A00%3A00&moid=4&shortcode=85899&telcoid=1
+            //}else{
             //    var text = words.split(" ");
             //}
 
             //console.log(text);
             if(!valid){
-                var kata = "Pendaftaran ketik "+keyword+" DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
+                var kata = "Pendaftaran ketik KFC DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
                 res.send("4 "+responseSMS(req.query.from,kata,500));
             }else{
-                console.log(text);
                 if (text[1]== "daftar"){
                     if(!lib.empty(text[2])){
                         var compDate = text[5].split("/");
-                        console.log(compDate);
                         req.body={
                             nik:text[2],
                             name:text[3],
@@ -78,7 +71,7 @@ var incomingSms  = function(req,res){
                             }
                         });
                     }else{
-                        var kata = "Pendaftaran ketik "+keyword+" DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
+                        var kata = "Pendaftaran ketik KFC DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
                         res.send("4 "+responseSMS(req.query.from,kata,5000));
                     }
 
@@ -93,7 +86,7 @@ var incomingSms  = function(req,res){
                     }
 
                     if(metode==0){
-                        var kata = "Pembayaran ketik "+keyword+" BAYAR#(NO REG)#MANDIRI/BCA/KFC#NO STRUK kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
+                        var kata = "Pembayaran ketik KFC BAYAR#(NO REG)#MANDIRI/BCA/KFC#NO STRUK kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
                         res.send("4 "+responseSMS(req.query.from,kata,500));
                     }else{
                         req.body={
@@ -117,10 +110,10 @@ var incomingSms  = function(req,res){
                 }else if (text[1]=="menang"){
                     res.json(smsRow);
                 }else if (text[1]=="cara"){
-                    var kata = "Pendaftaran ketik "+keyword+" DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
+                    var kata = "Pendaftaran ketik KFC DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
                     res.send("4 "+responseSMS(req.query.from,kata,5000));
                 }else{
-                    var kata = "Pendaftaran ketik "+keyword+"#DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
+                    var kata = "Pendaftaran ketik KFC#DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
                     res.send("4 "+responseSMS(req.query.from,kata,500));
                 }
             }

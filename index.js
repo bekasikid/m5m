@@ -4,7 +4,7 @@
 //"use strict";
 var express = require('express');
 var app = express();
-
+app.enable('trust proxy');
 //var db = require("./model/model_db");
 var lib = require("./model/model_library");
 var admin = require("./model/model_admin");

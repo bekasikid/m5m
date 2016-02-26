@@ -4,7 +4,7 @@
 //"use strict";
 var express = require('express');
 var app = express();
-app.enable('trust proxy');
+app.enable('trust proxy',1);
 //var db = require("./model/model_db");
 var lib = require("./model/model_library");
 var admin = require("./model/model_admin");
@@ -209,7 +209,7 @@ app.get("/sms-receive",function(req,res){
     //}else{
     //    res.status(401).send({ code : 401, message: "unauthorized"});
     //}
-    sms.incomingSms(req,res);
+    //sms.incomingSms(req,res);
 
 });
 

@@ -168,7 +168,6 @@ var daftar = function (req, res) {
 
 var mandiri = function (req, res) {
     var deferred = Q.defer();
-
     var sort = "";
     var limit = "";
     if (req.query.tipe == 'total') {

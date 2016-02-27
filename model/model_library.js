@@ -138,6 +138,17 @@ function whitelist(req){
     }
 }
 
+function getIP(req){
+    var ip_address = null;
+    try {
+        ip_address = req.headers['x-forwarded-for'];
+    }
+    catch ( error ) {
+        ip_address = req.connection.remoteAddress;
+    }
+    return ip_address;
+}
+
 function number_format (number, decimals, dec_point, thousands_sep) {
     var n = number, prec = decimals;
 
@@ -179,6 +190,7 @@ function number_format (number, decimals, dec_point, thousands_sep) {
 }
 
 module.exports.whitelist = whitelist;
+module.exports.getIP = getIP;
 module.exports.number_format = number_format;
 module.exports.empty = empty;
 module.exports.isset = isset;

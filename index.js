@@ -174,12 +174,6 @@ app.post("/update-score",function(req,res){
     });
 });
 
-app.get("/mandiri",function(req,res){
-    admin.mandiri(req,res).then(function(rows){
-        //res.json(rows);
-    });
-});
-
 app.post("/ganti-jadwal",function(req,res){
     //console.log(req.body);
     //res.json(req.body);
@@ -257,6 +251,13 @@ app.get("/manual-mandiri/:id/:mandiri",function(req,res){
     if(lib.whitelist(req)){
         admin.manualConfirm(req,res);
     }
+});
+
+app.get("/mandiri",function(req,res){
+    //admin.mandiri(req,res).then(function(rows){
+        //res.json(rows);
+    //});
+    res.send(lib.getIP(req));
 });
 
 app.get("/ticket-resend/:id",function(req,res){

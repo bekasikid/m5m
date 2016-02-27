@@ -163,15 +163,15 @@ app.get("/daftar",function(req,res){
 });
 
 app.post("/update-score",function(req,res){
-    //admin.score(req,res);
+    admin.score(req,res);
     //console.log(re)
-    filterModel.validateAdmin(req,res).then(function(retval){
-        if(retval.rc==200){
-            res.json(req.body);
-        }else{
-            res.send("gagal");
-        }
-    });
+    //filterModel.validateAdmin(req,res).then(function(retval){
+    //    if(retval.rc==200){
+    //        res.json(req.body);
+    //    }else{
+    //        res.send("gagal");
+    //    }
+    //});
 });
 
 app.post("/ganti-jadwal",function(req,res){

@@ -127,7 +127,7 @@ var daftar = function (req, res) {
     var wh = "";
     var where = [];
     var params = [];
-    if (!lib.empty(req.query.id) || !lib.empty(req.query.nik) || !lib.empty(req.query.name)) {
+    if (!lib.empty(req.query.id) || !lib.empty(req.query.nik) || !lib.empty(req.query.name) || !lib.empty(req.query.email) || !lib.empty(req.query.phone)) {
         if (!lib.empty(req.query.id)) {
             where.push(" registrations.registration_code = ? ");
             params.push(req.query.id);
@@ -149,7 +149,7 @@ var daftar = function (req, res) {
         }
 
         if (!lib.empty(req.query.email)) {
-            where.push(" registrations.registration_email = ?");
+            where.push(" registrations.registration_email like ?");
             params.push("%" + req.query.email + "%");
         }
 

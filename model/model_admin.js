@@ -337,7 +337,7 @@ var manualConfirm = function (req, res) {
                     console.log(retQ);
                     if (retQ.rc == 200) {
                         if(row.method_id==4){
-                            db.execute("UPDATE mandiri SET is_taken = 1, taken_by = ?, taken_date = ? WHERE mandiri_id = ? AND is_taken = 0", [row.registration_id, row.competition_date, req.params.mandiri]).then(function (sukses) {
+                            db.execute("UPDATE mandiri SET is_taken = 1, taken_by = ?, taken_date = ? WHERE mandiri_id = ? AND is_taken = 0", [row.registration_id, moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"), req.params.mandiri]).then(function (sukses) {
                                 if (sukses.affectedRows == 1) {
                                     db.execute("UPDATE registrations SET competition_session = ?, registration_valid = 3 WHERE registration_code = ?", [retQ.quota_session, req.params.id]).then(function () {
                                         res.send("sukses");
@@ -359,7 +359,7 @@ var manualConfirm = function (req, res) {
             }else if(row.registration_valid == 0){
                 //console.log(parseInt(row.method_id) == 4);
                 if(row.method_id==4){
-                    db.execute("UPDATE mandiri SET is_taken = 1, taken_by = ?, taken_date = ? WHERE mandiri_id = ? AND is_taken = 0", [row.registration_id, row.competition_date, req.params.mandiri]).then(function (sukses) {
+                    db.execute("UPDATE mandiri SET is_taken = 1, taken_by = ?, taken_date = ? WHERE mandiri_id = ? AND is_taken = 0", [row.registration_id, moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"), req.params.mandiri]).then(function (sukses) {
                         if (sukses.affectedRows == 1) {
                             db.execute("UPDATE registrations SET competition_session = ?, registration_valid = 3 WHERE registration_code = ?", [row.competition_session, req.params.id]).then(function () {
                                 res.send("sukses");

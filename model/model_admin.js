@@ -401,6 +401,10 @@ var ticketResend = function (req, res) {
     });
 };
 
+var updateScore = function(req,res){
+    
+}
+
 
 
 module.exports.ticketResend = ticketResend;

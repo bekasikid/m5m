@@ -382,7 +382,7 @@ var manualConfirm = function (req, res) {
 
 var ticketResend = function (req, res) {
     db.execute("UPDATE registrations SET email_ticket = 1 WHERE registration_code = ?",[req.params.id]).then(function () {
-        db.readQuery("SELECT * FROM registrations WHERE WHERE registration_code = ?",[req.params.id]).then(function(row){
+        db.readQuery("SELECT * FROM registrations WHERE registration_code = ?",[req.params.id]).then(function(row){
             res.json({
                 code:200,
                 message : "success",

@@ -183,7 +183,7 @@ app.get("/mandiri",function(req,res){
 app.post("/ganti-jadwal",function(req,res){
     //console.log(req.body);
     //res.json(req.body);
-    //reg.rubah(req,res);
+    reg.rubah(req,res);
 });
 /*master data*/
 app.get("/payment-method",function(req,res){

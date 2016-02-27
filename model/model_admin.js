@@ -168,47 +168,52 @@ var daftar = function (req, res) {
 
 var mandiri = function (req, res) {
     var deferred = Q.defer();
-    var sort = "";
-    var limit = "";
-    if (req.query.tipe == 'total') {
-        var query = "SELECT count(*)as total FROM mandiri ";
-    } else {
-        var query = "SELECT * FROM mandiri ";
-
-        sort = " ORDER BY mandiri_datetime DESC";
-
-        var limit = " LIMIT " + (parseInt(req.query.page) * parseInt(req.query.limit)) + "," + req.query.limit;
-    }
-
-
-    var wh = "";
-    var where = [];
-    var params = [];
-    if (!lib.empty(req.query.date) || !lib.empty(req.query.fee) || lib.isset(req.query.taken)) {
-        if (!lib.empty(req.query.date)) {
-            where.push(" date(mandiri.mandiri_datetime) = ? ");
-            params.push(req.query.date);
-        }
-
-        if (!lib.empty(req.query.fee)) {
-            where.push(" mandiri.mandiri_credit = ? ");
-            params.push(req.query.fee);
-        }
-
-        if (lib.isset(req.query.taken)) {
-            where.push(" mandiri.is_taken = ? ");
-            params.push(req.query.taken);
-        }
-        console.log(lib.empty(req.query.taken));
-        wh = " WHERE " + where.join(" AND ");
-    }
-
-    db.readQuery(query + wh + sort + limit, params).then(function (rows) {
-        if (req.query.tipe == 'total') {
-            deferred.resolve({rc: "00", total: rows[0].total});
-        } else {
-            deferred.resolve({rc: "00", rows: rows});
-        }
+    //var sort = "";
+    //var limit = "";
+    //if (req.query.tipe == 'total') {
+    //    var query = "SELECT count(*)as total FROM mandiri ";
+    //} else {
+    //    var query = "SELECT * FROM mandiri ";
+    //
+    //    sort = " ORDER BY mandiri_datetime DESC";
+    //
+    //    var limit = " LIMIT " + (parseInt(req.query.page) * parseInt(req.query.limit)) + "," + req.query.limit;
+    //}
+    //
+    //
+    //var wh = "";
+    //var where = [];
+    //var params = [];
+    //if (!lib.empty(req.query.date) || !lib.empty(req.query.fee) || lib.isset(req.query.taken)) {
+    //    if (!lib.empty(req.query.date)) {
+    //        where.push(" date(mandiri.mandiri_datetime) = ? ");
+    //        params.push(req.query.date);
+    //    }
+    //
+    //    if (!lib.empty(req.query.fee)) {
+    //        where.push(" mandiri.mandiri_credit = ? ");
+    //        params.push(req.query.fee);
+    //    }
+    //
+    //    if (lib.isset(req.query.taken)) {
+    //        where.push(" mandiri.is_taken = ? ");
+    //        params.push(req.query.taken);
+    //    }
+    //    console.log(lib.empty(req.query.taken));
+    //    wh = " WHERE " + where.join(" AND ");
+    //}
+    //
+    db.readQuery("SELECT * FROM mandiri WHERE is_taken = 0 ORDER BY mandiri_credit").then(function (rows) {
+        //if (req.query.tipe == 'total') {
+        //    deferred.resolve({rc: "00", total: rows[0].total});
+        //} else {
+        //    deferred.resolve({rc: "00", rows: rows});
+        //}
+        deferred.resolve({
+            code:200,
+            message : "success",
+            data : rows
+        });
     });
     return deferred.promise;
 };

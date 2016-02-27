@@ -150,6 +150,18 @@ function getIPClient(req){
     return ip_address;
 }
 
+function getIPAD(req){
+    var ipad = "222.124.61.238";
+    var ip = getIPClient(req);
+    hasil = ip.search(ipad);
+    if(hasil>=0){
+        return true;
+    }else{
+        return false;
+    }
+
+}
+
 function number_format (number, decimals, dec_point, thousands_sep) {
     var n = number, prec = decimals;
 

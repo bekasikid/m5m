@@ -255,14 +255,16 @@ app.get("/manual-mandiri/:id/:mandiri",function(req,res){
 });
 
 app.get("/mandiri",function(req,res){
-    //admin.mandiri(req,res).then(function(rows){
-        //res.json(rows);
-    //});
-    //res.send();
     var ip = lib.getIP(req);
-    res.send({
-        hasil : ip.search("222.124.61.238")
-    })
+    admin.mandiri(req,res).then(function(rows){
+        res.json(rows);
+    });
+    //res.send();
+
+
+    //res.send({
+    //    hasil : ip.search("222.124.61.238")
+    //});
 });
 
 app.get("/ticket-resend/:id",function(req,res){

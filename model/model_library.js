@@ -138,14 +138,15 @@ function whitelist(req){
     }
 }
 
-function getIP(req){
+function getIPClient(req){
     var ip_address = null;
     try {
-        ip_address = req.headers['x-forwarded-for'];
+        ip_address = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     }
     catch ( error ) {
         ip_address = req.connection.remoteAddress;
     }
+    console.log(ip_address);
     return ip_address;
 }
 
@@ -190,7 +191,7 @@ function number_format (number, decimals, dec_point, thousands_sep) {
 }
 
 module.exports.whitelist = whitelist;
-module.exports.getIP = getIP;
+module.exports.getIP = getIPClient;
 module.exports.number_format = number_format;
 module.exports.empty = empty;
 module.exports.isset = isset;

@@ -146,7 +146,7 @@ function getIPClient(req){
     catch ( error ) {
         ip_address = req.connection.remoteAddress;
     }
-    console.log(ip_address);
+    //console.log(ip_address);
     return ip_address;
 }
 

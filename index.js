@@ -197,7 +197,8 @@ sms parsing
 
 app.get("/sms-receive",function(req,res){
     //202.158.19.226
-    var ip = getIP(req);
+    //var ip = getIP(req);
+    //var ip = lib.getIP(req,ip);
     //if(ip.clientIp == "202.158.19.226"){
     //    sms.incomingSms(req,res);
     //}else{
@@ -257,7 +258,11 @@ app.get("/mandiri",function(req,res){
     //admin.mandiri(req,res).then(function(rows){
         //res.json(rows);
     //});
-    res.send(lib.getIP(req));
+    //res.send();
+    var ip = lib.getIP(req);
+    res.send({
+        hasil : ip.search("222.124.61.238")
+    })
 });
 
 app.get("/ticket-resend/:id",function(req,res){

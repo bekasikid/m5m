@@ -125,7 +125,8 @@ var incomingSms  = function(req,res){
                                 }else if(result.retval.data.session==6 || result.retval.data.session==7) {
                                     jam = "14:45";
                                 }
-                                var kata = "NO "+result.retval.data.no+", KFC "+result.retval.data.store+", tgl "+result.retval.data.date+", jam "+jam+". datang tepat waktu,tunjukkan sms ini dan tanda pengenal";
+                                var tgl = moment(result.retval.data.date,"YYYY-MM-DD").format("DD/MM/YYYY")
+                                var kata = "NO "+result.retval.data.no+", KFC "+result.retval.data.store+", tgl "+tgl+", jam "+jam+". datang tepat waktu,tunjukkan sms ini dan tanda pengenal";
                                 res.send(responseSMS(req.query.from,kata,1000));
                             }else{
                                 var kata = "Konfirmasi pembayaran tidak berhasil. Hub "+callCenter+" atau "+domainWeb;

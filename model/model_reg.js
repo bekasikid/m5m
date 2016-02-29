@@ -240,7 +240,7 @@ var loginConfirmation = function (req, res) {
 };
 
 var sendMail = function (req, res) {
-    db.readQuery("SELECT * FROM registrations WHERE registration_code = ?",
+    db.readQuery("SELECT * FROM registrations JOIN stores ON registrations.store_id = stores.store_id WHERE registration_code = ?",
         [req.params.id]).then(function (row) {
         db.execute("UPDATE registrations SET email_payment = 1 WHERE registration_code = ? AND email_payment = 0", [req.params.id]).then(function (resultUpdate) {
             if (resultUpdate.affectedRows == 1) {
@@ -253,6 +253,18 @@ var sendMail = function (req, res) {
                     //console.log(data.toString());
                     str = data.toString();
                     var emailText = str.replace("{{nodaftar}}", row[0]['registration_code']);
+                    var emailText = emailText.replace("{{noktp}}", row[0]['registration_nik']);
+                    var emailText = emailText.replace("{{nama}}", row[0]['registration_name']);
+                    var emailText = emailText.replace("{{lokasi}}", row[0]['store_name']);
+                    var emailText = emailText.replace("{{tanggal}}", moment(row[0]['competition_date'],"YYYY-MM-DD").tz("Asia/Jakarta").format("DD/MM/YYYY"));
+                    var jam = "12:45";
+                    if(row[0]['competition_session']==4 || row[0]['competition_session']==5){
+                        var jam = "13:45";
+                    }else if(row[0]['competition_session']==6 || row[0]['competition_session']==7){
+                        var jam = "14:45";
+                    }
+                    var emailText = emailText.replace("{{jam}}", jam);
+
                     var emailText = emailText.replace("{{nominal}}", lib.number_format((150000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
                     var emailText = emailText.replace("{{total}}", lib.number_format((150000 + 2000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
                     var emailText = emailText.replace("{{ingat}}", lib.number_format((150000 + 2000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
@@ -668,19 +680,23 @@ var rek = function (i) {
 
 var rubah = function (req, res) {
     db.readQuery("SELECT * FROM competitions WHERE registration_code = ?", [req.body.id]).then(function (rows) {
-        checkQuotas(req.body.store_id, req.body.date, req.body.session_id).then(function (rowQ) {
-            if (rowQ.rc == 200) {
-                db.execute("UPDATE quotas SET quota_space = quota_space + 1 WHERE quota_id = ?", [rows[0].quota_id]).then(function () {
-                    db.execute("UPDATE competitions SET quota_id = ? WHERE registration_code = ?", [rowQ.quota_id,req.body.id]).then(function () {
-                        //sendmail perubahan
-                        console.log(rowQ);
-                        db.execute("UPDATE registrations SET competition_session = ?, email_ticket = 1 WHERE registration_code = ?",[rowQ.quota_session,req.body.id]).then(function(rows){
-                            res.send("success");
-                        })
+        console.lgo(rows);
+        if(rows.length==1){
+            checkQuotas(req.body.store_id, req.body.date, req.body.session_id).then(function (rowQ) {
+                console.log(rowQ);
+                if (rowQ.rc == 200) {
+                    db.execute("UPDATE quotas SET quota_space = quota_space + 1 WHERE quota_id = ?", [rows[0].quota_id]).then(function () {
+                        db.execute("UPDATE competitions SET quota_id = ? WHERE registration_code = ?", [rowQ.quota_id,req.body.id]).then(function () {
+                            //sendmail perubahan
+                            console.log(rowQ);
+                            db.execute("UPDATE registrations SET competition_session = ?, email_ticket = 1 WHERE registration_code = ?",[rowQ.quota_session,req.body.id]).then(function(rows){
+                                res.send("success");
+                            })
+                        });
                     });
-                });
-            }
-        })
+                }
+            });
+        }
     });
 };
 

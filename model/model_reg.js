@@ -111,6 +111,7 @@ var registration = function (req, res) {
             "store_id": lib.empty(req.body.store_id) ? "" : req.body.store_id,
             "competition_date": lib.empty(req.body.competition_date) ? "" : req.body.competition_date,
             "competition_session": lib.empty(req.body.competition_session) ? 1 : req.body.competition_session,
+            "registration_method": lib.empty(req.body.reg_from) ? "Online" : req.body.reg_from,
             "registration_gcm": lib.empty(req.body.gcm) ? "" : req.body.gcm,
             "created_date": moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"),
             "updated_date": moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss")
@@ -321,12 +322,100 @@ var confirmation = function (req, res) {
                             .then(function (rowV) {
                                 if (rowV.affectedRows == 1) {
                                     db.execute("UPDATE registrations SET registration_valid = 1 WHERE registration_code = ?", [req.body.id]).then(function () {
-                                        deferred.resolve({
-                                            rc: 200,
-                                            retval: {
-                                                code: 200,
-                                                message: "success",
-                                                data: req.body
+                                        //proses tambah peserta
+                                        db.readQuery("SELECT * FROM contestants WHERE contestant_nik = ? AND contestant_name =?",[rowReg[0].registration_nik,rowReg[0].registration_name]).then(function(rowCon){
+                                            if(rowCon.length==0){
+                                                var cont = {
+                                                    contestant_nik : rowReg[0].registration_nik,
+                                                    contestant_name : rowReg[0].registration_name,
+                                                    contestant_phone : rowReg[0].registration_phone,
+                                                    created_date : moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss")
+                                                };
+                                                db.execute("INSERT INTO contestants SET ? ",cont).then(function(resCont){
+                                                    db.readQuery("SELECT * FROM quotas JOIN stores ON quotas.store_id = stores.store_id WHERE quotas.quota_date = ? AND quotas.quota_session = ? AND quotas.store_id = ?",[rowReg[0].competition_date,rowReg[0].competition_session,rowReg[0].store_id]).then(function(rowsQuota){
+                                                        db.readQuery("SELECT * FROM competitions WHERE registration_code = ?",[req.body.id]).then(function(rowsComp){
+                                                            console.log(rowsComp);
+                                                           if(rowsComp.length==0){
+                                                               console.log(rowsComp.length);
+                                                               var compRow = {
+                                                                   quota_id : rowsQuota[0].quota_id,
+                                                                   contestant_id : resCont.insertId,
+                                                                   registration_code : req.body.id,
+                                                                   competition_no : rowReg[0].store_id + lib.str_pad(rowReg[0].registration_id, 5, "0", "STR_PAD_LEFT"),
+                                                                   created_date : moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss")
+                                                               };
+                                                               console.log(compRow);
+                                                               db.execute("INSERT INTO competitions SET ?",compRow).then(function(){
+                                                                   deferred.resolve({
+                                                                       rc: 200,
+                                                                       retval: {
+                                                                           code: 200,
+                                                                           message: "success",
+                                                                           data: {
+                                                                               id : req.body.id,
+                                                                               no : compRow.competition_no,
+                                                                               store : rowsQuota[0].store_name,
+                                                                               "date" : rowsQuota[0].quota_date,
+                                                                               "session" : rowsQuota[0].quota_session
+                                                                           }
+                                                                       }
+                                                                   });
+                                                               })
+                                                           }else{
+                                                               deferred.resolve({
+                                                                   rc: 400,
+                                                                   retval: {
+                                                                       code: 400,
+                                                                       message: "Peserta sudah terdaftar",
+                                                                       data: req.body
+                                                                   }
+                                                               });
+                                                           }
+                                                        });
+                                                    });
+                                                });
+                                            }else{
+                                                db.readQuery("SELECT * FROM quotas JOIN stores ON quotas.store_id = stores.store_id WHERE quotas.quota_date = ? AND quotas.quota_session = ? AND quotas.store_id = ?",[rowReg[0].competition_date,rowReg[0].competition_session,rowReg[0].store_id]).then(function(rowsQuota){
+                                                    db.readQuery("SELECT * FROM competitions WHERE registration_code = ?",[req.body.id]).then(function(rowsComp){
+                                                        console.log(rowsComp);
+                                                        if(rowsComp.length==0){
+                                                            console.log(rowsComp.length);
+                                                            var compRow = {
+                                                                quota_id : rowsQuota[0].quota_id,
+                                                                contestant_id : rowCon[0].contestant_id,
+                                                                registration_code : req.body.id,
+                                                                competition_no : rowReg[0].store_id + lib.str_pad(rowReg[0].registration_id, 5, "0", "STR_PAD_LEFT"),
+                                                                created_date : moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss")
+                                                            };
+                                                            console.log(compRow);
+                                                            db.execute("INSERT INTO competitions SET ?",compRow).then(function(){
+                                                                deferred.resolve({
+                                                                    rc: 200,
+                                                                    retval: {
+                                                                        code: 200,
+                                                                        message: "success",
+                                                                        data: {
+                                                                            id : req.body.id,
+                                                                            no : compRow.competition_no,
+                                                                            store : rowsQuota[0].store_name,
+                                                                            "date" : rowsQuota[0].quota_date,
+                                                                            "session" : rowsQuota[0].quota_session
+                                                                        }
+                                                                    }
+                                                                });
+                                                            })
+                                                        }else{
+                                                            deferred.resolve({
+                                                                rc: 400,
+                                                                retval: {
+                                                                    code: 400,
+                                                                    message: "Peserta sudah terdaftar",
+                                                                    data: req.body
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                });
                                             }
                                         });
                                     })
@@ -429,33 +518,44 @@ var status = function (req, res) {
 };
 
 var statusReg = function (req, res) {
-    var query = "SELECT * FROM registrations " +
+    var query = "SELECT * FROM registrations LEFT JOIN competitions ON registrations.registration_code = competitions.registration_code  " +
         "LEFT JOIN stores ON registrations.store_id=stores.store_id " +
         "where registrations.registration_code= ?";
     db.readQuery(query, [req.params.id]).then(function (rows) {
         if (rows.length == 1) {
-            var row = {
-                id: req.params.id,
-                nik: rows[0]['registration_nik'],
-                name: rows[0]['registration_name'],
-                store: {
-                    store_id: rows[0]['store_id'],
-                    store_name: rows[0]['store_name'],
-                    store_address: rows[0]['store_address'],
-                    store_city: rows[0]['store_city'],
-                    store_province: rows[0]['store_province'],
-                    store_lat: rows[0]['store_lat'],
-                    store_long: rows[0]['store_long'],
-                    store_type: rows[0]['store_type']
-                },
-                payment: rows[0]['method_id'],
-                payment_name: rows[0]['payment_from'],
-                reffno: rows[0]['payment_reffno'],
-                competition_date: rows[0]['competition_date'],
-                paid: rows[0]['registration_confirmation'],
-                valid: rows[0]['registration_valid']
-            };
-            res.json({code: 200, message: "success", data: row});
+            if(lib.empty(rows[0].competition_id)){
+                qStores = "SELECT * FROM stores JOIN cities ON stores.store_city = cities.city_code WHERE store_id = ?";
+                pStores = [rows[0].store_id];
+            }else{
+                qStores = "SELECT * FROM quotas JOIN stores ON quotas.store_id = stores.store_id JOIN cities ON stores.store_city = cities.city_code WHERE quotas.quota_id = ?";
+                pStores = [rows[0].quota_id];
+            }
+            db.readQuery(qStores,pStores).then(function(rowsStore){
+                var row = {
+                    id: req.params.id,
+                    nik: rows[0]['registration_nik'],
+                    name: rows[0]['registration_name'],
+                    store: {
+                        store_id: rowsStore[0]['store_id'],
+                        store_name: rowsStore[0]['store_name'],
+                        store_address: rowsStore[0]['store_address'],
+                        store_city: rowsStore[0]['city_name'],
+                        store_province: rowsStore[0]['city_province'],
+                        store_lat: rowsStore[0]['store_lat'],
+                        store_long: rowsStore[0]['store_long'],
+                        store_type: rowsStore[0]['store_type']
+                    },
+                    payment: rows[0]['method_id'],
+                    //payment_name: rows[0]['payment_from'],
+                    //reffno: rows[0]['payment_reffno'],
+                    competition_date: rows[0]['competition_date'],
+                    competition_no: rows[0]['competition_no']
+                    //paid: rows[0]['registration_confirmation'],
+                    //valid: rows[0]['registration_valid']
+                };
+                res.json({code: 200, message: "success", data: row});
+            });
+
         } else {
             res.status(400).send({code: 400, message: "contestant not registered"});
         }

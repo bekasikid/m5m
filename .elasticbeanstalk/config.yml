@@ -2,10 +2,10 @@ branch-defaults:
   default:
     environment: kfc-dev2
   master:
-    environment: kfc-prod
+    environment: kfc-dev
 global:
   application_name: kfc
-  default_ec2_keyname: ainul
+  default_ec2_keyname: klaudix
   default_platform: Node.js
   default_region: ap-southeast-1
   profile: eb-cli

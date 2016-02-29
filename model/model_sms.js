@@ -13,9 +13,13 @@ var domainWeb ="www.menang5miliar.com";
 var getIP = require('ipware')().get_ip;
 var callCenter = "08551555025";
 var rekBCA = "";
-var rekMandiri = "";
+var rekMandiri = "1240007326987 AN PT.GLOBAL DINAMIKA INTERNUSA";
 var keyword = "kfc";
 
+var responseSMS = function(to,textResponse,price){
+    retval = "0,"+to+","+qs.escape(textResponse)+","+price;
+    return retval;
+};
 
 var incomingSms  = function(req,res){
     console.log(req.query);
@@ -26,7 +30,7 @@ var incomingSms  = function(req,res){
             "provider" : "infinetwork",
             "sms_from": req.query.from,
             "sms_text": req.query.text,
-            "sms_time": [req.query.time.slice(0, 10), " ", req.query.time.slice(10)].join(''),
+            "sms_time" : moment(req.query.time,"YYYY-MM-DDHH:mm:ss").format("YYYY-MM-DD HH:mm:ss"),
             "sms_telcoid": req.query.telcoid,
             "sms_shortCode": req.query.shortcode,
             "query_param" : JSON.stringify(req.query),
@@ -59,69 +63,76 @@ var incomingSms  = function(req,res){
                 console.log(text);
                 if (text[1]== "daftar"){
                     if(!lib.empty(text[2])){
-                        var compDate = text[5].split("/");
-                        console.log(compDate);
-                        req.body={
-                            nik:text[2],
-                            name:text[3],
-                            phone : smsRow.sms_from,
-                            location:text[4],
-                            competition_date: compDate[2]+"-"+compDate[1]+"-"+compDate[0]
-                        };
-                        console.log(req.body);
-                        reg.checkLocation(req, res).then(function(result){
-                            if (result.rc==200){
-                                //var kata = "NO REG "+result.retval.id+". Bayar ke BCA 7060013697 Mandiri 1200002132200 Rp. "+lib.number_format(result.retval.fee,0,",",".")+" atau ke KFC terdekat. Info, syarat & ket hub 08551555025 atau www.eatortreat.id";
-                                var kata = "NO REG "+result.retval.data.id+". Bayar ke BCA "+rekBCA+" Mandiri "+rekMandiri+" Rp. "+lib.number_format(result.retval.fee,0,",",".")+" atau ke KFC terdekat. Info, syarat & ket hub "+callCenter+" atau "+domainWeb;
-                                //res.send("4 "+responseSMS(req.query.from,kata,1000));
-                                res.send(responseSMS(req.query.from,kata,1000));
-                            }else if (result.rc==511){
-                                var kata = "Format salah. Info, syarat & ket hub "+callCenter+" atau "+domainWeb;
-                                //res.send("4 "+responseSMS(req.query.from,kata,500));
-                                res.send(responseSMS(req.query.from,kata,500));
-                            }
-                        });
+                        if(moment(text[5],"DDMMYYYY").isValid()){
+                            req.body={
+                                nik:text[2],
+                                name:text[3],
+                                phone : smsRow.sms_from,
+                                location:text[4],
+                                reg_from : "SMS",
+                                competition_date: moment(text[5],"DDMMYYYY").format("YYYY-MM-DD")
+                            };
+                            console.log(req.body);
+                            reg.checkLocation(req, res).then(function(result){
+                                if (result.rc==200){
+                                    var kata = "NO REG "+result.retval.data.id+", pembayaran dilakukan di outlet KFC terdekat. Info, syarat&ket hub "+callCenter+" atau "+domainWeb;
+                                    res.send(responseSMS(req.query.from,kata,1000));
+                                }else if (result.rc==511){
+                                    var kata = "Format salah. Info, syarat & ket hub "+callCenter+" atau "+domainWeb;
+                                    res.send(responseSMS(req.query.from,kata,500));
+                                }
+                            });
+                        }else{
+                            var kata = "Salah memasukkan tanggal, cth tgl 03032016 untuk ikut pada tanggal 3 Maret. Info, syarat & ket hub "+callCenter+" atau "+domainWeb;
+                            res.send(responseSMS(req.query.from,kata,500));
+                        }
+
                     }else{
-                        var kata = "Pendaftaran ketik "+keyword+" DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
-                        //res.send("4 "+responseSMS(req.query.from,kata,5000));
-                        res.send(responseSMS(req.query.from,kata,5000));
+                        var kata = "Pendaftaran ketik "+keyword+" DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DDMMYY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
+                        res.send(responseSMS(req.query.from,kata,1000));
                     }
 
                 }else if (text[1]=="bayar"){
-                    var metode = 0;
-                    if ($text[3]=='kfc'){
-                        metode=1;
-                    }else if ($text[3]=='mandiri'){
-                        metode=4;
-                    }else if ($text[3]=='bca'){
-                        metode=5;
-                    }
+                    //var metode = 0;
+                    //if ($text[3]=='kfc'){
+                    //    metode=1;
+                    //}
+                    //else if ($text[3]=='mandiri'){
+                    //    metode=4;
+                    //}else if ($text[3]=='bca'){
+                    //    metode=5;
+                    //}
 
-                    if(metode==0){
-                        var kata = "Pembayaran ketik "+keyword+" BAYAR#(NO REG)#MANDIRI/BCA/KFC#NO STRUK kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
-                        //res.send("4 "+responseSMS(req.query.from,kata,500));
-                        res.send(responseSMS(req.query.from,kata,500));
-                    }else{
+                    //if(metode==0){
+                    //    //var kata = "Pembayaran ketik "+keyword+" BAYAR#(NO REG)#MANDIRI/BCA/KFC#NO STRUK kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
+                    //    var kata = "Pembayaran ketik "+keyword+" BAYAR#NO.REG#KodeVoucher#KodeBayar kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
+                    //    //res.send("4 "+responseSMS(req.query.from,kata,500));
+                    //    res.send(responseSMS(req.query.from,kata,500));
+                    //}else{
                         req.body={
                             id:text[2],
-                            paymentMethod:metode,
-                            reffno:text[4]
-                        }
+                            paymentMethod:1,
+                            reffno:text[4],
+                            voucher:text[3]
+                        };
                         reg.confirmation(req, res).then(function(result){
                             console.log(result);
                             if (result.rc==200){
                                 //panggil function reply sms
-                                var kata = "NO REG "+result.retval.id+". Bayar ke BCA "+rekBCA+" Mandiri "+rekMandiri+" Rp. "+lib.number_format(result.retval.fee,0,",",".")+" atau ke KFC terdekat. Info, syarat & ket hub "+callCenter+" atau "+domainWeb;
-                                //res.send("4 "+responseSMS(req.query.from,kata,1000));
+                                var jam = "12:45";
+                                if(result.retval.data.session==4 || result.retval.data.session==5) {
+                                    jam = "13:45";
+                                }else if(result.retval.data.session==6 || result.retval.data.session==7) {
+                                    jam = "14:45";
+                                }
+                                var kata = "NO "+result.retval.data.no+", KFC "+result.retval.data.store+", tgl "+result.retval.data.date+", jam "+jam+". datang tepat waktu,tunjukkan sms ini dan tanda pengenal";
                                 res.send(responseSMS(req.query.from,kata,1000));
                             }else{
                                 var kata = "Konfirmasi pembayaran tidak berhasil. Hub "+callCenter+" atau "+domainWeb;
-                                //res.send("4 "+responseSMS(req.query.from,kata,1000));
                                 res.send(responseSMS(req.query.from,kata,1000));
                             }
                         });
-                    }
-
+                    //}
                 }else if (text[1]=="menang"){
                     res.json(smsRow);
                 }else if (text[1]=="cara"){
@@ -145,11 +156,6 @@ var incomingSms  = function(req,res){
     }
 
 };
-
-var responseSMS = function(to,textResponse,price){
-    retval = "0,"+to+","+qs.escape(textResponse)+","+"1000";
-    return retval;
-}
 
 /*var responBalik = Function(req,res){
 

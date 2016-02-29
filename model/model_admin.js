@@ -210,9 +210,9 @@ var mandiri = function (req, res) {
         //    deferred.resolve({rc: "00", rows: rows});
         //}
         deferred.resolve({
-            code:200,
-            message : "success",
-            data : rows
+            code: 200,
+            message: "success",
+            data: rows
         });
     });
     return deferred.promise;
@@ -340,7 +340,7 @@ var manualConfirm = function (req, res) {
                 reg.checkQuotas(row.store_id, row.competition_date, row.competition_session).then(function (retQ) {
                     console.log(retQ);
                     if (retQ.rc == 200) {
-                        if(row.method_id==4){
+                        if (row.method_id == 4) {
                             db.execute("UPDATE mandiri SET is_taken = 1, taken_by = ?, taken_date = ? WHERE mandiri_id = ? AND is_taken = 0", [row.registration_id, moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"), req.params.mandiri]).then(function (sukses) {
                                 if (sukses.affectedRows == 1) {
                                     db.execute("UPDATE registrations SET competition_session = ?, registration_valid = 3 WHERE registration_code = ?", [retQ.quota_session, req.params.id]).then(function () {
@@ -352,7 +352,7 @@ var manualConfirm = function (req, res) {
                                 }
 
                             });
-                        }else if(row.method_id==2){
+                        } else if (row.method_id == 2) {
                             db.execute("UPDATE registrations SET competition_session = ?, registration_valid = 3 WHERE registration_code = ?", [retQ.quota_session, req.params.id]).then(function () {
                                 res.send("sukses");
                             });
@@ -360,9 +360,9 @@ var manualConfirm = function (req, res) {
 
                     }
                 });
-            }else if(row.registration_valid == 0){
+            } else if (row.registration_valid == 0) {
                 //console.log(parseInt(row.method_id) == 4);
-                if(row.method_id==4){
+                if (row.method_id == 4) {
                     db.execute("UPDATE mandiri SET is_taken = 1, taken_by = ?, taken_date = ? WHERE mandiri_id = ? AND is_taken = 0", [row.registration_id, moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"), req.params.mandiri]).then(function (sukses) {
                         if (sukses.affectedRows == 1) {
                             db.execute("UPDATE registrations SET competition_session = ?, registration_valid = 3 WHERE registration_code = ?", [row.competition_session, req.params.id]).then(function () {
@@ -374,7 +374,7 @@ var manualConfirm = function (req, res) {
                         }
 
                     });
-                }else if(row.method_id==2){
+                } else if (row.method_id == 2) {
                     db.execute("UPDATE registrations SET competition_session = ?, registration_valid = 3 WHERE registration_code = ?", [row.competition_session, req.params.id]).then(function () {
                         res.send("sukses");
                     });
@@ -385,28 +385,59 @@ var manualConfirm = function (req, res) {
 }
 
 var ticketResend = function (req, res) {
-    db.execute("UPDATE registrations SET email_ticket = 1 WHERE registration_code = ?",[req.params.id]).then(function () {
-        db.readQuery("SELECT * FROM registrations WHERE registration_code = ?",[req.params.id]).then(function(row){
+    db.execute("UPDATE registrations SET email_ticket = 1 WHERE registration_code = ?", [req.params.id]).then(function () {
+        db.readQuery("SELECT * FROM registrations WHERE registration_code = ?", [req.params.id]).then(function (row) {
             res.json({
-                code:200,
-                message : "success",
-                data : {
-                    id : row[0].registration_code,
-                    name : row[0].registration_name,
-                    confirm : row[0].registration_confirmation,
-                    valid : row[0].registration_valid,
+                code: 200,
+                message: "success",
+                data: {
+                    id: row[0].registration_code,
+                    name: row[0].registration_name,
+                    confirm: row[0].registration_confirmation,
+                    valid: row[0].registration_valid,
                 }
             });
         });
     });
 };
 
-var updateScore = function(req,res){
-    
+var updateScore = function (req, res) {
+    /*
+     id
+     sigin
+     valid
+     status
+     record
+     image_url
+     record_url
+     */
+    db.readQuery("SELECT * FROM competitions where competition_no = ? ", [req.body.id]).then(function (rows) {
+        if (rows.length == 1) {
+            db.execute("UPDATE competitions SET competition_signin = ?, competition_eliminated = ?, competition_score = ?, image_url = ?, record_url = ? WHERE competition_no = ?",
+                [req.body.signin, req.body.status, req.body.record, req.body.image_url, req.body.record_url, req.body.id]).then(function () {
+                res.json({
+                    code: 200,
+                    message: "record updated"
+                });
+            });
+        }
+    });
+};
+
+var contestant = function (req, res) {
+    var q = "SELECT competitions.registration_code, competition_no as id, contestant_nik, contestant_name, contestant_email, competition_signin as signin, competition_eliminated as status, store_name, quota_session as sesi, competition_score as record, image_url, record_url FROM competitions JOIN contestants ON competitions.contestant_id = contestants.contestant_id JOIN quotas ON quotas.quota_id = competitions.quota_id JOIN stores ON stores.store_id = quotas.store_id ";
+    var w = " WHERE stores.store_id = ? AND quotas.quota_date = ?";
+    db.readQuery(q + w, [req.params.store, req.params.date]).then(function (rows) {
+        res.json({
+            code: 200,
+            message: "success",
+            data: rows
+        });
+    });
 }
 
-
-
+module.exports.updateScore = updateScore;
+module.exports.contestant = contestant;
 module.exports.ticketResend = ticketResend;
 module.exports.manualConfirm = manualConfirm;
 module.exports.rekapStores = rekapStores;

@@ -133,9 +133,14 @@ app.post("/login",function(req,res){
     });
 });
 
-app.get("/participants",function(req,res){
-
+app.get("/participants/:store/:date",function(req,res){
+    admin.contestant(req,res);
 });
+
+app.post("/update-score",function(req,res){
+    admin.updateScore(req,res);
+});
+
 app.get("/leaderboard",function(req,res){
     admin.leaderboard(req,res);
 });
@@ -159,18 +164,6 @@ app.get("/daftar",function(req,res){
         //} else{
         //    res.status(401).send({ code : 401, message: "Unauthorized" });
         //}
-    //});
-});
-
-app.post("/update-score",function(req,res){
-    admin.score(req,res);
-    //console.log(re)
-    //filterModel.validateAdmin(req,res).then(function(retval){
-    //    if(retval.rc==200){
-    //        res.json(req.body);
-    //    }else{
-    //        res.send("gagal");
-    //    }
     //});
 });
 

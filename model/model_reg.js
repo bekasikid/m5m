@@ -334,7 +334,7 @@ var confirmation = function (req, res) {
                             .then(function (rowV) {
                                 if (rowV.affectedRows == 1) {
                                     db.execute("UPDATE registrations SET registration_valid = 1 WHERE registration_code = ?", [req.body.id]).then(function () {
-                                        db.execute("UPDATE registrations SET email_ticket = 1 WHERE registration_code = ? AND NOT EMPTY(registration_email)", [req.body.id]).then(function () {});
+                                        //db.execute("UPDATE registrations SET email_ticket = 1 WHERE registration_code = ? AND NOT EMPTY(registration_email)", [req.body.id]).then(function () {});
                                         //proses tambah peserta
                                         db.readQuery("SELECT * FROM contestants WHERE contestant_nik = ? AND contestant_name =?",[rowReg[0].registration_nik,rowReg[0].registration_name]).then(function(rowCon){
                                             if(rowCon.length==0){

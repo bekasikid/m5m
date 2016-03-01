@@ -320,9 +320,28 @@ var confirmation = function (req, res) {
             db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ?, registration_voucher =? WHERE registration_code = ? AND registration_valid in (0,2)",
                 [req.body.paymentMethod, req.body.reffno, req.body.voucher, req.body.id]).then(function (row) {
                 if (row.affectedRows == 0) {
-                    deferred.resolve({
-                        rc: 400,
-                        retval: {code: 400, message: "Sudah Melakukan Konfirmasi"}
+                    db.readQuery("SELECT * FROM competitions JOIN contestants ON competitions.contestant_id = contestants.contestant_id JOIN quotas ON competitions.quota_id = quotas.quota_id JOIN stores ON quotas.store_id = stores.store_id  WHERE competitions.registration_code = ?", [req.body.id]).then(function(rowsCompetition){
+                        if(rowsCompetition.length==1){
+                            deferred.resolve({
+                                rc: 200,
+                                retval: {
+                                    code: 200,
+                                    message: "success",
+                                    data: {
+                                        id: req.body.id,
+                                        no: rowsCompetition[0].competition_no,
+                                        store: rowsCompetition[0].store_name,
+                                        "date": rowsCompetition[0].quota_date,
+                                        "session": rowsCompetition[0].quota_session
+                                    }
+                                }
+                            });
+                        }else{
+                            deferred.resolve({
+                                rc: 200,
+                                retval: {code: 200, message: "Sudah Melakukan Konfirmasi"}
+                            });
+                        }
                     });
                 } else {
                     //res.json(req.body);
@@ -450,10 +469,9 @@ var confirmation = function (req, res) {
             db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ? WHERE registration_code = ? AND registration_confirmation = 0",
                 [req.body.paymentMethod, req.body.reffno, req.body.id]).then(function (row) {
                 if (row.affectedRows == 0) {
-                    //res.status(400).send({ error: "confirmation failed" });
                     deferred.resolve({
-                        rc: 400,
-                        retval: {code: 400, message: "Sudah Melakukan Konfirmasi"}
+                        rc: 200,
+                        retval: {code: 200, message: "Sudah Melakukan Konfirmasi"}
                     });
                 } else {
                     //@TODO : musti tambahin no peserta

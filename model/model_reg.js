@@ -43,7 +43,7 @@ var checkQuotas = function (store, tgl, sess) {
     //var sess = 1;
     db.readQuery("SELECT * FROM stores WHERE store_id = ? AND store_runner = 1",[store]).then(function(rowsStore){
         if(rowsStore.length==1){
-            db.execute("UPDATE quotas SET quota_space=quota_space-1 WHERE store_id = ? AND quota_date = ? AND quota_session = ? AND quota_space>0",
+            db.execute("UPDATE quotas SET quota_space=quota_space-1 WHERE store_id = ? AND quota_date = ? AND quota_session = ? AND quota_space>0 AND quota_open = 1",
                 [store, tgl, sess]).then(function (result) {
                 if (result.affectedRows == 1) {
                     //console.log(result);
@@ -114,7 +114,8 @@ var registration = function (req, res) {
             "registration_method": lib.empty(req.body.reg_from) ? "Online" : req.body.reg_from,
             "registration_gcm": lib.empty(req.body.gcm) ? "" : req.body.gcm,
             "created_date": moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"),
-            "updated_date": moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss")
+            "updated_date": moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"),
+            "ip_req" : lib.getIP(req)
         };
         db.execute("INSERT INTO registrations SET ?", reg).then(function (row) {
             //console.log(row);
@@ -363,11 +364,11 @@ var confirmation = function (req, res) {
                                                     created_date : moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss")
                                                 };
                                                 db.execute("INSERT INTO contestants SET ? ",cont).then(function(resCont){
-                                                    db.readQuery("SELECT * FROM quotas JOIN stores ON quotas.store_id = stores.store_id WHERE quotas.quota_date = ? AND quotas.quota_session = ? AND quotas.store_id = ?",[rowReg[0].competition_date,rowReg[0].competition_session,rowReg[0].store_id]).then(function(rowsQuota){
+                                                    db.readQuery("SELECT * FROM quotas JOIN stores ON quotas.store_id = stores.store_id WHERE quotas.quota_date = ? AND quotas.quota_session = ? AND quotas.store_id = ?",
+                                                        [rowReg[0].competition_date,rowReg[0].competition_session,rowReg[0].store_id]).then(function(rowsQuota){
                                                         db.readQuery("SELECT * FROM competitions WHERE registration_code = ?",[req.body.id]).then(function(rowsComp){
                                                             console.log(rowsComp);
                                                            if(rowsComp.length==0){
-                                                               console.log(rowsComp.length);
                                                                var compRow = {
                                                                    quota_id : rowsQuota[0].quota_id,
                                                                    contestant_id : resCont.insertId,

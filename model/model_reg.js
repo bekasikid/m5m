@@ -322,7 +322,7 @@ var confirmation = function (req, res) {
                 if (row.affectedRows == 0) {
                     deferred.resolve({
                         rc: 400,
-                        retval: {code: 400, message: "confirmation failed"}
+                        retval: {code: 400, message: "Sudah Melakukan Konfirmasi"}
                     });
                 } else {
                     //res.json(req.body);
@@ -453,7 +453,7 @@ var confirmation = function (req, res) {
                     //res.status(400).send({ error: "confirmation failed" });
                     deferred.resolve({
                         rc: 400,
-                        retval: {code: 400, message: "registration failed"}
+                        retval: {code: 400, message: "Sudah Melakukan Konfirmasi"}
                     });
                 } else {
                     //@TODO : musti tambahin no peserta
@@ -475,7 +475,7 @@ var confirmation = function (req, res) {
                     //res.status(400).send({ error: "confirmation failed" });
                     deferred.resolve({
                         rc: 400,
-                        retval: {code: 400, message: "registration failed"}
+                        retval: {code: 400, message: "Sudah Melakukan Konfirmasi"}
                     });
                 } else {
                     //@TODO : musti tambahin no peserta
@@ -494,7 +494,7 @@ var confirmation = function (req, res) {
         //res.status(400).send({ error: "failed" });
         deferred.resolve({
             rc: 400,
-            retval: {code: 400, message: "registration failed"}
+            retval: {code: 400, message: "Konfirmasi Tidak Berhasil"}
         });
     }
     return deferred.promise;

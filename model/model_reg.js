@@ -317,12 +317,12 @@ var confirmation = function (req, res) {
         if (req.body.paymentMethod == 1) {
             //musti di cek antara mereka konfirmasi dulu dengan dapet data settlement duluan dr kfc
             //kalo konfirmasi dulu, maka update table registrasi, dan input table contestant
-            db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ?, registration_voucher =? WHERE registration_code = ? AND registration_confirmation = 0",
+            db.execute("UPDATE registrations SET registration_confirmation = 1, method_id = ? , payment_reffno = ?, registration_voucher =? WHERE registration_code = ? AND registration_valid in (0,2)",
                 [req.body.paymentMethod, req.body.reffno, req.body.voucher, req.body.id]).then(function (row) {
                 if (row.affectedRows == 0) {
                     deferred.resolve({
                         rc: 400,
-                        retval: {code: 400, message: "registration failed"}
+                        retval: {code: 400, message: "confirmation failed"}
                     });
                 } else {
                     //res.json(req.body);
@@ -334,6 +334,7 @@ var confirmation = function (req, res) {
                             .then(function (rowV) {
                                 if (rowV.affectedRows == 1) {
                                     db.execute("UPDATE registrations SET registration_valid = 1 WHERE registration_code = ?", [req.body.id]).then(function () {
+                                        db.execute("UPDATE registrations SET email_ticket = 1 WHERE registration_code = ? AND NOT EMPTY(registration_email)", [req.body.id]).then(function () {});
                                         //proses tambah peserta
                                         db.readQuery("SELECT * FROM contestants WHERE contestant_nik = ? AND contestant_name =?",[rowReg[0].registration_nik,rowReg[0].registration_name]).then(function(rowCon){
                                             if(rowCon.length==0){

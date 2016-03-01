@@ -329,7 +329,7 @@ var confirmation = function (req, res) {
                     //@TODO : musti tambahin no peserta
                     //tambahin kode voucher
                     db.readQuery("SELECT * FROM registrations WHERE registration_code = ?", [req.body.id]).then(function (rowReg) {
-                        db.execute("UPDATE vouchers SET voucher_taken = 1, voucher_taken_by = ?, voucher_taken_date = ?, updated_date = now() WHERE voucher_code = ?",
+                        db.execute("UPDATE vouchers SET voucher_taken = 1, voucher_taken_by = ?, voucher_taken_date = ?, updated_date = now() WHERE voucher_code = ? AND voucher_taken=0",
                             [rowReg[0].registration_id, moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"), req.body.voucher])
                             .then(function (rowV) {
                                 if (rowV.affectedRows == 1) {

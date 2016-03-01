@@ -334,7 +334,6 @@ var confirmation = function (req, res) {
                             .then(function (rowV) {
                                 if (rowV.affectedRows == 1) {
                                     db.execute("UPDATE registrations SET registration_valid = 1 WHERE registration_code = ?", [req.body.id]).then(function () {
-                                        //db.execute("UPDATE registrations SET email_ticket = 1 WHERE registration_code = ? AND NOT EMPTY(registration_email)", [req.body.id]).then(function () {});
                                         //proses tambah peserta
                                         db.readQuery("SELECT * FROM contestants WHERE contestant_nik = ? AND contestant_name =?",[rowReg[0].registration_nik,rowReg[0].registration_name]).then(function(rowCon){
                                             if(rowCon.length==0){
@@ -359,19 +358,21 @@ var confirmation = function (req, res) {
                                                                };
                                                                console.log(compRow);
                                                                db.execute("INSERT INTO competitions SET ?",compRow).then(function(){
-                                                                   deferred.resolve({
-                                                                       rc: 200,
-                                                                       retval: {
-                                                                           code: 200,
-                                                                           message: "success",
-                                                                           data: {
-                                                                               id : req.body.id,
-                                                                               no : compRow.competition_no,
-                                                                               store : rowsQuota[0].store_name,
-                                                                               "date" : rowsQuota[0].quota_date,
-                                                                               "session" : rowsQuota[0].quota_session
+                                                                   db.execute("UPDATE registrations SET email_ticket = 1 WHERE registration_code = ?", [req.body.id]).then(function () {
+                                                                       deferred.resolve({
+                                                                           rc: 200,
+                                                                           retval: {
+                                                                               code: 200,
+                                                                               message: "success",
+                                                                               data: {
+                                                                                   id : req.body.id,
+                                                                                   no : compRow.competition_no,
+                                                                                   store : rowsQuota[0].store_name,
+                                                                                   "date" : rowsQuota[0].quota_date,
+                                                                                   "session" : rowsQuota[0].quota_session
+                                                                               }
                                                                            }
-                                                                       }
+                                                                       });
                                                                    });
                                                                })
                                                            }else{
@@ -402,19 +403,21 @@ var confirmation = function (req, res) {
                                                             };
                                                             console.log(compRow);
                                                             db.execute("INSERT INTO competitions SET ?",compRow).then(function(){
-                                                                deferred.resolve({
-                                                                    rc: 200,
-                                                                    retval: {
-                                                                        code: 200,
-                                                                        message: "success",
-                                                                        data: {
-                                                                            id : req.body.id,
-                                                                            no : compRow.competition_no,
-                                                                            store : rowsQuota[0].store_name,
-                                                                            "date" : rowsQuota[0].quota_date,
-                                                                            "session" : rowsQuota[0].quota_session
+                                                                db.execute("UPDATE registrations SET email_ticket = 1 WHERE registration_code = ?", [req.body.id]).then(function () {
+                                                                    deferred.resolve({
+                                                                        rc: 200,
+                                                                        retval: {
+                                                                            code: 200,
+                                                                            message: "success",
+                                                                            data: {
+                                                                                id : req.body.id,
+                                                                                no : compRow.competition_no,
+                                                                                store : rowsQuota[0].store_name,
+                                                                                "date" : rowsQuota[0].quota_date,
+                                                                                "session" : rowsQuota[0].quota_session
+                                                                            }
                                                                         }
-                                                                    }
+                                                                    });
                                                                 });
                                                             })
                                                         }else{

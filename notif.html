@@ -88,29 +88,66 @@
                 padding: 0px 20px;
                 margin: 0;
             }
+            #info ul
+            {
+                list-style-type: none;
+            }
+            #rinci {
+                border: 1px solid #EEE;width: 100%;
+            }
+            #rinci td {
+                border: 1px solid #EEE;
+                padding: 10px;
+            }
         </style>
     </head>
     <body>		
         <div class="container" style="width: 100%">                        
             <div id="info">
-                <ul>
-                    <li>No Pendaftaran : {{nodaftar}}</li>
-                    <li>No KTP : {{noktp}}</li>
-                    <li>Nama : {{nama}}</li>
-                    <li>Lokasi : {{lokasi}}</li>
-                    <li>Tanggal : {{tanggal}}</li>
-                    <li>Waktu : {{jam}}</li>
+                <ul style="list-style-type: none;">
+                    <li>No Pendaftaran : <strong>{{nodaftar}}</strong></li>
+                    <li>No KTP : <strong>{{noktp}}</strong></li>
+                    <li>Nama : <strong>{{nama}}</strong></li>
+                    <li>Lokasi : <strong>{{lokasi}}</strong></li>
+                    <li>Tanggal : <strong>{{tanggal}}</strong></li>
+                    <li>Waktu : <strong>{{jam}}</strong></li>
                     <li><stong>PASTIKAN NAMA ANDA, LOKASI, SERTA WAKTU LOMBA SUDAH SESUAI SEBELUM MELAKUKAN TRANSFER</stong></li>
+                    <li><h1>Biaya Pendaftaran : Rp.<strong>{{total}}</strong></h1></li>
+                    <li>INGAT <strong>{{total}}</strong> TIDAK BOLEH KURANG ATAU LEBIH, ATAU PEMBAYARAN TIDAK BISA KAMI PROSES.</li>
+                    <li>RINCIAN PEMBAYARAN</li>
                 </ul>
 
-                <p><h1>Biaya Pendaftaran : Rp.<strong>{{total}}</strong></h1></p>
-                <p>INGAT <strong>{{ingat}}</strong> TIDAK BOLEH KURANG ATAU LEBIH,
-                ATAU PEMBAYARAN TIDAK BISA KAMI PROSES.</p>
-                <p>RINCIAN PEMBAYARAN</p>
-				<p>HARGA PAKET : Rp.{{nominal}}</p>
-				<p>ADMIN FEE : Rp.2.000</p>
-
-                <ul>
+                <table id="rinci" style="border: 1px solid #EEE;width: 100%;" width="100%" border="1" cellpadding="5" cellspacing="3">
+                    <tr>
+                        <td>Keterangan</td>
+                        <td>Nominal</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Paket Balap Makan Ayam
+                        </td>
+                        <td style="text-align: right;">
+                            Rp.{{nominal}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Biaya Admin
+                        </td>
+                        <td style="text-align: right;">
+                            Rp.2000
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Total Bayar
+                        </td>
+                        <td style="text-align: right;">
+                            Rp.<strong>{{total}}</strong>
+                        </td>
+                    </tr>
+                </table>
+                <ul style="list-style-type: none;">
                     <li>PEMBAYARAN DILAKUKAN MELALUI TRANSFER BANK(ABAIKAN EMAIL INI JIKA ANDA MEMBAYAR MELALUI CREDIT CARD) MENUJU REKENING NOMOR:
                         BANK MANDIRI: 124.000.732.6987 A/N: PT.GLOBAL DINAMIKA INTERNUSA</li>
                     <li>BIAYA TRANSFER DITANGGUNG OLEH PESERTA</li>

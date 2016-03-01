@@ -266,8 +266,8 @@ var sendMail = function (req, res) {
                     var emailText = emailText.replace("{{jam}}", jam);
 
                     var emailText = emailText.replace("{{nominal}}", lib.number_format((150000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
-                    var emailText = emailText.replace("{{total}}", lib.number_format((150000 + 2000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
-                    var emailText = emailText.replace("{{ingat}}", lib.number_format((150000 + 2000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
+                    var emailText = emailText.replace(/{{total}}/g, lib.number_format((150000 + 2000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
+                    //var emailText = emailText.replace("{{ingat}}", lib.number_format((150000 + 2000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
 
                     var sendgrid = require("sendgrid")("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");
                     var email = new sendgrid.Email();
@@ -680,7 +680,7 @@ var rek = function (i) {
 
 var rubah = function (req, res) {
     db.readQuery("SELECT * FROM competitions WHERE registration_code = ?", [req.body.id]).then(function (rows) {
-        console.lgo(rows);
+        console.log(rows);
         if(rows.length==1){
             checkQuotas(req.body.store_id, req.body.date, req.body.session_id).then(function (rowQ) {
                 console.log(rowQ);

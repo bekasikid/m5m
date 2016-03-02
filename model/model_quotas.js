@@ -66,7 +66,15 @@ var getQuotas = function(req,res){
         }
 
     });
-}
+};
+
+var closeQuota = function(req,res){
+    db.execute("UPDATE quotas SET quotas.quota_open=0 WHERE quotas.quota_date = ?",[req.params.dt]).then(function(){
+        res.send("sukses");
+    });
+};
+
+module.exports.closeQuota = closeQuota;
 module.exports.getStores = getStores;
 module.exports.getQuotas = getQuotas;
 module.exports.getCities = getCities;

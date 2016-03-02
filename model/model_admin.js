@@ -434,7 +434,7 @@ var contestant = function (req, res) {
             data: rows
         });
     });
-}
+};
 
 module.exports.updateScore = updateScore;
 module.exports.contestant = contestant;

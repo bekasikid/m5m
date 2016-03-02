@@ -121,6 +121,10 @@ app.get("/quota/:id/:dt",function(req,res){
     quotas.getQuotas(req,res);
 });
 
+app.get("/quota-close/:dt",function(req,res){
+    quotas.closeQuota(req,res);
+});
+
 /*back office*/
 app.post("/login",function(req,res){
     filterModel.validateAdmin(req,res).then(function(retval){
@@ -168,9 +172,7 @@ app.get("/daftar",function(req,res){
 });
 
 app.post("/ganti-jadwal",function(req,res){
-    //console.log(req.body);
-    //res.json(req.body);
-    reg.rubah(req,res);
+    //reg.rubah(req,res);
 });
 /*master data*/
 app.get("/payment-method",function(req,res){

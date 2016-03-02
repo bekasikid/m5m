@@ -172,7 +172,7 @@ app.get("/daftar",function(req,res){
 });
 
 app.post("/ganti-jadwal",function(req,res){
-    //reg.rubah(req,res);
+    reg.rubah(req,res);
 });
 /*master data*/
 app.get("/payment-method",function(req,res){

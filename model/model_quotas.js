@@ -53,7 +53,7 @@ var getQuotas = function(req,res){
             });
         }else{
             var rowsS = [];
-            db.readQuery("SELECT quota_session,quota_space FROM quotas where store_id = '"+req.params.id+"' AND quota_date = '"+req.params.dt+"'").then(function(rowsSession){
+            db.readQuery("SELECT quota_session,quota_space FROM quotas where store_id = '"+req.params.id+"' AND quota_date = '"+req.params.dt+"' AND quota_open=1").then(function(rowsSession){
                 if(rowsSession.length==0){
                     rows[0]['session'] = rowsS;
                 }else{

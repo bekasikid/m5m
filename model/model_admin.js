@@ -437,7 +437,26 @@ var contestant = function (req, res) {
 };
 
 var contestantAll = function (req, res) {
-    var q = "SELECT competitions.registration_code, competition_no as id, contestant_nik, contestant_name, contestant_email, competition_signin as signin, competition_eliminated as status, store_name, quota_session as sesi, competition_score as record, image_url, record_url FROM competitions JOIN contestants ON competitions.contestant_id = contestants.contestant_id JOIN quotas ON quotas.quota_id = competitions.quota_id JOIN stores ON stores.store_id = quotas.store_id ";
+    var q = "SELECT competitions.registration_code, " +
+        "competitions.competition_no as competition_id, " +
+        "contestants.contestant_nik as registration_nik, " +
+        "contestants.contestant_name as registration_name, " +
+        "contestants.contestant_email as registration_email, " +
+        "contestants.contestant_phone as registration_phone, " +
+        "competitions.competition_signin as signed_in, " +
+        "competitions.competition_eliminated as id_valid, " +
+        "competitions.created_date as registration_date, " +
+        "quotas.store_id, " +
+        "store_name, " +
+        "quota_date as competition_date, " +
+        "quota_session as competition_session, " +
+        "competition_score as time_minutes, " +
+        "competition_second as time_seconds, " +
+        "competition_millisecond as time_milliseconds, " +
+        "competitions.session_winner, " +
+        "image_url, " +
+        "record_url " +
+        "FROM competitions JOIN contestants ON competitions.contestant_id = contestants.contestant_id JOIN quotas ON quotas.quota_id = competitions.quota_id JOIN stores ON stores.store_id = quotas.store_id ";
     var w = " WHERE quotas.quota_date = ?";
     db.readQuery(q + w, [req.params.date]).then(function (rows) {
         res.json({

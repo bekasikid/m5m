@@ -436,7 +436,20 @@ var contestant = function (req, res) {
     });
 };
 
+var contestantAll = function (req, res) {
+    var q = "SELECT competitions.registration_code, competition_no as id, contestant_nik, contestant_name, contestant_email, competition_signin as signin, competition_eliminated as status, store_name, quota_session as sesi, competition_score as record, image_url, record_url FROM competitions JOIN contestants ON competitions.contestant_id = contestants.contestant_id JOIN quotas ON quotas.quota_id = competitions.quota_id JOIN stores ON stores.store_id = quotas.store_id ";
+    var w = " WHERE quotas.quota_date = ?";
+    db.readQuery(q + w, [req.params.date]).then(function (rows) {
+        res.json({
+            code: 200,
+            message: "success",
+            data: rows
+        });
+    });
+};
+
 module.exports.updateScore = updateScore;
+module.exports.contestantAll = contestantAll;
 module.exports.contestant = contestant;
 module.exports.ticketResend = ticketResend;
 module.exports.manualConfirm = manualConfirm;

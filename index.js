@@ -141,6 +141,10 @@ app.get("/participants/:store/:date",function(req,res){
     admin.contestant(req,res);
 });
 
+app.get("/participants-all/:date",function(req,res){
+    admin.contestantAll(req,res);
+});
+
 app.post("/update-score",function(req,res){
     admin.updateScore(req,res);
 });

@@ -91,7 +91,7 @@ var registration = function (req, res) {
                 rc: 400,
                 retval: {
                     code: 400,
-                    message: "registration failed, data not valid"
+                    message: "Pendaftaran gagal, data tidak lengkap"
                 }
             });
         }
@@ -143,7 +143,7 @@ var registration = function (req, res) {
                                 rc: 400,
                                 retval: {
                                     code: 400,
-                                    message: "quota not available"
+                                    message: "Quota tidak tersedia, pilih jadwal yang lain"
                                 }
                             });
                         }
@@ -157,7 +157,7 @@ var registration = function (req, res) {
                     rc: 400,
                     retval: {
                         code: 400,
-                        message: "registration failed"
+                        message: "Pendaftaran gagal"
                     }
                 });
             }
@@ -166,7 +166,7 @@ var registration = function (req, res) {
                 rc: 400,
                 retval: {
                     code: 400,
-                    message: "registration failed"
+                    message: "Pendaftaran gagal"
                 }
             });
         });
@@ -175,7 +175,7 @@ var registration = function (req, res) {
             rc: 400,
             retval: {
                 code: 400,
-                message: "registration failed, data not valid"
+                message: "Pendaftaran gagal, data tidak lengkap"
             }
         });
     }
@@ -234,7 +234,7 @@ var loginConfirmation = function (req, res) {
     } else {
         deferred.resolve({
             rc: 400,
-            retval: {code: 400, message: "registration failed"}
+            retval: {code: 400, message: "Pendaftaran gagal"}
         });
     }
     return deferred.promise;
@@ -547,7 +547,7 @@ var status = function (req, res) {
             };
             res.json({code: 200, message: "success", data: row});
         } else {
-            res.status(400).send({code: 400, message: "contestant not registered"});
+            res.status(400).send({code: 400, message: "Peserta belum terdaftar"});
         }
     });
 };
@@ -592,7 +592,7 @@ var statusReg = function (req, res) {
             });
 
         } else {
-            res.status(400).send({code: 400, message: "contestant not registered"});
+            res.status(400).send({code: 400, message: "Peserta belum terdaftar"});
         }
     });
 };
@@ -634,7 +634,7 @@ var history = function (req, res) {
                 };
                 res.json({code: 200, message: "success", data: row});
             } else {
-                res.status(400).send({code: 200, message: "contestant not registered"});
+                res.status(400).send({code: 200, message: "Peserta belum terdaftar"});
             }
         });
     } else if (!lib.empty(req.query.nik)) {

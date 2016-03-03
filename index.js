@@ -203,7 +203,11 @@ app.get("/sms-receive",function(req,res){
     //}else{
     //    res.status(401).send({ code : 401, message: "unauthorized"});
     //}
-    //sms.incomingSms(req,res);
+    var telcoid = parseInt(req.query.telcoid);
+    if(telcoid==2 || telcoid == 3){
+        sms.incomingSms(req,res);
+    }
+
 
 });
 

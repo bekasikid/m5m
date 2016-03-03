@@ -228,7 +228,7 @@ var mandiri = function (req, res) {
 
 var mandiriNotTaken = function(req,res){
     var deferred = Q.defer();
-    db.readQuery("SELECT * FROM mandiri where is_taken=0").then(function (rows) {
+    db.readQuery("SELECT * FROM mandiri where is_taken=0 ORDER BY mandiri_credit ASC").then(function (rows) {
         if (req.query.tipe == 'total') {
             deferred.resolve({code: 200, message : "success", total: rows[0].total});
         } else {

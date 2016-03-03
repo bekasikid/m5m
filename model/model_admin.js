@@ -180,9 +180,11 @@ var mandiri = function (req, res) {
         if (!lib.empty(req.query.sort)) {
             var urut = "";
             if (req.query.sort == "tgl") {
-                urut = "mandiri.mandiri_datetime"
+                urut = "mandiri.mandiri_datetime";
             } else if (req.query.sort == "nominal") {
-                urut = "mandiri.mandiri_credit"
+                urut = "mandiri.mandiri_credit";
+            }else if (req.query.sort == "id") {
+                urut = "mandiri.mandiri_id";
             }
             sort = " ORDER BY " + urut + " " + req.query.sortby;
         }
@@ -223,6 +225,23 @@ var mandiri = function (req, res) {
     });
     return deferred.promise;
 };
+
+var mandiriNotTaken = function(req,res){
+    var deferred = Q.defer();
+    db.readQuery("SELECT * FROM mandiri where is_taken=0").then(function (rows) {
+        if (req.query.tipe == 'total') {
+            deferred.resolve({code: 200, message : "success", total: rows[0].total});
+        } else {
+            deferred.resolve({code: 200, message : "success", data: rows});
+        }
+        //deferred.resolve({
+        //    code: 200,
+        //    message: "success",
+        //    data: rows
+        //});
+    });
+    return deferred.promise;
+}
 
 var scores = function (req, res) {
     db.readQuery("SELECT * FROM competitions " +

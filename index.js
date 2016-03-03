@@ -260,6 +260,13 @@ app.get("/mandiri",function(req,res){
     });
 });
 
+app.get("/mandiri-not-taken",function(req,res){
+    var ip = lib.getIP(req);
+    admin.mandiriNotTaken(req,res).then(function(rows){
+        res.json(rows);
+    });
+});
+
 app.get("/ticket-resend/:id",function(req,res){
         admin.ticketResend(req,res);
 });

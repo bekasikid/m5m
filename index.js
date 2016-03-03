@@ -258,12 +258,6 @@ app.get("/mandiri",function(req,res){
     admin.mandiri(req,res).then(function(rows){
         res.json(rows);
     });
-    //res.send();
-
-
-    //res.send({
-    //    hasil : ip.search("222.124.61.238")
-    //});
 });
 
 app.get("/ticket-resend/:id",function(req,res){

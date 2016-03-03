@@ -466,6 +466,7 @@ var contestantAll = function (req, res) {
         "competitions.competition_no as competition_id, " +
         "contestants.contestant_nik as registration_nik, " +
         "contestants.contestant_name as registration_name, " +
+        "registrations.registration_id, " +
         "contestants.contestant_email as registration_email, " +
         "contestants.contestant_phone as registration_phone, " +
         "competitions.competition_signin as signed_in, " +
@@ -481,8 +482,11 @@ var contestantAll = function (req, res) {
         "competitions.session_winner, " +
         "image_url, " +
         "record_url " +
-        "FROM competitions JOIN contestants ON competitions.contestant_id = contestants.contestant_id JOIN quotas ON quotas.quota_id = competitions.quota_id JOIN stores ON stores.store_id = quotas.store_id ";
-    var w = " WHERE quotas.quota_date = ?";
+        "FROM competitions JOIN contestants ON competitions.contestant_id = contestants.contestant_id " +
+        "JOIN quotas ON quotas.quota_id = competitions.quota_id " +
+        "JOIN stores ON stores.store_id = quotas.store_id "+
+        "JOIN registrations ON registrations.registration_code = competitions.registration_code ";
+    var w = " WHERE quotas.quota_date = ? AND competitions.competition_eliminated != 5";
     db.readQuery(q + w, [req.params.date]).then(function (rows) {
         res.json({
             code: 200,

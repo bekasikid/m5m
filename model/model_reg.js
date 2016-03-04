@@ -340,7 +340,7 @@ var confirmation = function (req, res) {
                         }else{
                             deferred.resolve({
                                 rc: 200,
-                                retval: {code: 200, message: "Sudah Melakukan Konfirmasi"}
+                                retval: {code: 400, message: "Silahkan Melakukan Pendaftaran terlebih dahulu"}
                             });
                         }
                     });

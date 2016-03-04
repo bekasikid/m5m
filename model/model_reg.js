@@ -340,7 +340,7 @@ var confirmation = function (req, res) {
                         }else{
                             deferred.resolve({
                                 rc: 200,
-                                retval: {code: 400, message: "Silahkan Melakukan Pendaftaran terlebih dahulu"}
+                                retval: {code: 420, message: "Silahkan Melakukan Pendaftaran terlebih dahulu"}
                             });
                         }
                     });
@@ -399,7 +399,7 @@ var confirmation = function (req, res) {
                                                                deferred.resolve({
                                                                    rc: 400,
                                                                    retval: {
-                                                                       code: 400,
+                                                                       code: 421,
                                                                        message: "Peserta sudah terdaftar",
                                                                        data: req.body
                                                                    }
@@ -444,7 +444,7 @@ var confirmation = function (req, res) {
                                                             deferred.resolve({
                                                                 rc: 400,
                                                                 retval: {
-                                                                    code: 400,
+                                                                    code: 421,
                                                                     message: "Peserta sudah terdaftar",
                                                                     data: req.body
                                                                 }
@@ -458,7 +458,7 @@ var confirmation = function (req, res) {
                                 } else {
                                     deferred.resolve({
                                         rc: 400,
-                                        retval: {code: 400, message: "salah kode voucher"}
+                                        retval: {code: 450, message: "salah kode voucher"}
                                     });
                                 }
                             });
@@ -472,7 +472,7 @@ var confirmation = function (req, res) {
                 if (row.affectedRows == 0) {
                     deferred.resolve({
                         rc: 200,
-                        retval: {code: 200, message: "Sudah Melakukan Konfirmasi"}
+                        retval: {code: 410, message: "Sudah Melakukan Konfirmasi"}
                     });
                 } else {
                     //@TODO : musti tambahin no peserta

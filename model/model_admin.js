@@ -520,6 +520,7 @@ module.exports.rekapStores = rekapStores;
 module.exports.rekapDate = rekapDate;
 module.exports.rekapCity = rekapCity;
 module.exports.rekapReg = rekapReg;
+module.exports.mandiriTambah = mandiriTambah;
 module.exports.mandiriNotTaken = mandiriNotTaken;
 module.exports.mandiri = mandiri;
 module.exports.participants = participants;

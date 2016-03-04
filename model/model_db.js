@@ -29,7 +29,7 @@ var openConn = function () {
 
 var openReadConn = function () {
     readPool = mysql.createPool({
-        host: "kfc-1.cbseeyyassm5.ap-southeast-1.rds.amazonaws.com",
+        host: "kfc-2.cbseeyyassm5.ap-southeast-1.rds.amazonaws.com",
         user: "fonetix",
         password: "Fonetix1pwD",
         //database: 'kfc',

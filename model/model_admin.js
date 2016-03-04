@@ -241,7 +241,22 @@ var mandiriNotTaken = function(req,res){
         //});
     });
     return deferred.promise;
-}
+};
+
+var mandiriTambah = function(req,res){
+    var deferred = Q.defer();
+    var mRow = {
+        mandiri_datetime : req.body.tgl,
+        mandiri_credit : req.body.nominal,
+        mandiri_desc : req.body.desc,
+        date_created : moment().format("YYYY-MM-DD")
+    };
+
+    db.execute("INSERT INTO mandiri SET ? ").then(function (rows) {
+        deferred.resolve({code: 200, message : "success"});
+    });
+    return deferred.promise;
+};
 
 var scores = function (req, res) {
     db.readQuery("SELECT * FROM competitions " +

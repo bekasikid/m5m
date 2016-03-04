@@ -264,6 +264,13 @@ app.get("/mandiri",function(req,res){
     });
 });
 
+app.post("/mandiri-tambah",function(req,res){
+    //var ip = lib.getIP(req);
+    admin.mandiriTambah(req,res).then(function(rows){
+        res.json(rows);
+    });
+});
+
 app.get("/mandiri-not-taken",function(req,res){
     var ip = lib.getIP(req);
     admin.mandiriNotTaken(req,res).then(function(rows){

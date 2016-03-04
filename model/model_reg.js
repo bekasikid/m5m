@@ -701,6 +701,7 @@ var rek = function (i) {
 
 };
 
+
 var rubah = function (req, res) {
     db.readQuery("SELECT * FROM competitions WHERE registration_code = ?", [req.body.id]).then(function (rows) {
         console.log(rows);
@@ -714,10 +715,29 @@ var rubah = function (req, res) {
                             console.log(rowQ);
                             db.execute("UPDATE registrations SET competition_session = ?, email_ticket = 1 WHERE registration_code = ?",[rowQ.quota_session,req.body.id]).then(function(rows){
                                 res.send("success");
-                            })
+                            });
                         });
                     });
                 }
+            });
+        }else{
+            db.readQuery("SELECT * FROM registrations WHERE registration_code = ?", [req.body.id]).then(function (rowsReg) {
+                if(rowsReg[0].registration_valid==0){
+                    checkQuotas(req.body.store_id, req.body.date, req.body.session_id).then(function (rowQ) {
+                        if (rowQ.rc == 200) {
+                            db.execute("UPDATE quotas SET quota_space = quota_space + 1 WHERE quota_id = ?", [rows[0].quota_id]).then(function () {
+                                db.execute("UPDATE registrations SET competition_date = ?, competition_session = ?, store_id  = ? WHERE registration_code = ?",[req.body.date,req.body.session_id,req.body.store_id,req.body.id]).then(function(rows){
+                                    res.send("success");
+                                });
+                            });
+                        }
+                    });
+                }else if(rowsReg[0].registration_valid==2){
+                    db.execute("UPDATE registrations SET competition_date = ?, competition_session = ?, store_id  = ? WHERE registration_code = ?",[req.body.date,req.body.session_id,req.body.store_id,req.body.id]).then(function(rows){
+                        res.send("success");
+                    });
+                }
+
             });
         }
     });

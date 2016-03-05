@@ -144,12 +144,93 @@ var daftar = function (req, res) {
         }
 
         if (!lib.empty(req.query.phone)) {
-            where.push(" registrations.registration_phone = ?");
+            where.push(" registrations.registration_phone like ?");
             params.push("%" + req.query.phone + "%");
         }
 
         if (!lib.empty(req.query.email)) {
             where.push(" registrations.registration_email like ?");
+            params.push("%" + req.query.email + "%");
+        }
+
+        wh = " WHERE " + where.join(" AND ");
+    }
+
+    db.readQuery(query + wh + sort + limit, params).then(function (rows) {
+        if (req.query.tipe == 'total') {
+            deferred.resolve({rc: "00", total: rows[0].total});
+        } else {
+            deferred.resolve({rc: "00", rows: rows});
+        }
+    });
+    return deferred.promise;
+};
+
+var peserta = function (req, res) {
+    /*
+     query :
+     id, nik, name, page, limit, sort, sortby, type
+     */
+    var deferred = Q.defer();
+
+    var sort = "";
+    var limit = "";
+    if (req.query.tipe == 'total') {
+        var query = "SELECT count(*)as total FROM competitions";
+    } else {
+        var query = "SELECT * FROM competitions " +
+            "JOIN contestants ON competitions.contestant_id=contestants.contestant_id " +
+            "JOIN quotas ON quotas.quota_id=competitions.quota_id " +
+            "JOIN stores ON stores.store_id=quotas.store_id ";
+        if (!lib.empty(req.query.sort)) {
+            var urut = "";
+            if (req.query.sort == "id") {
+                urut = "competitions.registration_code"
+            } else if (req.query.sort == "nik") {
+                urut = "contestants.contestant_nik"
+            } else if (req.query.sort == "name") {
+                urut = "contestants.contestant_name"
+            } else if (req.query.sort == "phone") {
+                urut = "contestants.contestant_phone"
+            } else if (req.query.sort == "email") {
+                urut = "contestants.contestant_email"
+            } else if (req.query.sort == "key") {
+                urut = "competitions.competition_id"
+            } else if (req.query.sort == "date") {
+                urut = "quotas.quota_date"
+            }
+            sort = " ORDER BY " + urut + " " + req.query.sortby;
+        }
+        var limit = " LIMIT " + (parseInt(req.query.page) * parseInt(req.query.limit)) + "," + req.query.limit;
+    }
+
+
+    var wh = "";
+    var where = [];
+    var params = [];
+    if (!lib.empty(req.query.id) || !lib.empty(req.query.nik) || !lib.empty(req.query.name) || !lib.empty(req.query.email) || !lib.empty(req.query.phone)) {
+        if (!lib.empty(req.query.id)) {
+            where.push(" registrations.registration_code = ? ");
+            params.push(req.query.id);
+        }
+
+        if (!lib.empty(req.query.nik)) {
+            where.push(" contestants.contestant_nik = ? ");
+            params.push(req.query.nik);
+        }
+
+        if (!lib.empty(req.query.name)) {
+            where.push(" contestants.contestant_name like ?");
+            params.push("%" + req.query.name + "%");
+        }
+
+        if (!lib.empty(req.query.phone)) {
+            where.push(" contestants.contestant_phone like ?");
+            params.push("%" + req.query.phone + "%");
+        }
+
+        if (!lib.empty(req.query.email)) {
+            where.push(" contestants.contestant_email like ?");
             params.push("%" + req.query.email + "%");
         }
 

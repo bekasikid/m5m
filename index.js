@@ -149,7 +149,7 @@ app.post("/update-score",function(req,res){
     admin.updateScore(req,res);
 });
 
-app.get("/leaderboard",function(req,res){
+app.get("/leaderboard/:pos",function(req,res){
     admin.leaderboard(req,res);
 });
 

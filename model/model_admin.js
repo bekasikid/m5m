@@ -173,7 +173,7 @@ var mandiri = function (req, res) {
     if (req.query.tipe == 'total') {
         var query = "SELECT count(*)as total FROM mandiri ";
     } else {
-        var query = "SELECT * FROM mandiri ";
+        var query = "SELECT mandiri.*, registrations.registration_nik, registrations.registration_name,registrations.registration_code FROM mandiri LEFT JOIN registrations ON mandiri.taken_by=registrations.registration_id ";
 
         sort = " ORDER BY mandiri_datetime DESC";
 
@@ -252,7 +252,7 @@ var mandiriTambah = function(req,res){
         date_created : moment().format("YYYY-MM-DD")
     };
 
-    db.execute("INSERT INTO mandiri SET ? ").then(function (rows) {
+    db.execute("INSERT INTO mandiri SET ? ",mRow).then(function (rows) {
         deferred.resolve({code: 200, message : "success"});
     });
     return deferred.promise;
@@ -263,15 +263,16 @@ var scores = function (req, res) {
         "JOIN contestants ON competitions.contestant_id=contestants.contestant_id " +
         "JOIN quotas ON quotas.quota_id=competitions.quota_id " +
         "JOIN stores ON stores.store_id=quotas.store_id " +
-        "WHERE quotas.quota_date = ?" +
-        "ORDER BY competitions.competition_score ASC", [req.query.date]).then(function (rows) {
+        "WHERE quotas.quota_date = ? AND competition_eliminated = 1 " +
+        "ORDER BY competitions.session_winner ASC", [req.query.date]).then(function (rows) {
         var tables = [];
         for (i = 0; i < rows.length; i++) {
             tables.push({
                 "store_id": rows[i].store_id,
+                "competition_no" : rows[i].competition_no,
                 "store": rows[i].store_name,
                 "name": rows[i].contestant_name,
-                "score": rows[i].competition_score,
+                "time": rows[i].competition_score+":"+rows[i].competition_second+":"+rows[i].competition_millisecond,
                 "competition": req.query.date,
             });
         }

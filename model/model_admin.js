@@ -370,6 +370,7 @@ var scores = function (req, res) {
         for (i = 0; i < rows.length; i++) {
             tables.push({
                 "store_id": rows[i].store_id,
+                "date" : rows[i].quota_date,
                 "competition_no" : rows[i].competition_no,
                 "store": rows[i].store_name,
                 "name": rows[i].contestant_name,

@@ -241,60 +241,60 @@ var loginConfirmation = function (req, res) {
 };
 
 var sendMail = function (req, res) {
-    db.readQuery("SELECT * FROM registrations JOIN stores ON registrations.store_id = stores.store_id WHERE registration_code = ?",
-        [req.params.id]).then(function (row) {
-        db.execute("UPDATE registrations SET email_payment = 1 WHERE registration_code = ? AND email_payment = 0", [req.params.id]).then(function (resultUpdate) {
-            if (resultUpdate.affectedRows == 1) {
-                console.log(row);
-                var fs = require('fs');
-                fs.readFile('notif.html', function (err, data) {
-                    //if (err) {
-                    //    throw err;
-                    //}
-                    //console.log(data.toString());
-                    str = data.toString();
-                    var emailText = str.replace("{{nodaftar}}", row[0]['registration_code']);
-                    var emailText = emailText.replace("{{noktp}}", row[0]['registration_nik']);
-                    var emailText = emailText.replace("{{nama}}", row[0]['registration_name']);
-                    var emailText = emailText.replace("{{lokasi}}", row[0]['store_name']);
-                    var emailText = emailText.replace("{{tanggal}}", moment(row[0]['competition_date'],"YYYY-MM-DD").tz("Asia/Jakarta").format("DD/MM/YYYY"));
-                    var jam = "12:45";
-                    if(row[0]['competition_session']==4 || row[0]['competition_session']==5){
-                        var jam = "13:45";
-                    }else if(row[0]['competition_session']==6 || row[0]['competition_session']==7){
-                        var jam = "14:45";
-                    }
-                    var emailText = emailText.replace("{{jam}}", jam);
-
-                    var emailText = emailText.replace("{{nominal}}", lib.number_format((150000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
-                    var emailText = emailText.replace(/{{total}}/g, lib.number_format((150000 + 2000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
-                    //var emailText = emailText.replace("{{ingat}}", lib.number_format((150000 + 2000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
-
-                    var sendgrid = require("sendgrid")("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");
-                    var email = new sendgrid.Email();
-
-                    email.addTo(row[0]['registration_email']);
-                    email.setFrom("info@menang5miliar.com");
-                    email.setFromName("Menang 5 Miliar");
-                    email.setSubject("Pembayaran Program Balap Makan Ayam");
-                    email.setHtml(emailText);
-
-                    sendgrid.send(email, function (err, result) {
-                        var fs = require('fs');
-                        var stream = fs.createWriteStream("./logs/mail/" + moment().tz("Asia/Jakarta").format("YYYY-MM-DD") + "-send-payment.txt", {'flags': 'a'});
-                        stream.once('open', function (fd) {
-                            stream.write(moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss") + "||" + JSON.stringify(result) + "\n");
-                            stream.end();
-                        });
-                    });
+    //db.readQuery("SELECT * FROM registrations JOIN stores ON registrations.store_id = stores.store_id WHERE registration_code = ?",
+    //    [req.params.id]).then(function (row) {
+    //    db.execute("UPDATE registrations SET email_payment = 1 WHERE registration_code = ? AND email_payment = 0", [req.params.id]).then(function (resultUpdate) {
+    //        if (resultUpdate.affectedRows == 1) {
+    //            console.log(row);
+    //            var fs = require('fs');
+    //            fs.readFile('notif.html', function (err, data) {
+    //                //if (err) {
+    //                //    throw err;
+    //                //}
+    //                //console.log(data.toString());
+    //                str = data.toString();
+    //                var emailText = str.replace("{{nodaftar}}", row[0]['registration_code']);
+    //                var emailText = emailText.replace("{{noktp}}", row[0]['registration_nik']);
+    //                var emailText = emailText.replace("{{nama}}", row[0]['registration_name']);
+    //                var emailText = emailText.replace("{{lokasi}}", row[0]['store_name']);
+    //                var emailText = emailText.replace("{{tanggal}}", moment(row[0]['competition_date'],"YYYY-MM-DD").tz("Asia/Jakarta").format("DD/MM/YYYY"));
+    //                var jam = "12:45";
+    //                if(row[0]['competition_session']==4 || row[0]['competition_session']==5){
+    //                    var jam = "13:45";
+    //                }else if(row[0]['competition_session']==6 || row[0]['competition_session']==7){
+    //                    var jam = "14:45";
+    //                }
+    //                var emailText = emailText.replace("{{jam}}", jam);
+    //
+    //                var emailText = emailText.replace("{{nominal}}", lib.number_format((150000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
+    //                var emailText = emailText.replace(/{{total}}/g, lib.number_format((150000 + 2000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
+    //                //var emailText = emailText.replace("{{ingat}}", lib.number_format((150000 + 2000 + lib.generateFee(row[0]['registration_id'])), 0, ",", "."));
+    //
+    //                var sendgrid = require("sendgrid")("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");
+    //                var email = new sendgrid.Email();
+    //
+    //                email.addTo(row[0]['registration_email']);
+    //                email.setFrom("info@menang5miliar.com");
+    //                email.setFromName("Menang 5 Miliar");
+    //                email.setSubject("Pembayaran Program Balap Makan Ayam");
+    //                email.setHtml(emailText);
+    //
+    //                sendgrid.send(email, function (err, result) {
+    //                    var fs = require('fs');
+    //                    var stream = fs.createWriteStream("./logs/mail/" + moment().tz("Asia/Jakarta").format("YYYY-MM-DD") + "-send-payment.txt", {'flags': 'a'});
+    //                    stream.once('open', function (fd) {
+    //                        stream.write(moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss") + "||" + JSON.stringify(result) + "\n");
+    //                        stream.end();
+    //                    });
+    //                });
                     res.send("sukses");
-                });
-            }else{
-                res.send("gagal");
-            }
-        });
-
-    });
+    //            });
+    //        }else{
+    //            res.send("gagal");
+    //        }
+    //    });
+    //
+    //});
 
 }
 

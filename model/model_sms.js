@@ -137,9 +137,16 @@ var incomingSms  = function(req,res){
                         });
                     //}
                 }else if (text[1]=="menang"){
-                    res.json(smsRow);
+                    //res.json(smsRow);
+                    if(text[2]=="03032016"){
+                        var kata = "PEMENANG : 1.501009952 AMIR ACHMAD INDARTO; 2.050209953 Ilham Galuh Hayura; 3.050105712 yogas anggoro";
+                    }else{
+                        var kata = "PEMENANG : 1.055108071 aris sucipto; 2.050203504 BERLODESKI; 3.052008599 Jordan Firmansyah";
+                    }
+                    res.send(responseSMS(req.query.from,kata,1000));
                 }else if (text[1]=="cara"){
                     var kata = "Pendaftaran ketik "+keyword+" DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
+                    //var kata = "PEMENANG : 1.501009952 AMIR ACHMAD INDARTO; 2.Ilham Galuh Hayura; 3.yogas anggoro";
                     //res.send("4 "+responseSMS(req.query.from,kata,500));
                     res.send(responseSMS(req.query.from,kata,1000));
                 }else{

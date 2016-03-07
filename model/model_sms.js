@@ -58,7 +58,7 @@ var incomingSms  = function(req,res){
             if(!valid){
                 var kata = "Pendaftaran ketik "+keyword+" DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
                 //res.send("4 "+responseSMS(req.query.from,kata,500));
-                res.send(responseSMS(req.query.from,kata,500));
+                res.send(responseSMS(req.query.from,kata,1000));
             }else{
                 console.log(text);
                 if (text[1]== "daftar"){
@@ -79,12 +79,12 @@ var incomingSms  = function(req,res){
                                     res.send(responseSMS(req.query.from,kata,1000));
                                 }else if (result.rc==511){
                                     var kata = "Format salah. Info, syarat & ket hub "+callCenter+" atau "+domainWeb;
-                                    res.send(responseSMS(req.query.from,kata,500));
+                                    res.send(responseSMS(req.query.from,kata,1000));
                                 }
                             });
                         }else{
                             var kata = "Salah memasukkan tanggal, cth tgl 03032016 untuk ikut pada tanggal 3 Maret. Info, syarat & ket hub "+callCenter+" atau "+domainWeb;
-                            res.send(responseSMS(req.query.from,kata,500));
+                            res.send(responseSMS(req.query.from,kata,1000));
                         }
 
                     }else{
@@ -139,11 +139,11 @@ var incomingSms  = function(req,res){
                 }else if (text[1]=="cara"){
                     var kata = "Pendaftaran ketik "+keyword+" DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
                     //res.send("4 "+responseSMS(req.query.from,kata,500));
-                    res.send(responseSMS(req.query.from,kata,500));
+                    res.send(responseSMS(req.query.from,kata,1000));
                 }else{
                     var kata = "Pendaftaran ketik "+keyword+"#DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
                     //res.send("4 "+responseSMS(req.query.from,kata,500));
-                    res.send(responseSMS(req.query.from,kata,500));
+                    res.send(responseSMS(req.query.from,kata,1000));
                 }
             }
 

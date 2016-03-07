@@ -17,7 +17,21 @@ var validator = require("email-validator");
 
 var regOnline = function (req, res) {
     registration(req, res).then(function (result) {
-        res.json(result.retval);
+        console.log(result);
+        var kode = "";
+        if(result.rc==200){
+            kode = result.retval.data.id;
+        }
+        var log_reg = {
+            log_datetime : moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"),
+            registration_code : kode,
+            log_request : JSON.stringify(req.body),
+            log_response : JSON.stringify(result.retval),
+            log_ip : lib.getIP(req)
+        };
+        db.execute("INSERT INTO registrations_logs SET ?",log_reg).then(function(){
+            res.json(result.retval);
+        });
     });
 };
 
@@ -38,7 +52,7 @@ var checkQuotas = function (store, tgl, sess) {
     var akhir = parseInt (moment(tgl, "YYYY-MM-DD").format("X"));
     var awal = parseInt(moment().format("X"));
     var detik = 5*24*60*60;
-    console.log("Hasil : "+(akhir-awal)+"||"+detik);
+    //console.log("Hasil : "+(akhir-awal)+"||"+detik);
     var deferred = Q.defer();
     //var sess = 1;
     db.readQuery("SELECT * FROM stores WHERE store_id = ? AND store_runner = 1",[store]).then(function(rowsStore){
@@ -121,12 +135,13 @@ var registration = function (req, res) {
             //console.log(row);
             if (row.insertId > 0) {
                 retval = req.body;
-                retval['fee'] = fee + lib.generateFee(row.insertId);
+                //retval['fee'] = fee + lib.generateFee(row.insertId);
                 var uniquecode = lib.uniqueCode(row.insertId);
                 retval['id'] = uniquecode;
                 db.execute("UPDATE registrations SET registration_fee = ?, registration_code = ? WHERE registration_id = ?", [retval['fee'], uniquecode, row.insertId]).then(function () {
                     checkQuotas(req.body.store_id, req.body.competition_date, reg.competition_session).then(function (retQ) {
                         console.log(retQ);
+                        console.log("halllooo");
                         if (retQ.rc == 200) {
                             db.execute("UPDATE registrations SET competition_session = ? WHERE registration_id = ?", [retQ.quota_session, row.insertId]).then(function () {
                                 deferred.resolve({
@@ -139,6 +154,7 @@ var registration = function (req, res) {
                                 });
                             });
                         } else {
+                            console.log("gagal son");
                             deferred.resolve({
                                 rc: 400,
                                 retval: {

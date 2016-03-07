@@ -354,9 +354,120 @@ var confirmation = function (req, res) {
                                 }
                             });
                         }else{
-                            deferred.resolve({
-                                rc: 200,
-                                retval: {code: 420, message: "Silahkan Melakukan Pendaftaran terlebih dahulu"}
+                            db.readQuery("SELECT * FROM registrations WHERE registration_code = ?", [req.body.id]).then(function (rowReg) {
+                                db.execute("UPDATE vouchers SET voucher_taken = 1, voucher_taken_by = ?, voucher_taken_date = ?, updated_date = now() WHERE voucher_code = ? AND voucher_taken=0",
+                                    [rowReg[0].registration_id, moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"), req.body.voucher])
+                                    .then(function (rowV) {
+                                        if (rowV.affectedRows == 1) {
+                                            db.execute("UPDATE registrations SET registration_valid = 1 WHERE registration_code = ?", [req.body.id]).then(function () {
+                                                //proses tambah peserta
+                                                db.readQuery("SELECT * FROM contestants WHERE contestant_nik = ? AND contestant_name =?",[rowReg[0].registration_nik,rowReg[0].registration_name]).then(function(rowCon){
+                                                    if(rowCon.length==0){
+                                                        var cont = {
+                                                            contestant_nik : rowReg[0].registration_nik,
+                                                            contestant_name : rowReg[0].registration_name,
+                                                            contestant_phone : rowReg[0].registration_phone,
+                                                            created_date : moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss")
+                                                        };
+                                                        db.execute("INSERT INTO contestants SET ? ",cont).then(function(resCont){
+                                                            db.readQuery("SELECT * FROM quotas JOIN stores ON quotas.store_id = stores.store_id WHERE quotas.quota_date = ? AND quotas.quota_session = ? AND quotas.store_id = ?",
+                                                                [rowReg[0].competition_date,rowReg[0].competition_session,rowReg[0].store_id]).then(function(rowsQuota){
+                                                                db.readQuery("SELECT * FROM competitions WHERE registration_code = ?",[req.body.id]).then(function(rowsComp){
+                                                                    console.log(rowsComp);
+                                                                    if(rowsComp.length==0){
+                                                                        var compRow = {
+                                                                            quota_id : rowsQuota[0].quota_id,
+                                                                            contestant_id : resCont.insertId,
+                                                                            registration_code : req.body.id,
+                                                                            competition_no : rowReg[0].store_id + lib.str_pad(rowReg[0].registration_id, 5, "0", "STR_PAD_LEFT"),
+                                                                            created_date : moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss")
+                                                                        };
+                                                                        console.log(compRow);
+                                                                        db.execute("INSERT INTO competitions SET ?",compRow).then(function(){
+                                                                            db.execute("UPDATE registrations SET email_ticket = 1 WHERE registration_code = ?", [req.body.id]).then(function () {
+                                                                                deferred.resolve({
+                                                                                    rc: 200,
+                                                                                    retval: {
+                                                                                        code: 200,
+                                                                                        message: "success",
+                                                                                        data: {
+                                                                                            id : req.body.id,
+                                                                                            no : compRow.competition_no,
+                                                                                            store : rowsQuota[0].store_name,
+                                                                                            "date" : rowsQuota[0].quota_date,
+                                                                                            "session" : rowsQuota[0].quota_session
+                                                                                        }
+                                                                                    }
+                                                                                });
+                                                                            });
+                                                                        })
+                                                                    }else{
+                                                                        deferred.resolve({
+                                                                            rc: 400,
+                                                                            retval: {
+                                                                                code: 421,
+                                                                                message: "Peserta sudah terdaftar",
+                                                                                data: req.body
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                });
+                                                            });
+                                                        });
+                                                    }else{
+                                                        db.readQuery("SELECT * FROM quotas JOIN stores ON quotas.store_id = stores.store_id WHERE quotas.quota_date = ? AND quotas.quota_session = ? AND quotas.store_id = ?",[rowReg[0].competition_date,rowReg[0].competition_session,rowReg[0].store_id]).then(function(rowsQuota){
+                                                            db.readQuery("SELECT * FROM competitions WHERE registration_code = ?",[req.body.id]).then(function(rowsComp){
+                                                                console.log(rowsComp);
+                                                                if(rowsComp.length==0){
+                                                                    console.log(rowsComp.length);
+                                                                    var compRow = {
+                                                                        quota_id : rowsQuota[0].quota_id,
+                                                                        contestant_id : rowCon[0].contestant_id,
+                                                                        registration_code : req.body.id,
+                                                                        competition_no : rowReg[0].store_id + lib.str_pad(rowReg[0].registration_id, 5, "0", "STR_PAD_LEFT"),
+                                                                        created_date : moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss")
+                                                                    };
+                                                                    console.log(compRow);
+                                                                    db.execute("INSERT INTO competitions SET ?",compRow).then(function(){
+                                                                        db.execute("UPDATE registrations SET email_ticket = 1 WHERE registration_code = ?", [req.body.id]).then(function () {
+                                                                            deferred.resolve({
+                                                                                rc: 200,
+                                                                                retval: {
+                                                                                    code: 200,
+                                                                                    message: "success",
+                                                                                    data: {
+                                                                                        id : req.body.id,
+                                                                                        no : compRow.competition_no,
+                                                                                        store : rowsQuota[0].store_name,
+                                                                                        "date" : rowsQuota[0].quota_date,
+                                                                                        "session" : rowsQuota[0].quota_session
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                        });
+                                                                    })
+                                                                }else{
+                                                                    deferred.resolve({
+                                                                        rc: 400,
+                                                                        retval: {
+                                                                            code: 421,
+                                                                            message: "Peserta sudah terdaftar",
+                                                                            data: req.body
+                                                                        }
+                                                                    });
+                                                                }
+                                                            });
+                                                        });
+                                                    }
+                                                });
+                                            })
+                                        } else {
+                                            deferred.resolve({
+                                                rc: 400,
+                                                retval: {code: 450, message: "salah kode voucher"}
+                                            });
+                                        }
+                                    });
                             });
                         }
                     });

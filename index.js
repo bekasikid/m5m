@@ -206,6 +206,8 @@ app.get("/sms-receive",function(req,res){
     var telcoid = parseInt(req.query.telcoid);
     if(telcoid==2 || telcoid == 3){
         sms.incomingSms(req,res);
+    }else{
+        res.send("gagal");
     }
 
 

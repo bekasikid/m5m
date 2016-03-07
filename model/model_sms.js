@@ -111,9 +111,9 @@ var incomingSms  = function(req,res){
                     //    res.send(responseSMS(req.query.from,kata,500));
                     //}else{
                         req.body={
-                            id:text[2],
+                            id:text[4],
                             paymentMethod:1,
-                            reffno:text[4],
+                            reffno:text[2],
                             voucher:text[3]
                         };
                         reg.confirmation(req, res).then(function(result){

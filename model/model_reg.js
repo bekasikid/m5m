@@ -339,20 +339,38 @@ var confirmation = function (req, res) {
                 if (row.affectedRows == 0) {
                     db.readQuery("SELECT * FROM competitions JOIN contestants ON competitions.contestant_id = contestants.contestant_id JOIN quotas ON competitions.quota_id = quotas.quota_id JOIN stores ON quotas.store_id = stores.store_id  WHERE competitions.registration_code = ?", [req.body.id]).then(function(rowsCompetition){
                         if(rowsCompetition.length==1){
-                            deferred.resolve({
-                                rc: 200,
-                                retval: {
-                                    code: 200,
-                                    message: "success",
-                                    data: {
-                                        id: req.body.id,
-                                        no: rowsCompetition[0].competition_no,
-                                        store: rowsCompetition[0].store_name,
-                                        "date": rowsCompetition[0].quota_date,
-                                        "session": rowsCompetition[0].quota_session
+                            if(req.body.reg_from=="SMS"){
+                                deferred.resolve({
+                                    rc: 4100,
+                                    retval: {
+                                        code: 410,
+                                        message: "success",
+                                        data: {
+                                            id: req.body.id,
+                                            no: rowsCompetition[0].competition_no,
+                                            store: rowsCompetition[0].store_name,
+                                            "date": rowsCompetition[0].quota_date,
+                                            "session": rowsCompetition[0].quota_session
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }else{
+                                deferred.resolve({
+                                    rc: 200,
+                                    retval: {
+                                        code: 200,
+                                        message: "success",
+                                        data: {
+                                            id: req.body.id,
+                                            no: rowsCompetition[0].competition_no,
+                                            store: rowsCompetition[0].store_name,
+                                            "date": rowsCompetition[0].quota_date,
+                                            "session": rowsCompetition[0].quota_session
+                                        }
+                                    }
+                                });
+                            }
+
                         }else{
                             db.readQuery("SELECT * FROM registrations WHERE registration_code = ?", [req.body.id]).then(function (rowReg) {
                                 db.execute("UPDATE vouchers SET voucher_taken = 1, voucher_taken_by = ?, voucher_taken_date = ?, updated_date = now() WHERE voucher_code = ? AND voucher_taken=0",

@@ -114,7 +114,8 @@ var incomingSms  = function(req,res){
                             id:text[4],
                             paymentMethod:1,
                             reffno:text[2],
-                            voucher:text[3]
+                            voucher:text[3],
+                            reg_from : "SMS"
                         };
                         reg.confirmation(req, res).then(function(result){
                             console.log(result);
@@ -130,7 +131,7 @@ var incomingSms  = function(req,res){
                                 var kata = "NO "+result.retval.data.no+", KFC "+result.retval.data.store+", tgl "+tgl+", jam "+jam+". datang tepat waktu,tunjukkan sms ini dan tanda pengenal";
                                 res.send(responseSMS(req.query.from,kata,1000));
                             }else{
-                                var kata = "Konfirmasi pembayaran tidak berhasil. Hub "+callCenter+" atau "+domainWeb;
+                                var kata = "Maaf kode bayar/voucher/reg yang Anda masukan Salah atau tidak valid. Hub Call center 08551555025 atau www.menang5miliar.com";
                                 res.send(responseSMS(req.query.from,kata,1000));
                             }
                         });

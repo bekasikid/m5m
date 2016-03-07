@@ -152,13 +152,10 @@ var incomingSms  = function(req,res){
                     //res.send("4 "+responseSMS(req.query.from,kata,500));
                     res.send(responseSMS(req.query.from,kata,1000));
                 }else if (text[1]=="klaim"){
-                    db.readQuery("SELECT * FROM registrations join stores on registrations.store_id = stores.store_id where registrations.registration_code = ",[text[2]]).then(function(rowsRes){
+                    db.readQuery("SELECT * FROM registrations join stores on registrations.store_id = stores.store_id where registrations.registration_code = ?",[text[2]]).then(function(rowsRes){
                         var kata = "No Klaim "+text[2]+". Paket dapat diambil di KFC "+rowsRes[0].store_name+" sampai tgl "+moment(rowsRes[0].competition_date,"YYYY-MM-DD").format("MMDDYYY")+" pukul 16:00";
                         res.send(responseSMS(req.query.from,kata,1000));
                     });
-                    //var kata = "PEMENANG : 1.501009952 AMIR ACHMAD INDARTO; 2.Ilham Galuh Hayura; 3.yogas anggoro";
-                    //res.send("4 "+responseSMS(req.query.from,kata,500));
-
                 }else{
                     var kata = "Pendaftaran ketik "+keyword+"#DAFTAR#NO ID#NAMA LENGKAP#KOTA PILIHAN#TANGGAL TANDING PILIHAN DD/MM/YY kirim ke 95899, atau hub "+callCenter+" atau "+domainWeb;
                     //res.send("4 "+responseSMS(req.query.from,kata,500));

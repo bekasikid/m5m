@@ -374,7 +374,7 @@ var scores = function (req, res) {
                 "competition_no" : rows[i].competition_no,
                 "store": rows[i].store_name,
                 "name": rows[i].contestant_name,
-                //"record": rows[i].competition_score+":"+rows[i].competition_second+":"+rows[i].competition_millisecond,
+                "record": rows[i].competition_score+":"+rows[i].competition_second+":"+rows[i].competition_millisecond,
                 "competition": req.query.date,
             });
         }

@@ -75,6 +75,7 @@ var incomingSms  = function(req,res){
                             console.log(req.body);
                             reg.checkLocation(req, res).then(function(result){
                                 if (result.rc==200){
+                                    console.log(result.retval);
                                     var kata = "NO REG "+result.retval.data.id+", pembayaran dilakukan di outlet KFC terdekat. Info, syarat&ket hub "+callCenter+" atau "+domainWeb;
                                     res.send(responseSMS(req.query.from,kata,1000));
                                 }else if (result.rc==511){

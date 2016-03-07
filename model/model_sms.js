@@ -140,6 +140,8 @@ var incomingSms  = function(req,res){
                     //res.json(smsRow);
                     if(text[2]=="03032016"){
                         var kata = "PEMENANG : 1.501009952 AMIR ACHMAD INDARTO; 2.050209953 Ilham Galuh Hayura; 3.050105712 yogas anggoro";
+                    }else if(text[2]=="04032016"){
+                        var kata = "PEMENANG : 1.501009952 AMIR ACHMAD INDARTO; 2.050209953 Ilham Galuh Hayura; 3.050105712 yogas anggoro";
                     }else{
                         var kata = "PEMENANG : 1.055108071 aris sucipto; 2.050203504 BERLODESKI; 3.052008599 Jordan Firmansyah";
                     }

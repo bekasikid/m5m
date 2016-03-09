@@ -39,7 +39,7 @@ app.get('/', function(req, res){
     //console.log(lib.empty(iseng.lama));
     //var validator = require("email-validator");
     //console.log(validator.validate("email.com"));
-    res.status(200).send(""+lib.generateFee(1166));
+    res.send("dev");
 });
 
 app.get("/generate",function(req,res){

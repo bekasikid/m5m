@@ -12,8 +12,8 @@ var readPool = null;
 var openConn = function () {
     pool = mysql.createPool({
         host: "kfc.cbseeyyassm5.ap-southeast-1.rds.amazonaws.com",
-        user: "ainul",
-        password: "apaansih",
+        user: "fonetix",
+        password: "Fonetix1pwD",
         //database: 'kfc',
         database: 'm5m',
         //host: 'localhost',
@@ -30,8 +30,8 @@ var openConn = function () {
 var openReadConn = function () {
     readPool = mysql.createPool({
         host: "kfc-2.cbseeyyassm5.ap-southeast-1.rds.amazonaws.com",
-        user: "ainul",
-        password: "apaansih",
+        user: "fonetix",
+        password: "Fonetix1pwD",
         //database: 'kfc',
         database: 'm5m',
         //host: 'localhost',

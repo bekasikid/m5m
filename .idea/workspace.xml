@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ce5f5be6-9def-4f60-99a4-1a0d4b4a9d1e" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.js" afterPath="$PROJECT_DIR$/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/model_admin.js" afterPath="$PROJECT_DIR$/model/model_admin.js" />
     </list>
     <ignored path="kfc.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,17 +27,17 @@
         <entry file="file://$PROJECT_DIR$/index.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="205" column="11" selection-start-line="205" selection-start-column="11" selection-end-line="205" selection-end-column="25" />
+              <caret line="31" column="23" selection-start-line="31" selection-start-column="23" selection-end-line="31" selection-end-column="23" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="model_db.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="model_db.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model/model_db.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="31" column="68" selection-start-line="31" selection-start-column="68" selection-end-line="31" selection-end-column="68" />
+            <state vertical-scroll-proportion="0.77272725">
+              <caret line="36" column="18" selection-start-line="36" selection-start-column="18" selection-end-line="36" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -69,16 +67,16 @@
         <entry file="file://$PROJECT_DIR$/model/model_reg.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="375" column="79" selection-start-line="375" selection-start-column="79" selection-end-line="375" selection-end-column="79" />
+              <caret line="161" column="90" selection-start-line="161" selection-start-column="46" selection-end-line="161" selection-end-column="90" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="model_admin.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="model_admin.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/model_admin.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5707071">
+            <state vertical-scroll-proportion="0.0">
               <caret line="258" column="41" selection-start-line="258" selection-start-column="41" selection-end-line="258" selection-end-column="41" />
               <folding />
             </state>
@@ -118,11 +116,11 @@
         <option value="$PROJECT_DIR$/model/model_library.js" />
         <option value="$PROJECT_DIR$/notif.html" />
         <option value="$PROJECT_DIR$/model/model_quotas.js" />
-        <option value="$PROJECT_DIR$/model/model_db.js" />
-        <option value="$PROJECT_DIR$/model/model_reg.js" />
         <option value="$PROJECT_DIR$/model/model_sms.js" />
-        <option value="$PROJECT_DIR$/index.js" />
         <option value="$PROJECT_DIR$/model/model_admin.js" />
+        <option value="$PROJECT_DIR$/index.js" />
+        <option value="$PROJECT_DIR$/model/model_reg.js" />
+        <option value="$PROJECT_DIR$/model/model_db.js" />
       </list>
     </option>
   </component>
@@ -675,18 +673,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/model_reg.js">
+    <entry file="file://$PROJECT_DIR$/model/model_admin.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="375" column="79" selection-start-line="375" selection-start-column="79" selection-end-line="375" selection-end-column="79" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/model_db.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="68" selection-start-line="31" selection-start-column="68" selection-end-line="31" selection-end-column="68" />
+          <caret line="258" column="41" selection-start-line="258" selection-start-column="41" selection-end-line="258" selection-end-column="41" />
           <folding />
         </state>
       </provider>
@@ -694,15 +684,23 @@
     <entry file="file://$PROJECT_DIR$/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="205" column="11" selection-start-line="205" selection-start-column="11" selection-end-line="205" selection-end-column="25" />
+          <caret line="31" column="23" selection-start-line="31" selection-start-column="23" selection-end-line="31" selection-end-column="23" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/model_admin.js">
+    <entry file="file://$PROJECT_DIR$/model/model_reg.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5707071">
-          <caret line="258" column="41" selection-start-line="258" selection-start-column="41" selection-end-line="258" selection-end-column="41" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="161" column="90" selection-start-line="161" selection-start-column="46" selection-end-line="161" selection-end-column="90" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/model_db.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.77272725">
+          <caret line="36" column="18" selection-start-line="36" selection-start-column="18" selection-end-line="36" selection-end-column="18" />
           <folding />
         </state>
       </provider>

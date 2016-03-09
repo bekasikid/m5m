@@ -154,7 +154,7 @@ var registration = function (req, res) {
                                 });
                             });
                         } else {
-                            console.log("gagal son");
+                            //console.log("gagal son");
                             deferred.resolve({
                                 rc: 400,
                                 retval: {
@@ -341,7 +341,7 @@ var confirmation = function (req, res) {
                         if(rowsCompetition.length==1){
                             if(req.body.reg_from=="SMS"){
                                 deferred.resolve({
-                                    rc: 4100,
+                                    rc: 410,
                                     retval: {
                                         code: 410,
                                         message: "success",
@@ -490,9 +490,6 @@ var confirmation = function (req, res) {
                         }
                     });
                 } else {
-                    //res.json(req.body);
-                    //@TODO : musti tambahin no peserta
-                    //tambahin kode voucher
                     db.readQuery("SELECT * FROM registrations WHERE registration_code = ?", [req.body.id]).then(function (rowReg) {
                         db.execute("UPDATE vouchers SET voucher_taken = 1, voucher_taken_by = ?, voucher_taken_date = ?, updated_date = now() WHERE voucher_code = ? AND voucher_taken=0",
                             [rowReg[0].registration_id, moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"), req.body.voucher])

@@ -194,8 +194,8 @@ var peserta = function (req, res) {
                 urut = "contestants.contestant_phone"
             } else if (req.query.sort == "email") {
                 urut = "contestants.contestant_email"
-            } else if (req.query.sort == "key") {
-                urut = "competitions.competition_id"
+            } else if (req.query.sort == "no") {
+                urut = "competitions.competition_no"
             } else if (req.query.sort == "date") {
                 urut = "quotas.quota_date"
             }
@@ -210,8 +210,13 @@ var peserta = function (req, res) {
     var params = [];
     if (!lib.empty(req.query.id) || !lib.empty(req.query.nik) || !lib.empty(req.query.name) || !lib.empty(req.query.email) || !lib.empty(req.query.phone)) {
         if (!lib.empty(req.query.id)) {
-            where.push(" registrations.registration_code = ? ");
+            where.push(" competitions.registration_code = ? ");
             params.push(req.query.id);
+        }
+
+        if (!lib.empty(req.query.no)) {
+            where.push(" competitions.competition_no = ? ");
+            params.push(req.query.no);
         }
 
         if (!lib.empty(req.query.nik)) {
@@ -245,6 +250,20 @@ var peserta = function (req, res) {
         }
     });
     return deferred.promise;
+};
+
+var updatePeserta = function (req, res) {
+    db.readQuery("SELECT * FROM contestants where contestant_id = ? ", [req.body.id]).then(function (rows) {
+        if (rows.length == 1) {
+            db.execute("UPDATE contestants SET contestant_email = ? WHERE contestant_id = ?",
+                [req.body.email, req.body.id]).then(function () {
+                res.json({
+                    code: 200,
+                    message: "record updated"
+                });
+            });
+        }
+    });
 };
 
 var mandiri = function (req, res) {
@@ -628,5 +647,7 @@ module.exports.mandiriNotTaken = mandiriNotTaken;
 module.exports.mandiri = mandiri;
 module.exports.participants = participants;
 module.exports.daftar = daftar;
+module.exports.peserta = peserta;
+module.exports.updatePeserta = updatePeserta;
 module.exports.leaderboard = leaderboard;
 module.exports.nearOutlets = nearOutlets;

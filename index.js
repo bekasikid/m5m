@@ -182,6 +182,31 @@ app.get("/daftar",function(req,res){
     //});
 });
 
+app.get("/peserta",function(req,res){
+    //filterModel.validateAdmin(req,res).then(function(retval){
+    //    if(retval.rc==200){
+    //res.json(retval.row);
+    admin.peserta(req,res).then(function(rows){
+        if(req.query.tipe=='total'){
+            res.send(rows.total.toString());
+        }else{
+            res.json({
+                    code: 200,
+                    message: "success",
+                    data : rows.rows
+                }
+            );
+        }
+    });
+    //} else{
+    //    res.status(401).send({ code : 401, message: "Unauthorized" });
+    //}
+    //});
+});
+app.post("/update-peserta",function(req,res){
+    admin.updatePeserta(req,res);
+});
+
 app.post("/ganti-jadwal",function(req,res){
     reg.rubah(req,res);
 });

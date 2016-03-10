@@ -379,22 +379,36 @@ var scores = function (req, res) {
     //    //res.json(tables);
     //    res.json({code: 200, message: "success", data: tables});
     //});
-    db.readQuery("SELECT * FROM competitions " +
-        "JOIN contestants ON competitions.contestant_id=contestants.contestant_id " +
-        "JOIN quotas ON quotas.quota_id=competitions.quota_id " +
-        "JOIN stores ON stores.store_id=quotas.store_id " +
-        "WHERE competition_eliminated = 1 AND session_winner = ?" +
-        "ORDER BY quotas.quota_date ASC", [req.params.pos]).then(function (rows) {
+    //var q = "SELECT * FROM competitions " +
+    //    "JOIN contestants ON competitions.contestant_id=contestants.contestant_id " +
+    //    "JOIN quotas ON quotas.quota_id=competitions.quota_id " +
+    //    "JOIN stores ON stores.store_id=quotas.store_id " +
+    //    "WHERE competition_eliminated = 1 AND session_winner = ?" +
+    //    "ORDER BY quotas.quota_date ASC";
+
+    var q = "SELECT * FROM leaderboard JOIN competitions  ON `leaderboard`.`competition_id` = competitions.`competition_id` " +
+        "JOIN contestants ON competitions.`contestant_id` = contestants.`contestant_id` JOIN quotas ON competitions.`quota_id` = quotas.`quota_id`" +
+        "WHERE competitions.`session_winner` = ? ORDER BY leaderboard.competition_date ASC";
+    db.readQuery(q, [req.params.pos]).then(function (rows) {
         var tables = [];
         for (i = 0; i < rows.length; i++) {
+            //tables.push({
+            //    "store_id": rows[i].store_id,
+            //    "date" : rows[i].quota_date,
+            //    "competition_no" : rows[i].competition_no,
+            //    "store": rows[i].store_name,
+            //    "name": rows[i].contestant_name,
+            //    "record": rows[i].competition_score+":"+rows[i].competition_second+":"+rows[i].competition_millisecond,
+            //    "competition": req.query.date,
+            //});
             tables.push({
                 "store_id": rows[i].store_id,
-                "date" : rows[i].quota_date,
+                "date" : rows[i].competition_date,
                 "competition_no" : rows[i].competition_no,
                 "store": rows[i].store_name,
                 "name": rows[i].contestant_name,
                 "record": rows[i].competition_score+":"+rows[i].competition_second+":"+rows[i].competition_millisecond,
-                "competition": req.query.date,
+                //"competition": req.query.date,
             });
         }
         //res.json(tables);

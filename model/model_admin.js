@@ -388,6 +388,7 @@ var scores = function (req, res) {
 
     var q = "SELECT * FROM leaderboard JOIN competitions  ON `leaderboard`.`competition_id` = competitions.`competition_id` " +
         "JOIN contestants ON competitions.`contestant_id` = contestants.`contestant_id` JOIN quotas ON competitions.`quota_id` = quotas.`quota_id`" +
+        "JOIN stores ON stores.`store_id` = quotas.`store_id`" +
         "WHERE competitions.`session_winner` = ? ORDER BY leaderboard.competition_date ASC";
     db.readQuery(q, [req.params.pos]).then(function (rows) {
         var tables = [];

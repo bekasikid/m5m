@@ -208,7 +208,7 @@ var peserta = function (req, res) {
     var wh = "";
     var where = [];
     var params = [];
-    if (!lib.empty(req.query.id) || !lib.empty(req.query.nik) || !lib.empty(req.query.name) || !lib.empty(req.query.email) || !lib.empty(req.query.phone)) {
+    if (!lib.empty(req.query.id) || !lib.empty(req.query.no) || !lib.empty(req.query.nik) || !lib.empty(req.query.name) || !lib.empty(req.query.email) || !lib.empty(req.query.phone)) {
         if (!lib.empty(req.query.id)) {
             where.push(" competitions.registration_code = ? ");
             params.push(req.query.id);
@@ -389,7 +389,7 @@ var scores = function (req, res) {
     var q = "SELECT * FROM leaderboard JOIN competitions  ON `leaderboard`.`competition_id` = competitions.`competition_id` " +
         "JOIN contestants ON competitions.`contestant_id` = contestants.`contestant_id` JOIN quotas ON competitions.`quota_id` = quotas.`quota_id`" +
         "JOIN stores ON stores.`store_id` = quotas.`store_id`" +
-        "WHERE competitions.`session_winner` = ? ORDER BY leaderboard.competition_date ASC";
+        "WHERE leaderboard.competition_winner = ? ORDER BY leaderboard.competition_date ASC";
     db.readQuery(q, [req.params.pos]).then(function (rows) {
         var tables = [];
         for (i = 0; i < rows.length; i++) {
@@ -407,7 +407,7 @@ var scores = function (req, res) {
                 "date" : rows[i].competition_date,
                 "competition_no" : rows[i].competition_no,
                 "store": rows[i].store_name,
-                "name": rows[i].contestant_name,
+                "name": rows[i].contestant_name.toUpperCase(),
                 "record": rows[i].competition_score+":"+rows[i].competition_second+":"+rows[i].competition_millisecond,
                 //"competition": req.query.date,
             });
@@ -432,7 +432,7 @@ var leaderboard = function (req, res) {
                 tables.push({
                     "store_id": rows[i].store_id,
                     "store": rows[i].store_name,
-                    "name": rows[i].contestant_name,
+                    "name": rows[i].contestant_name.toUpperCase(),
                     "time": rows[i].competition_score+":"+rows[i].competition_second+":"+rows[i].competition_millisecond,
                     "competition": rows[i].competition_date,
                 });

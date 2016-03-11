@@ -160,6 +160,10 @@ app.get("/leaderboard/:pos",function(req,res){
     admin.leaderboard(req,res);
 });
 
+app.get("/leaderboard-admin/:pos",function(req,res){
+    admin.leaderboardAdmin(req,res);
+});
+
 app.get("/daftar",function(req,res){
     //filterModel.validateAdmin(req,res).then(function(retval){
     //    if(retval.rc==200){

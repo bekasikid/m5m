@@ -389,7 +389,7 @@ var scores = function (req, res) {
     var q = "SELECT * FROM leaderboard JOIN competitions  ON `leaderboard`.`competition_id` = competitions.`competition_id` " +
         "JOIN contestants ON competitions.`contestant_id` = contestants.`contestant_id` JOIN quotas ON competitions.`quota_id` = quotas.`quota_id`" +
         "JOIN stores ON stores.`store_id` = quotas.`store_id`" +
-        "WHERE leaderboard.competition_winner = ? ORDER BY leaderboard.competition_date ASC";
+        "WHERE leaderboard.competition_winner = ? AND leaderboard.is_show=1  ORDER BY leaderboard.competition_date ASC";
     db.readQuery(q, [req.params.pos]).then(function (rows) {
         var tables = [];
         for (i = 0; i < rows.length; i++) {
@@ -442,6 +442,27 @@ var leaderboard = function (req, res) {
         });
     }
 
+};
+
+var leaderboardAdmin = function (req, res) {
+    var q = "SELECT * FROM leaderboard JOIN competitions  ON `leaderboard`.`competition_id` = competitions.`competition_id` " +
+        "JOIN contestants ON competitions.`contestant_id` = contestants.`contestant_id` JOIN quotas ON competitions.`quota_id` = quotas.`quota_id`" +
+        "JOIN stores ON stores.`store_id` = quotas.`store_id`" +
+        "WHERE leaderboard.competition_winner = ? ORDER BY leaderboard.competition_date ASC";
+    db.readQuery(q, [req.params.pos]).then(function (rows) {
+        var tables = [];
+        for (i = 0; i < rows.length; i++) {
+            tables.push({
+                "store_id": rows[i].store_id,
+                "date" : rows[i].competition_date,
+                "competition_no" : rows[i].competition_no,
+                "store": rows[i].store_name,
+                "name": rows[i].contestant_name.toUpperCase(),
+                "record": rows[i].competition_score+":"+rows[i].competition_second+":"+rows[i].competition_millisecond,
+            });
+        }
+        res.json({code: 200, message: "success", data: tables});
+    });
 };
 
 var nearOutlets = function (req, res) {
@@ -664,5 +685,6 @@ module.exports.participants = participants;
 module.exports.daftar = daftar;
 module.exports.peserta = peserta;
 module.exports.updatePeserta = updatePeserta;
+module.exports.leaderboardAdmin = leaderboardAdmin;
 module.exports.leaderboard = leaderboard;
 module.exports.nearOutlets = nearOutlets;
